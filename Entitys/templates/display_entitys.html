@@ -1,0 +1,121 @@
+<!-- Entitys/display_entitys.html -->
+{% extends '_base.html' %}
+{% block title %}Entity's{% endblock title %}
+{% block content %}
+  <div class="row">
+    <div class="container col-md-4">
+    <form>
+      <label for="entitys">Entitys:</label>
+      <ul class="list-group">
+        {% for ent in entitys%}
+        <li class="list-group-item list-group-item-primary list-group-item-action"><a href={% url 'Entitys:display' ent %} style="color:black;text-decoration:none;">{{ent}}</a></li>
+        {% endfor %}
+      </ul>
+  </form>
+  </div>
+
+  <div class="container col-md-8 bg-light">
+    <div class="row">
+      <h1>Entity: {{ entity }}</h1>
+
+<hr>
+
+        <div class="row">
+         <div class="col-md-6">
+            <h1 style=>Relations:</h1>
+	    {% for rel in relation_set %}
+	    <h5><a href="{% url 'Relations:display' rel %}" style="text-decoration:none;">{{rel}}</a></h5>
+	    {% endfor %}
+         </div>
+
+         <div class="col-md-6">
+           <h1>Semantic Types:</h1>
+           {% for type in types %}
+	   <h5><a href="{% url 'Types:display' type %}" style="text-decoration:none;">{{type}}</a></h5>
+           {% endfor %}
+        </div>
+  </div>
+
+<hr>
+
+  {% if draw_out_edges %}
+  <div class=row>
+    <div class="col-md-12">
+      <h3>Connected To:</h3>
+      <div class="offset-md-2">
+        {{ draw_out_edges | safe }}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+<hr>
+
+  <div class=row>
+    <div class="col-md-12">
+     <table class="table table-hover">
+      <thead>
+        <tr>
+        <th>EntityA:</th>
+        <th>Relation</th>
+        <th>EntityB</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for data in out_edges_data %}
+        <tr>
+          <td>{{ data.0 }}</td>
+	  <td><a href="{% url 'Relations:display' data.1 %}"style="text-decoration:none;">{{ data.1 }}</a></td>
+	  <td><a href="{% url 'Entitys:display' data.2 %}" style="text-decoration:none;">{{ data.2 }}</a></td>
+        </tr>
+	    {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </div>
+
+<hr>
+
+  {% if draw_in_edges %}
+  <div class=row>
+    <div class="col-md-12">
+      <h3>Connected From:</h3>
+      <div class=offset-md-2>
+      {{ draw_in_edges | safe }}>
+      <div>
+    </div>
+   </div>
+{% endif %}
+
+<hr>
+
+<div class=row>
+    <div >
+     <table class="table table-hover">
+      <thead>
+        <tr>
+        <th>EntityA:</th>
+        <th>Relation</th>
+        <th>EntityB</th>
+        </tr>
+      </thead>
+      <tbody>
+	    {% for data in in_edges_data %}
+        <tr>
+	  <td><a href="{% url 'Entitys:display' data.0 %}" style="text-decoration:none;">{{ data.0 }}</a></td>
+	  <td><a href="{% url 'Relations:display' data.1 %}" style="text-decoration:none;">{{ data.1 }}</a></td>
+	  <td>{{ data.2 }}</td>
+        </tr>
+	    {% endfor %}
+      </tbody>
+    </table>
+
+    </div>
+  </div>
+
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}
+

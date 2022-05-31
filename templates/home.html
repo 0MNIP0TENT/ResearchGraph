@@ -1,0 +1,23 @@
+<!-- templates/pages/home.html -->
+{% extends '_base.html' %}
+{% block title %}Home{% endblock title %}
+{% block content %}
+<div class="jumbotron jumbotron-fluid">
+  <div class="container">
+    <h1 class="display-4">Welcome</h1>
+    <p class="lead">This website is designed to help explore graph data associated with breast cancer.</p>
+    <p class="lead">Click on a tab to start searching!</p>
+    <p class="lead">Note: A the lines means there is a connection between two vertex's in that direction. It can be one connection or multiple.</p>
+  </div>
+</div>
+<!--<div class="row" style="width:100%">
+<div class="card">
+  <div class="card-body">
+    <h5 class="card-title">Welcome!</h5>
+    <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+    <a href="#" class="card-link">Card link</a>
+    <a href="#" class="card-link">Another link</a>
+  </div>
+</div>-->
+{% endblock content %}

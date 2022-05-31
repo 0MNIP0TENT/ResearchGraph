@@ -1,0 +1,69 @@
+
+<!-- Relations/display_relations.html -->
+{% extends '_base.html' %}
+{% block title %}Relation's{% endblock title %}
+{% block content %}
+  <div class="row">
+    <div class="container col-md-4">
+    <form >
+      <label for="relations">Relations:</label>
+      <ul class="list-group">
+        {% for rel in relations%}
+        <li class="list-group-item list-group-item-primary list-group-item-action"><a href={% url 'Relations:display' rel %} style="color:black;text-decoration:none;">{{rel}}</a></li>
+        {% endfor %}
+      </ul>
+  </form>
+  </div>
+
+  <div class="container col-md-8 bg-light">
+    <div class="row">
+      <h1>Relation: {{ relation }}</h1>
+
+<hr>
+
+  {% if relation_edges %}
+  <div class=row>
+    <div class="col-md-12">
+      <h3>Relation Edges:</h3>
+      <div class="offset-md-2">
+        {{ relation_edges | safe }}
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  
+ <hr>
+
+    <div class=row> 
+    <div class="col-md-12">
+     <table class="table table-hover">
+      <thead>
+        <tr>
+        <th>EntityA:</th>
+        <th>Relation</th>
+        <th>EntityB</th>
+        </tr>
+      </thead>
+      <tbody>
+	    {% for data in relation_data %}
+        <tr>
+          <td><a href="{% url 'Entitys:display' data.0 %}" style="text-decoration:none;">{{ data.0 }}</a></td>
+	  <td>{{ data.2 }}</td>
+	  <td><a href="{% url 'Entitys:display' data.1 %}" style="text-decoration:none;">{{ data.1 }}</a></td>
+        </tr>
+	    {% endfor %}
+      </tbody>
+    </table>
+    </div>
+  </div>  
+
+<hr>
+
+
+
+      </div>
+    </div>
+  </div>
+
+{% endblock content %}

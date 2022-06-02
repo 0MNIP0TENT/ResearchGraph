@@ -17,7 +17,10 @@ def display_relations_view(request,relation=None):
     if "GET" == request.method:
         if relation != None:
             context['relation'] = relation
-            context['relation_data'] = relation_data
+            # remove duplicates
+            unique_relation_data = list()
+            [unique_relation_data.append(ent) for ent in relation_data if ent not in unique_relation_data]
+            context['relation_data'] = sorted(unique_relation_data)
             context['relation_edges'] = h.get_image(relation_data)
 
             return render(request,'display_relations.html',context)

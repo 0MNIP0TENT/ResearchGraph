@@ -19,7 +19,7 @@ def display_types_view(request,s_type=None):
         context['s_types'] = sorted(set(s_types))
         context['s_type'] = s_type
         if s_type != None:
-            context['entitys_with_type'] = entitys_with_type 
+            context['entitys_with_type'] = sorted(entitys_with_type)
 
             return render(request,'display_types.html',context)
 

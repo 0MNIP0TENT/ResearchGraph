@@ -24,8 +24,8 @@ def display_entitys_view(request,entity=None):
             context['draw_in_edges'] = h.get_image_planar(in_edges) 
             context['draw_out_edges'] = h.get_image_planar(out_edges) 
 
-            context['out_edges_data'] = set([(trip[0],trip[2]['relation'],trip[1]) for trip in out_edges])
-            context['in_edges_data'] =  set([(trip[0],trip[2]['relation'],trip[1]) for trip in in_edges])
+            context['out_edges_data'] = sorted(set([(trip[0],trip[2]['relation'],trip[1]) for trip in out_edges]))
+            context['in_edges_data'] =  sorted(set([(trip[0],trip[2]['relation'],trip[1]) for trip in in_edges]))
 
             return render(request,'display_entitys.html',context)
 

@@ -3,18 +3,18 @@
 {% block title %}Entity's{% endblock title %}
 {% block content %}
   <div class="row">
-    <div class="container col-md-4">
+    <div class="container col-md-3">
     <form>
       <label for="entitys">Entitys:</label>
       <ul class="list-group">
         {% for ent in entitys%}
-        <li class="list-group-item list-group-item-primary list-group-item-action"><a href={% url 'Entitys:display' ent %} style="color:black;text-decoration:none;">{{ent}}</a></li>
+        <li class="list-group-item list-group-item-primary list-group-item-action text-break"><a href={% url 'Entitys:display' ent %} style="color:black;text-decoration:none;">{{ent}}</a></li>
         {% endfor %}
       </ul>
   </form>
   </div>
 
-  <div class="container col-md-8 bg-light">
+  <div class="container col-md-9 bg-light">
     <div class="row">
       <h1>Entity: {{ entity }}</h1>
 

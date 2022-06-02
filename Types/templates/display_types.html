@@ -9,7 +9,7 @@
       <label for="types">Types:</label>
       <ul class="list-group">
         {% for t in s_types%}
-        <li class="list-group-item list-group-item-primary list-group-item-action"><a href={% url 'Types:display' t %} style="color:black;text-decoration:none;">{{t}}</a></li>
+        <li class="list-group-item list-group-item-primary list-group-item-action text-break"><a href={% url 'Types:display' t %} style="color:black;text-decoration:none;">{{t}}</a></li>
         {% endfor %}
       </ul>
   </form>

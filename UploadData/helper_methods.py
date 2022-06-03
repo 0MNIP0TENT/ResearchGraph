@@ -171,7 +171,7 @@ def get_semantic_types(entity):
 def get_image_planar(edge_list):
     buf = io.BytesIO()
     image  = nx.MultiDiGraph(edge_list)
-    nx.draw_planar(image,with_labels=True)
+    nx.draw_planar(image,font_size=8,with_labels=True)
     plt.margins(x=0.3)
     plt.savefig(buf,format='svg',transparent=True) 
     image_bytes = buf.getvalue().decode('utf-8')
@@ -182,7 +182,7 @@ def get_image_planar(edge_list):
 def get_image(edge_list):
     buf = io.BytesIO()
     image  = nx.MultiDiGraph(edge_list,data=True)
-    nx.draw(image,with_labels=True)
+    nx.draw(image,font_size=8,with_labels=True)
     plt.margins(x=0.3)
     plt.savefig(buf,format='svg',transparent=True) 
     image_bytes = buf.getvalue().decode('utf-8')

@@ -1,8 +1,17 @@
 
 <!-- Relations/display_relations.html -->
 {% extends '_base.html' %}
+{% load static %}
 {% block title %}Relation's{% endblock title %}
 {% block content %}
+
+<div class="row col-3">
+ <form class="d-flex" role="search">
+  <input class="form-control me-2" type="text" id="myInput" placeholder="Enter a relation" aria-label="Search">
+  <button class="btn btn-outline-success" onClick="getRelationValue({{relations}});" type="button">Search</button>
+  </form>
+</div>
+
   <div class="row">
     <div class="container col-md-3">
     <form >
@@ -62,5 +71,7 @@
       </div>
     </div>
   </div>
+
+<script src="{% static 'UploadData/search.js' %}"></script>
 
 {% endblock content %}

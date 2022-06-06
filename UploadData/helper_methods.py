@@ -141,6 +141,21 @@ semantic_types = {
    'vtbt':'Vertebrate',
 }
 
+def fix_relations(col):
+    # taking out the underscores and replacing with spaces
+    relations = list()
+    for row in col:
+        if '_' in row:
+            a = row.replace('_',' ')
+            relations.append(a)
+
+        else:
+            relations.append(row)
+
+    return relations
+
+
+
 def fix_names(col):
     # the slashes in the names are converted to hyphens be changed in order
     # to be passed through the url.
@@ -164,8 +179,8 @@ def get_semantic_types(entity):
     """
         If we know the the full name from the dictionary, we use that.
     """
-    str = entity.replace(",","|").lower()
-    translated = [semantic_types[t] if t in semantic_types else t for t in set(str.split('|')[2:])]
+    str = entity.replace(",","|")
+    translated = [semantic_types[t.lstip()] if t in semantic_types else t.lstrip() for t in set(str.split('|')[2:])]
     return translated 
 
 def get_image_planar(edge_list):
@@ -203,6 +218,7 @@ def create_graph():
     colC = [d['entityB'].upper() for d in Triple.objects.values('entityB')] 
           
     entA = fix_names(colA)
+    rel = fix_relations(colB) 
     entB = fix_names(colC)
 
     # add nodes first to add node attribs
@@ -211,7 +227,7 @@ def create_graph():
         G.add_node(entB[data],types=get_semantic_types(colC[data])) 
 
     for data in range(len(entA)):
-        G.add_edge(entA[data],entB[data],relation=colB[data])
+        G.add_edge(entA[data],entB[data],relation=rel[data])
 
     return G
 

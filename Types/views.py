@@ -12,6 +12,7 @@ def display_types_view(request,s_type=None):
     node_attribs = nx.get_node_attributes(G,'types') 
 
     s_types = list()
+    # enteresting
     [s_types.extend(t) for t in node_attribs.values()]
 
     entitys_with_type = [k for k,v in node_attribs.items() if s_type in v]

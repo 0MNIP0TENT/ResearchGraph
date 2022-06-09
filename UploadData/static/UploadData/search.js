@@ -2,45 +2,40 @@ function getEntityValue(check){
   // Selecting the input element and get its value 
   var inputVal = document.getElementById("myInput").value;
     
-    upperCase = inputVal.toUpperCase() 
+    upperCase = inputVal.toUpperCase(); 
 
     if (check.includes(upperCase)) {
       window.location.replace("/Entitys/"+upperCase);
     }
-
     else {
       alert('You Entered an invalid input.');
     }
-
 }
 
 function getRelationValue(check){
   // Selecting the input element and get its value 
   var inputVal = document.getElementById("myInput").value;
-  upperCase = inputVal.toUpperCase() 
+  upperCase = inputVal.toUpperCase(); 
     if (check.includes(upperCase)) {
       window.location.replace("/Relations/"+upperCase);
     }
-
     else {
       alert('You Entered an invalid input.');
     }
-
 }
 
-function getTypeValue(check){
+function getTypeValue(check,translations){
   // Selecting the input element and get its value 
   var inputVal = document.getElementById("myInput").value;
-  upperCase = inputVal.toUpperCase() 
-    if (check.includes(upperCase)) {
-      window.location.replace("/Types/"+upperCase);
-    }
-
+  lowerCase = inputVal.toLowerCase(); 
+  if(lowerCase in translations) {
+    window.location.replace("/Types/"+translations[lowerCase]);
+   }
     else {
       alert('You Entered an invalid input.');
     }
-
 }
+
 var input = document.getElementById("myInput");
 // Execute a function when the user presses a key on the keyboard
 input.addEventListener("keypress", function(event) {

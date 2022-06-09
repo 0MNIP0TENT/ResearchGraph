@@ -125,10 +125,23 @@ semantic_types = {
    'sbst':'SBST:SUBSTANCE',
    # added 
    'atopic':'ATOPIC',
+   'body':'BODY',
+   'breast':'BREAST',
+   'ductal':'DUCTAL',
    'carb':'CARB',
+   'conformal':'CONFORMAL',
+   'cytotoxic':'CYTOTOXIC',
+   'erbb':'ERBB',
+   'human':'HUMAN',
+   'internal':'INTERNAL',
+   'invt':'INVT',
+   'left':'LEFT',
+   'lipd':'LIPD',
+   'low-level':'LOW-LEVEL',
    'opco':'OPCO',
    'strd':'STRD', #STEROIDS
    'adjuvant':'ADJUVANT',
+   'general':'GENERAL',
    # added end
    'shro':'SHRO:SELF-HELP OR RELIEF ORGanization',
    'socb':'SOCB:SOCIAL BEHAVIOR',

@@ -24,7 +24,7 @@ function getRelationValue(check){
     }
 }
 
-function getTypeValue(check,translations){
+function getTypeValue(translations){
   // Selecting the input element and get its value 
   var inputVal = document.getElementById("myInput").value;
   lowerCase = inputVal.toLowerCase(); 

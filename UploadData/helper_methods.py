@@ -124,24 +124,46 @@ semantic_types = {
    'rnlw':'RNLW:REGULATION OR LAW',
    'sbst':'SBST:SUBSTANCE',
    # added 
+   'adjuvant':'ADJUVANT',
    'atopic':'ATOPIC',
+   'biological':'BIOLOGICAL',
    'body':'BODY',
    'breast':'BREAST',
    'ductal':'DUCTAL',
    'carb':'CARB',
    'conformal':'CONFORMAL',
    'cytotoxic':'CYTOTOXIC',
+   'emission-computed':'EMISSION-COMPUTED',
    'erbb':'ERBB',
+   'general':'GENERAL',
    'human':'HUMAN',
    'internal':'INTERNAL',
    'invt':'INVT',
    'left':'LEFT',
    'lipd':'LIPD',
    'low-level':'LOW-LEVEL',
-   'opco':'OPCO',
+   'malignant':'MALIGNANT',
+   'mass':'MASS',
+   'mediterranean':'MEDITERRANEAN',
+   'myofascial':'MYOFASCIAL',
+   'non-small-cell lung':'NON-SMALL-CELL LUNG',
+   'non-steroidal':'NON-STEROIDAL',
+   'nos':'NOS',
+   'nsba':'NSBA',
+   'omega-3':'OMEGA-3',
+   'opco':'OPCO', 
+   'oral':'ORAL', 
+   'phase ii':'PHASE II',
+   'phase iii':'PHASE III',
+   'pleural':'PLEURAL',
+   'postoperative':'POSTOPERATIVE',
+   'premature':'PREMATURE',
+   'randomized':'RANDOMIZED',
+   'single-photon':'SINGLE-PHOTON', 
    'strd':'STRD', #STEROIDS
-   'adjuvant':'ADJUVANT',
-   'general':'GENERAL',
+   'targeted':'TARGETED',
+   'tumor-infiltrating':'TUMOR-INFILTRATING',
+   'university':'UNIVERSITY',
    # added end
    'shro':'SHRO:SELF-HELP OR RELIEF ORGanization',
    'socb':'SOCB:SOCIAL BEHAVIOR',
@@ -221,7 +243,6 @@ def get_image(edge_list):
 
 def get_hist_image(G):
     return nx.degree_histogram(G)
-
 
 
 def get_entity_data(G, entity):

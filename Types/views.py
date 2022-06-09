@@ -17,7 +17,6 @@ def display_types_view(request,s_type=None):
     entitys_with_type = [k for k,v in node_attribs.items() if s_type in v]
     context['s_types'] = sorted(set(s_types))
     context['translations'] = h.semantic_types
-    print(context['translations'])
      
     if "GET" == request.method:
         context['s_type'] = s_type

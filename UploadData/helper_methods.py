@@ -1,4 +1,5 @@
 from .models import Triple
+from collections import Counter
 import networkx as nx
 import matplotlib
 matplotlib.use('Agg')
@@ -266,7 +267,7 @@ def get_bar_image(G):
     plt.bar(x[:5],y[:5], color=list(colors.values()))
     plt.xticks([])
     plt.xlabel("Nodes")
-    plt.ylabel("Connections")
+    plt.ylabel("# of connections")
     plt.legend(handles, labels)
     plt.title('Nodes with the most connections.')
     plt.savefig(buf,format='svg',transparent=True) 
@@ -277,7 +278,48 @@ def get_bar_image(G):
     plt.close()
 
     return image_bytes
-        
+
+def get_relation_bar(relations):
+
+    bars = 5
+
+    buf = io.BytesIO()
+
+    c = Counter()
+    c.update(relations.values())
+
+    relation_counts = [(x,y) for x,y in c.items()]
+
+    sorted_list = sort_tuples(relation_counts)
+
+    x = list()
+    y = list()
+
+    [x.append(a) for a, _ in sorted_list[-bars:]]
+    [y.append(b) for _, b in  sorted_list[-bars:]]
+
+    plt.figure(figsize=(10,3))
+    colors = dict(zip(x,['cyan','blue','green','orange','red']))
+    labels = colors.keys() 
+    handles = [plt.Rectangle((0,0),1,1,color=colors[label]) for label in labels]
+
+    plt.bar(x[:5],y[:5], color=list(colors.values()))
+    plt.xticks([])
+    plt.xlabel("Relations")
+    plt.ylabel("# of times found in triple")
+    plt.legend(handles, labels)
+    plt.title('Relations in the most triples')
+    plt.savefig(buf,format='svg',transparent=True) 
+
+    image_bytes = buf.getvalue().decode('utf-8')
+
+    buf.close()
+    plt.close()
+
+    return image_bytes
+
+
+
 def sort_tuples(tup):
     """
         function will sort a list of tupels based

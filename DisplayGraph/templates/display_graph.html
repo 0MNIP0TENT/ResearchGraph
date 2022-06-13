@@ -4,6 +4,9 @@
 {% block content %}
 <h1>Info: {{ info }}</h1>
 <div class="container-fluid">
-{{ bar | safe }}
+  {{ bar | safe }}
 </div>
+<div class="container-fluid">
+  {{ relation_bar | safe }}
+<div class="container-fluid">
 {% endblock content %}

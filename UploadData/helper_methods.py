@@ -241,9 +241,49 @@ def get_image(edge_list):
     plt.close()
     return image_bytes
 
-def get_hist_image(G):
-    return nx.degree_histogram(G)
+def get_bar_image(G):
 
+    bars = 5
+
+    buf = io.BytesIO()
+
+    degree_list = list(nx.degree(G))
+   
+    x = list()
+    y = list()
+
+    sorted_list = sort_tuples(degree_list)
+
+    [x.append(a) for a, _ in sorted_list[-bars:]]
+    [y.append(b) for _, b in  sorted_list[-bars:]]
+
+
+    plt.figure(figsize=(10,3))
+    colors = dict(zip(x,['cyan','blue','green','orange','red']))
+    labels = colors.keys() 
+    handles = [plt.Rectangle((0,0),1,1,color=colors[label]) for label in labels]
+
+    plt.bar(x[:5],y[:5], color=list(colors.values()))
+    plt.xticks([])
+    plt.xlabel("Nodes")
+    plt.ylabel("Connections")
+    plt.legend(handles, labels)
+    plt.title('Nodes with the most connections.')
+    plt.savefig(buf,format='svg',transparent=True) 
+
+    image_bytes = buf.getvalue().decode('utf-8')
+
+    buf.close()
+    plt.close()
+
+    return image_bytes
+        
+def sort_tuples(tup):
+    """
+        function will sort a list of tupels based
+        on it's second value.
+    """
+    return(sorted(tup, key = lambda x: x[1])) 
 
 def get_entity_data(G, entity):
     return G.nodes[entity]['types']

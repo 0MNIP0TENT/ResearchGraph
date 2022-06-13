@@ -25,20 +25,34 @@
 
   <div class="container col-md-9 bg-light">
     <div class="row">
-      <h1>Entity: {{ entity }}</h1>
+      <div class="container">
+    <h1>Entity: {{ entity }} </h1>
 
+      </div>
+      </div>
+
+<hr>
+
+    <div class="row">
+      <div class="col-6">
+        <h3>Total count: {{ degree }}</h3>
+      </div>
+      <div class="col-6">
+        <h3>Unique count: {{ unique_degree }}</h3>
+      </div>
+      </div>
 <hr>
 
         <div class="row">
          <div class="col-md-6">
-            <h1 style=>Relations:</h1>
+            <h3 style=>Relations:</h3>
 	    {% for rel in relation_set %}
-	    <h5><a href="{% url 'Relations:display' rel %}" style="text-decoration:none;">{{rel}}</a></h5>
+	    <h5><a href="{% url 'Relations:display' rel %}" style="text-decoration:none;">{{ rel }}</a></h5>
 	    {% endfor %}
          </div>
 
          <div class="col-md-6">
-           <h1>Semantic Types:</h1>
+           <h3>Semantic Types:</h3>
            {% for type in types %}
 	   <h5><a href="{% url 'Types:display' type %}" style="text-decoration:none;">{{type}}</a></h5>
            {% endfor %}
@@ -56,7 +70,6 @@
       </div>
       </div>
     </div>
-  </div>
   {% endif %}
 
 <hr>

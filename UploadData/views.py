@@ -68,7 +68,6 @@ def upload_data_view(request):
 
         G.add_edges_from(al)
 
-
         entitys = list(G.nodes())
         
         context["excel_data"] = excel_data 

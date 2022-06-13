@@ -18,6 +18,7 @@ def display_entitys_view(request,entity=None):
     if "GET" == request.method:
         if entity != None:
             context['entity'] = entity
+            context['degree'] = G.degree[entity] 
             context['types'] = h.get_entity_data(G,entity) 
             context['relation_set'] = set([v for k,v in nx.get_edge_attributes(G,'relation').items() if entity in k])
 
@@ -26,6 +27,7 @@ def display_entitys_view(request,entity=None):
 
             context['out_edges_data'] = sorted(set([(trip[0],trip[2]['relation'],trip[1]) for trip in out_edges]))
             context['in_edges_data'] =  sorted(set([(trip[0],trip[2]['relation'],trip[1]) for trip in in_edges]))
+            context['unique_degree'] = len(context['in_edges_data']) + len(context['out_edges_data'])
 
             return render(request,'display_entitys.html',context)
 

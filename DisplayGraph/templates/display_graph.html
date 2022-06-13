@@ -2,10 +2,8 @@
 {% extends '_base.html' %}
 {% block title %}Research Graph{% endblock title %}
 {% block content %}
-<div style="width:100%">
-  {{ graph | safe }}
+<h1>Info: {{ info }}</h1>
+<div class="container-fluid">
+{{ bar | safe }}
 </div>
-{% for row in excel_data %}
-  <h5>{{ row }} </h5>
-{% endfor %}
 {% endblock content %}

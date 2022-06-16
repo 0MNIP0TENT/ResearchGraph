@@ -26,38 +26,33 @@
   <div class="container col-md-9 bg-light">
     <div class="row">
       <div class="container">
-    <h1>Entity: {{ entity }} </h1>
-
+        <h1>Entity: {{ entity }} </h1>
       </div>
-      </div>
+    </div>
 
 <hr>
 
     <div class="row">
-      <div class="col-6">
-        <h3>Total count: {{ degree }}</h3>
-      </div>
-      <div class="col-6">
-        <h3>Unique count: {{ unique_degree }}</h3>
-      </div>
-      </div>
+      <h3>Count: {{ unique_degree }}</h3>
+    </div>
+
 <hr>
 
-        <div class="row">
-         <div class="col-md-6">
-            <h3 style=>Relations:</h3>
-	    {% for rel in relation_set %}
-	    <h5><a href="{% url 'Relations:display' rel %}" style="text-decoration:none;">{{ rel }}</a></h5>
-	    {% endfor %}
-         </div>
+   <div class="row">
+     <div class="col-md-6">
+       <h3 style=>Relations:</h3>
+       {% for rel in relation_set %}
+       <h5><a href="{% url 'Relations:display' rel %}" style="text-decoration:none;">{{ rel }}</a></h5>
+       {% endfor %}
+     </div>
 
-         <div class="col-md-6">
-           <h3>Semantic Types:</h3>
-           {% for type in types %}
-	   <h5><a href="{% url 'Types:display' type %}" style="text-decoration:none;">{{type}}</a></h5>
-           {% endfor %}
-        </div>
-  </div>
+   <div class="col-md-6">
+     <h3>Semantic Types:</h3>
+     {% for type in types %}
+     <h5><a href="{% url 'Types:display' type %}" style="text-decoration:none;">{{type}}</a></h5>
+     {% endfor %}
+   </div>
+</div>
 
 <hr>
 
@@ -123,13 +118,13 @@
         </tr>
       </thead>
       <tbody>
-	    {% for data in in_edges_data %}
+	{% for data in in_edges_data %}
         <tr>
 	  <td><a href="{% url 'Entitys:display' data.0 %}" style="text-decoration:none;">{{ data.0 }}</a></td>
 	  <td><a href="{% url 'Relations:display' data.1 %}" style="text-decoration:none;">{{ data.1 }}</a></td>
 	  <td>{{ data.2 }}</td>
         </tr>
-	    {% endfor %}
+	{% endfor %}
       </tbody>
     </table>
 

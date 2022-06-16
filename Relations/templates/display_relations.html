@@ -30,14 +30,14 @@
       <h1>Relation: {{ relation }}</h1>
   </div>
     <div class="col-6">
-      <h1>Count: {{ count }}</h1>
+      <h1>Edges: {{ count }}</h1>
   </div>
 <hr>
 
   {% if relation_edges %}
   <div class=row>
     <div class="container col-md-12">
-    <h3>Relation Edges:</h3>
+    <h3>Relation Graph:</h3>
       <div class="container offset-lg-2">
         {{ relation_edges | safe }}
       </div>

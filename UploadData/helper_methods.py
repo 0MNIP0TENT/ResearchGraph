@@ -265,12 +265,17 @@ def get_bar_image(G):
     labels = colors.keys() 
     handles = [plt.Rectangle((0,0),1,1,color=colors[label]) for label in labels]
 
-    plt.bar(x[:5],y[:5], color=list(colors.values()))
-    plt.xticks([])
-    plt.xlabel("Nodes")
+    plt.barh(x[:5],y[:5], color=list(colors.values()))
+
+    # add value to end of bar
+    for index, value in enumerate(y[:5]):
+        plt.text(value,index, str(value))
+
+    plt.yticks([])
+    plt.ylabel("Nodes")
     plt.ylabel("# of connections")
     plt.legend(handles, labels)
-    plt.title('Nodes with the most connections.')
+    plt.title('Nodes with the most connections')
     plt.savefig(buf,format='svg',transparent=True) 
 
     image_bytes = buf.getvalue().decode('utf-8')
@@ -304,12 +309,18 @@ def get_relation_bar(relations):
     labels = colors.keys() 
     handles = [plt.Rectangle((0,0),1,1,color=colors[label]) for label in labels]
 
-    plt.bar(x[:5],y[:5], color=list(colors.values()))
-    plt.xticks([])
-    plt.xlabel("Relations")
-    plt.ylabel("# of times found in triple")
+    plt.barh(x[:5],y[:5], color=list(colors.values()))
+
+    plt.yticks([])
+    plt.ylabel("Relations")
+    plt.ylabel("# of edges")
     plt.legend(handles, labels)
-    plt.title('Relations in the most triples')
+    plt.title('Relations with the most edges')
+
+    # add value to end of bar
+    for index, value in enumerate(y[:5]):
+        plt.text(value,index,str(value))
+
     plt.savefig(buf,format='svg',transparent=True) 
 
     image_bytes = buf.getvalue().decode('utf-8')
@@ -318,7 +329,6 @@ def get_relation_bar(relations):
     plt.close()
 
     return image_bytes
-
 
 
 def sort_tuples(tup):

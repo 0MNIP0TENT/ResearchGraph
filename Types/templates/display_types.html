@@ -34,15 +34,16 @@
      <table class="table table-hover">
       <thead>
         <tr>
-        <th>Entity's:</th>
+        <th>Entities:</th>
+        <th>Edges:</th>
         </tr>
       </thead>
       <tbody>
-	    {% for ent in entitys_with_type %}
+      {% for ent in entitys_with_type %}
         <tr>
-          <td><a href="{% url 'Entitys:display' ent %}" style="text-decoration:none;">{{ ent }}</a></td>
-        </tr>
-	    {% endfor %}
+          <td><a href="{% url 'Entitys:display' ent.0 %}" style="text-decoration:none;">{{ ent.0 }}</a></td>
+          <td>{{ ent.1 }}</td>
+      {% endfor %}
       </tbody>
     </table>
     </div>

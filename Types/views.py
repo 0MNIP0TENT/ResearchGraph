@@ -21,7 +21,12 @@ def display_types_view(request,s_type=None):
     if "GET" == request.method:
         context['s_type'] = s_type
         if s_type != None:
-            context['entitys_with_type'] = sorted(entitys_with_type)
+            entitys_with_type = sorted(entitys_with_type)
+            edges = [len(G.in_edges(ent,default=0)) + len(G.out_edges(ent,default=0)) for ent in entitys_with_type]
+            entitys_with_type = list(zip(entitys_with_type,edges))
+
+            context['entitys_with_type'] = entitys_with_type
+            context['edges'] = [len(G.in_edges(ent,default=0)) + len(G.out_edges(ent,default=0)) for ent in entitys_with_type]
 
             return render(request,'display_types.html',context)
 

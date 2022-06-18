@@ -23,7 +23,8 @@ def display_types_view(request,s_type=None):
         if s_type != None:
             entitys_with_type = sorted(entitys_with_type)
             edges = [len(G.in_edges(ent,default=0)) + len(G.out_edges(ent,default=0)) for ent in entitys_with_type]
-            entitys_with_type = list(zip(entitys_with_type,edges))
+            percents = [round(edge/len(G.edges)*100,2) for edge in edges]
+            entitys_with_type = list(zip(entitys_with_type,edges,percents))
 
             context['entitys_with_type'] = entitys_with_type
             context['edges'] = [len(G.in_edges(ent,default=0)) + len(G.out_edges(ent,default=0)) for ent in entitys_with_type]

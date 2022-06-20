@@ -31,4 +31,5 @@ urlpatterns = [
     path('Entitys/', include('Entitys.urls')),
     path('Types/', include('Types.urls')),
     path('Relations/', include('Relations.urls')),
+    path('Charts/', include('Charts.urls')),
 ]

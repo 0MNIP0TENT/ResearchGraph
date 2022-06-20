@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'Relations.apps.RelationsConfig',
     'Entitys.apps.EntitysConfig',
     'Types.apps.TypesConfig',
+    'Charts.apps.ChartsConfig',
 
     # third party
     'crispy_forms',

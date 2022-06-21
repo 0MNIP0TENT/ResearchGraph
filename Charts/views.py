@@ -9,7 +9,7 @@ def display_charts_view(request):
     
     G = h.create_graph()
     data = G.degree
-    context['data'] = dict(data)
+    context['data'] = dict(sorted(data))
 
     if "GET" == request.method:
            

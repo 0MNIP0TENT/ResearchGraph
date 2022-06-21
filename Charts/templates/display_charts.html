@@ -2,7 +2,7 @@
 {% extends '_base.html' %}
 {% load static %}
 {% block content %}
-<div class="row col-lg-3">
+<div class="row">
   <form class="d-flex">
     <select name="select_box" class="form-select" id="select_box">
       {% for d in data %}
@@ -12,8 +12,8 @@
     <button class="btn btn-outline-success" id="myBtn" onClick="lick({{data}});" type="button">Search</button>
   </form>
   </div>
-</div>
-<canvas id="canv" style="width:100%;max-width:700px"></canvas>
+</div>  
+<canvas id="canv" style="width:100%"></canvas>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
 <script src="{% static 'Charts/dcharts.js' %}"></script>
 

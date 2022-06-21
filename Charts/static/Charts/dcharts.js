@@ -1,8 +1,18 @@
-var xValues = ["Italy", "France", "Spain", "USA", "Argentina"];
-var yValues = [55, 49, 44, 24, 15];
-var barColors = ["red", "green","blue","orange","brown"];
+var xValues = [];
+var yValues = [];
+var barColors = [];
 
-new Chart("myChart", {
+function lick(data) { 
+var input = document.getElementById("select_box").value;
+if(input in data) {
+  chart.data.datasets[0].data.push(data[input]);
+  chart.data.labels.push(input);
+
+  chart.update();
+  }
+}
+
+var chart = new Chart("canv", {
   type: "bar",
   data: {
     labels: xValues,

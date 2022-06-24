@@ -8,6 +8,7 @@ def display_entitys_view(request,entity=None):
 
     context = dict()
 
+
     G = h.create_graph()
 
     context['entitys'] = sorted(list(G.nodes()))
@@ -24,9 +25,29 @@ def display_entitys_view(request,entity=None):
             context['draw_in_edges'] = h.get_image_planar(in_edges) 
             context['draw_out_edges'] = h.get_image_planar(out_edges) 
 
-            context['out_edges_data'] = sorted([(trip[0],trip[2]['relation'],trip[1]) for trip in out_edges])
-            context['in_edges_data'] =  sorted([(trip[0],trip[2]['relation'],trip[1]) for trip in in_edges])
-            context['unique_degree'] = len(context['in_edges_data']) + len(context['out_edges_data'])
+            out_edges_data = sorted([[trip[0],trip[2]['relation'],trip[1]] for trip in out_edges])
+            
+            out_edges_nums = [len(G.in_edges(ent[2],default=0)) + len(G.out_edges(ent[2],default=0)) for ent in out_edges_data]
+            out_edges_percents = [round(edge/len(G.edges)*100,2) for edge in out_edges_nums]
+
+            for i in range(len(out_edges_data)):
+                out_edges_data[i].append(out_edges_nums[i])
+                out_edges_data[i].append(out_edges_percents[i])
+            
+
+            in_edges_data = sorted([[trip[0],trip[2]['relation'],trip[1]] for trip in in_edges])
+
+            in_edges_nums = [len(G.in_edges(ent[0],default=0)) + len(G.out_edges(ent[0],default=0)) for ent in in_edges_data]
+            in_edges_percents = [round(edge/len(G.edges)*100,2) for edge in in_edges_nums]
+
+            for i in range(len(in_edges_data)):
+                in_edges_data[i].append(in_edges_nums[i])
+                in_edges_data[i].append(in_edges_percents[i])
+
+            context['out_edges_data'] = out_edges_data 
+            context['in_edges_data'] = in_edges_data 
+
+            context['unique_degree'] = len(in_edges) + len(out_edges)
 
             return render(request,'display_entitys.html',context)
 

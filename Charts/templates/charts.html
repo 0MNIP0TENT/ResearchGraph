@@ -1,0 +1,9 @@
+
+<!-- Charts/charts.html -->
+{% extends '_base.html' %}
+{% load static %}
+{% block content %}
+<h1>Make Charts</h1>
+<a href={% url 'Charts:degree' %}><h5>Degree of Nodes</h5></a>
+<a href={% url 'Charts:relation' %}><h5>Number of Relations</h5></a>
+{% endblock content %}

@@ -30,7 +30,13 @@ var chart = new Chart("canv", {
         getRandomColorHex(),
         getRandomColorHex(),
         getRandomColorHex(),
-        getRandomColorHex()
+        getRandomColorHex(),
+        getRandomColorHex(),
+        getRandomColorHex(),
+        getRandomColorHex(),
+        getRandomColorHex(),
+        getRandomColorHex(),
+        getRandomColorHex(),
       ],
 
     }], 

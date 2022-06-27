@@ -49,8 +49,8 @@ var chart = new Chart("canv", {
   scales: {
     yAxes: [{
       ticks: {
-        beginAtZero: true
-      }
+        beginAtZero: true,
+      },
     }]
   },
    legend: {

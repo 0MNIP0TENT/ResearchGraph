@@ -45,6 +45,13 @@ var chart = new Chart("canv", {
       display: true,
       text: 'Degree Of Node',
     },
+  scales: {
+    yAxes: [{
+      ticks: {
+        beginAtZero: true
+      }
+    }]
+  },
    legend: {
         display: false
     },

@@ -2,7 +2,13 @@
 {% extends '_base.html' %}
 {% load static %}
 {% block content %}
-  <form class="d-flex">
+{% include 'graph_menu.html' %}
+<h1 class="text-center py-2">Make you own Charts</h1>
+<div class="row">
+<h3>Number of edges associated with relation</h3>
+</div>
+{% include 'chart_menu.html' %}
+  <form class="d-flex py-3">
     <select name="select_box" class="form-select" id="select_box">
       {% for d in data %}
       <option value="{{d}}">{{d}}</option>

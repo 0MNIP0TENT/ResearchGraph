@@ -1,0 +1,27 @@
+<!-- Charts/display_out_relations.html -->
+{% extends '_base.html' %}
+{% load static %}
+{% block content %}
+{% include 'graph_menu.html' %}
+<h1 class="text-center py-2">Make you own Charts</h1>
+<div class="row">
+<h3>Number of edges associated with relation</h3>
+</div>
+{% include 'chart_menu.html' %}
+  <form class="d-flex py-3">
+    <select name="select_box" class="form-select" id="select_box">
+      {% for node in nodes %}
+      <option value="{{node}}">{{node}}</option>
+      {% endfor %}
+    </select>
+    <button class="btn btn-outline-success" id="myBtn" onClick="lick({{data}});" type="button">Search</button>
+  </form>
+  </div>
+</div>  
+<div class="container min-vw-100 min-vh-100">  
+<canvas id="canv"></canvas>
+</div>  
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+<script src="{% static 'Charts/out_relations_chart.js' %}"></script>
+
+{% endblock content %}

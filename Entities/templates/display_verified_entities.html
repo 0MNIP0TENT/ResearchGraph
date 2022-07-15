@@ -1,24 +1,24 @@
-<!-- Entitys/display_entitys.html -->
+<!-- Entitys/display_verified_entitys.html -->
 {% extends '_base.html' %}
 {% load static %}
-{% block title %}Entity's{% endblock title %}
+{% block title %}Entities{% endblock title %}
 {% block content %}
-{% include 'graph_menu.html' %}
+{% include 'verified_graph_menu.html' %}
 
 <div class="row col-lg-3">
 <form class="d-flex">
   <input class="form-control me-2" type="text" id="myInput" placeholder="Enter a entity" aria-label="Search">
-  <button class="btn btn-outline-success" onClick="getEntityValue({{entitys}});" id="myBtn" type="button">Search</button>
+  <button class="btn btn-outline-success" onClick="getEntityValue({{entities}});" id="myBtn" type="button">Search</button>
   </form>
 </div>
 
   <div class="row">
     <div class="container col-md-3">
     <form>
-      <label for="entitys">Entitys:</label>
+      <label for="entitys">Entities:</label>
       <ul class="list-group">
-        {% for ent in entitys%}
-        <li class="list-group-item list-group-item-secondary list-group-item-action text-break"><a href={% url 'Entitys:display' ent %} style="color:black;text-decoration:none;">{{ent}}</a></li>
+        {% for ent in entities%}
+        <li class="list-group-item list-group-item-secondary list-group-item-action text-break"><a href={% url 'Entities:display_verified' ent %} style="color:black;text-decoration:none;">{{ent}}</a></li>
         {% endfor %}
       </ul>
   </form>
@@ -27,7 +27,8 @@
   <div class="container col-md-9">
     <div class="row">
       <div class="container">
-        <h1>Entity: {{ entity }} </h1>
+        <h1 class="text-center">Verified</h1>
+        <h1>Entities: {{ entity }} </h1>
       </div>
     </div>
 
@@ -43,14 +44,14 @@
      <div class="col-md-6">
        <h3 style=>Relations:</h3>
        {% for rel in relation_set %}
-       <h5><a href="{% url 'Relations:display' rel %}" style="text-decoration:none;">{{ rel }}</a></h5>
+       <h5><a href="{% url 'Relations:display_verified' rel %}" style="text-decoration:none;">{{ rel }}</a></h5>
        {% endfor %}
      </div>
 
    <div class="col-md-6">
      <h3>Semantic Types:</h3>
      {% for type in types %}
-     <h5><a href="{% url 'Types:display' type %}" style="text-decoration:none;">{{type}}</a></h5>
+     <h5><a href="{% url 'Types:display_verified' type %}" style="text-decoration:none;">{{ type }}</a></h5>
      {% endfor %}
    </div>
 </div>
@@ -86,8 +87,8 @@
         {% for data in out_edges_data %}
         <tr>
           <td>{{ data.0 }}</td>
-	  <td><a href="{% url 'Relations:display' data.1 %}"style="text-decoration:none;">{{ data.1 }}</a></td>
-	  <td><a href="{% url 'Entitys:display' data.2 %}" style="text-decoration:none;">{{ data.2 }}</a></td>
+	  <td><a href="{% url 'Relations:display_verified' data.1 %}"style="text-decoration:none;">{{ data.1 }}</a></td>
+	  <td><a href="{% url 'Entities:display_verified' data.2 %}" style="text-decoration:none;">{{ data.2 }}</a></td>
 	  <td>{{ data.3 }}</td>
 	  <td>{{ data.4 }}</td>
         </tr>
@@ -127,10 +128,10 @@
       <tbody>
 	{% for data in in_edges_data %}
         <tr>
-	  <td><a href="{% url 'Entitys:display' data.0 %}" style="text-decoration:none;">{{ data.0 }}</a></td>
+	  <td><a href="{% url 'Entities:display_verified' data.0 %}" style="text-decoration:none;">{{ data.0 }}</a></td>
 	  <td>{{ data.3 }}</td>
 	  <td>{{ data.4 }}</td>
-	  <td><a href="{% url 'Relations:display' data.1 %}" style="text-decoration:none;">{{ data.1 }}</a></td>
+	  <td><a href="{% url 'Relations:display_verified' data.1 %}" style="text-decoration:none;">{{ data.1 }}</a></td>
 	  <td>{{ data.2 }}</td>
         </tr>
 	{% endfor %}
@@ -143,7 +144,6 @@
       </div>
     </div>
   </div>
-  <script src="{% static 'UploadData/search.js' %}"></script>
+  <script src="{% static 'UploadData/search_verified.js' %}"></script>
 
 {% endblock content %}
-

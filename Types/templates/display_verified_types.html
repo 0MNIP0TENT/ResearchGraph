@@ -1,10 +1,9 @@
-
-<!-- Types/display_types.html -->
+<!-- Types/templates/display_verified_types.html -->
 {% extends '_base.html' %}
 {% load static %}
 {% block title %}Semantic Types{% endblock title %}
 {% block content %}
-{% include 'graph_menu.html' %}
+{% include 'verified_graph_menu.html' %}
 
 <div class="row col-lg-3">
  <form class="d-flex">
@@ -19,7 +18,7 @@
       <label for="types">Types:</label>
       <ul class="list-group">
         {% for t in s_types %}
-        <li class="list-group-item list-group-item-secondary list-group-item-action text-break"><a href={% url 'Types:display' t %} style="color:black;text-decoration:none;">{{t}}</a></li>
+        <li class="list-group-item list-group-item-secondary list-group-item-action text-break"><a href={% url 'Types:display_verified' t %} style="color:black;text-decoration:none;">{{t}}</a></li>
         {% endfor %}
       </ul>
   </form>
@@ -27,7 +26,8 @@
 
   <div class="container col-md-9">
     <div class="row">
-      <h1>Semantic Type: {{ s_type }}</h1>
+    <h1 class="text-center">Verified</h1>
+    <h1>Semantic Type: {{ s_type }}</h1>
 <hr>
 
   <div class=row> 
@@ -43,7 +43,7 @@
       <tbody>
       {% for ent in entitys_with_type %}
         <tr>
-          <td><a href="{% url 'Entitys:display' ent.0 %}" style="text-decoration:none;">{{ ent.0 }}</a></td>
+          <td><a href="{% url 'Entities:display_verified' ent.0 %}" style="text-decoration:none;">{{ ent.0 }}</a></td>
           <td>{{ ent.1 }}</td>
           <td>{{ ent.2 }}</td>
       {% endfor %}
@@ -58,6 +58,6 @@
     </div>
   </div>
 
-<script src="{% static 'UploadData/search.js' %}"></script>
+<script src="{% static 'UploadData/search_verified.js' %}"></script>
 
 {% endblock content %}

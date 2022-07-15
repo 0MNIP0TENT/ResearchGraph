@@ -5,7 +5,7 @@ function getEntityValue(check){
     upperCase = inputVal.toUpperCase(); 
 
     if (check.includes(upperCase)) {
-      window.location.replace("/Entitys/"+upperCase);
+      window.location.replace("/Entities/UnVerified/"+upperCase);
     }
     else {
       alert('You Entered an invalid input.');
@@ -17,7 +17,7 @@ function getRelationValue(check){
   var inputVal = document.getElementById("myInput").value;
   upperCase = inputVal.toUpperCase(); 
     if (check.includes(upperCase)) {
-      window.location.replace("/Relations/"+upperCase);
+      window.location.replace("/Relations/UnVerified/"+upperCase);
     }
     else {
       alert('You Entered an invalid input.');
@@ -29,7 +29,7 @@ function getTypeValue(translations){
   var inputVal = document.getElementById("myInput").value;
   lowerCase = inputVal.toLowerCase(); 
   if(lowerCase in translations) {
-    window.location.replace("/Types/"+translations[lowerCase]);
+    window.location.replace("/Types/UnVerified/"+translations[lowerCase]);
    }
     else {
       alert('You Entered an invalid input.');

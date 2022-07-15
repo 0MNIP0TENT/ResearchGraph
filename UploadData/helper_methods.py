@@ -342,12 +342,18 @@ def get_entity_data(G, entity):
     return G.nodes[entity]['types']
 
 
-def create_graph():
+def create_graph(dataset):
     G = nx.MultiDiGraph()
+    if dataset == "Verified":
+        colA = [d['entityA'].upper() for d in Verified.objects.values('entityA')] 
+        colB = [d['relation'] for d in Verified.objects.values('relation')] 
+        colC = [d['entityB'].upper() for d in Verified.objects.values('entityB')] 
 
-    colA = [d['entityA'].upper() for d in Verified.objects.values('entityA')] 
-    colB = [d['relation'] for d in Verified.objects.values('relation')] 
-    colC = [d['entityB'].upper() for d in Verified.objects.values('entityB')] 
+    else:
+        colA = [d['entityA'].upper() for d in Triple.objects.values('entityA')] 
+        colB = [d['relation'] for d in Triple.objects.values('relation')] 
+        colC = [d['entityB'].upper() for d in Triple.objects.values('entityB')] 
+
           
     entA = fix_names(colA)
     rel = fix_relations(colB) 

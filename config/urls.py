@@ -28,7 +28,7 @@ urlpatterns = [
     path('', include('pages.urls')),
     path('UploadData/', include('UploadData.urls')),
     path('DisplayGraph/', include('DisplayGraph.urls')),
-    path('Entitys/', include('Entitys.urls')),
+    path('Entities/', include('Entities.urls')),
     path('Types/', include('Types.urls')),
     path('Relations/', include('Relations.urls')),
     path('Charts/', include('Charts.urls')),

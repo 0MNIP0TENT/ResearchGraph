@@ -3,9 +3,10 @@
 {% load static %}
 {% block content %}
 {% include 'verified_graph_menu.html' %}
+<h1 class="text-center py-2">Verified</h1>
 <h1 class="text-center py-2">Make you own Charts</h1>
 <h3>Number of edges(degree) associated with entity</h3>
-{% include 'chart_menu.html' %}
+{% include 'verified_chart_menu.html' %}
   <form class="d-flex py-3">
     <select name="select_box" class="form-select" id="select_box">
       {% for d in data %}

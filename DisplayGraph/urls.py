@@ -3,5 +3,6 @@ from . import views
 
 app_name = 'DisplayGraph'
 urlpatterns = [
-    path('', views.display_graph_view, name='display'),
+    path('Verified/', views.display_verified_graph_view, name='display_verified'),
+    path('UnVerified/', views.display_unverified_graph_view, name='display_unverified'),
 ]

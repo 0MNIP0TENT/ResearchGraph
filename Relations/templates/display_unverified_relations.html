@@ -1,10 +1,10 @@
 
-<!-- Relations/display_relations.html -->
+<!-- Relations/display_unverified_relations.html -->
 {% extends '_base.html' %}
 {% load static %}
 {% block title %}Relation's{% endblock title %}
 {% block content %}
-{% include 'graph_menu.html' %}
+{% include 'unverified_graph_menu.html' %}
 
 <div class="row col-lg-3">
  <form class="d-flex">
@@ -19,7 +19,7 @@
       <label for="relations">Relations:</label>
       <ul class="list-group">
         {% for rel in relations%}
-        <li class="list-group-item list-group-item-secondary list-group-item-action text-break"><a href={% url 'Relations:display' rel %} style="color:black;text-decoration:none;">{{rel}}</a></li>
+        <li class="list-group-item list-group-item-secondary list-group-item-action text-break"><a href={% url 'Relations:display_unverified' rel %} style="color:black;text-decoration:none;">{{rel}}</a></li>
         {% endfor %}
       </ul>
   </form>
@@ -27,6 +27,9 @@
 
   <div class="container col-md-9">
     <div class="row">
+    <h1 class="text-center">UnVerified</h1>
+<br>
+<br>
     <div class="col-6">
       <h1>Relation: {{ relation }}</h1>
   </div>
@@ -61,9 +64,9 @@
       <tbody>
 	    {% for data in relation_data %}
         <tr>
-          <td><a href="{% url 'Entitys:display' data.0 %}" style="text-decoration:none;">{{ data.0 }}</a></td>
+          <td><a href="{% url 'Entities:display_unverified' data.0 %}" style="text-decoration:none;">{{ data.0 }}</a></td>
 	  <td>{{ data.2 }}</td>
-	  <td><a href="{% url 'Entitys:display' data.1 %}" style="text-decoration:none;">{{ data.1 }}</a></td>
+	  <td><a href="{% url 'Entities:display_unverified' data.1 %}" style="text-decoration:none;">{{ data.1 }}</a></td>
         </tr>
 	    {% endfor %}
       </tbody>
@@ -77,6 +80,6 @@
     </div>
   </div>
 
-<script src="{% static 'UploadData/search.js' %}"></script>
+<script src="{% static 'UploadData/search_unverified.js' %}"></script>
 
 {% endblock content %}

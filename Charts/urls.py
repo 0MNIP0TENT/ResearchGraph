@@ -3,7 +3,11 @@ from . import views
 
 app_name = 'Charts'
 urlpatterns = [
-    path('degree/', views.display_degree_view, name='degree'),
-    path('relation/', views.display_relation_view, name='relation'),
-    path('out-relations/', views.display_out_relations_view, name='out_relations'),
+    path('degree/Verified', views.display_verified_degree_view, name='degree_verified'),
+    path('relation/Verified', views.display_verified_relation_view, name='relation_verified'),
+    path('out-relations/Verified', views.display_verified_out_relations_view, name='out_relations_verified'),
+
+    path('degree/UnVerified', views.display_unverified_degree_view, name='degree_unverified'),
+    path('relation/UnVerified', views.display_unverified_relation_view, name='relation_unverified'),
+    path('out-relations/UnVerified', views.display_unverified_out_relations_view, name='out_relations_unverified'),
 ]

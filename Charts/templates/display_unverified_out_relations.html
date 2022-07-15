@@ -1,15 +1,18 @@
-<!-- Charts/display_verified_charts.html -->
+<!-- Charts/display_unverified_out_relations.html -->
 {% extends '_base.html' %}
 {% load static %}
 {% block content %}
-{% include 'verified_graph_menu.html' %}
+{% include 'unverified_graph_menu.html' %}
+<h1 class="text-center py-2">UnVerified</h1>
 <h1 class="text-center py-2">Make you own Charts</h1>
-<h3>Number of edges(degree) associated with entity</h3>
-{% include 'chart_menu.html' %}
+<div class="row">
+<h3>Number of edges associated with relation</h3>
+</div>
+{% include 'unverified_chart_menu.html' %}
   <form class="d-flex py-3">
     <select name="select_box" class="form-select" id="select_box">
-      {% for d in data %}
-      <option value="{{d}}">{{d}}</option>
+      {% for node in nodes %}
+      <option value="{{node}}">{{node}}</option>
       {% endfor %}
     </select>
     <button class="btn btn-outline-success" id="myBtn" onClick="lick({{data}});" type="button">Search</button>
@@ -20,6 +23,6 @@
 <canvas id="canv"></canvas>
 </div>  
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
-<script src="{% static 'Charts/dcharts.js' %}"></script>
+<script src="{% static 'Charts/out_relations_chart.js' %}"></script>
 
 {% endblock content %}

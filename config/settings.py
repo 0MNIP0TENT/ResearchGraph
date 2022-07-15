@@ -44,7 +44,7 @@ INSTALLED_APPS = [
     'UploadData.apps.UploaddataConfig',
     'DisplayGraph.apps.DisplaygraphConfig',
     'Relations.apps.RelationsConfig',
-    'Entitys.apps.EntitysConfig',
+    'Entities.apps.EntitiesConfig',
     'Types.apps.TypesConfig',
     'Charts.apps.ChartsConfig',
 
@@ -160,9 +160,9 @@ MEDIA_ROOT = BASE_DIR.joinpath('media/')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'home'
-ACCOUNT_LOGOUT_REDIRECT = 'home'
+LOGIN_REDIRECT_URL = 'pages:home'
+LOGOUT_REDIRECT_URL = 'pages:home'
+ACCOUNT_LOGOUT_REDIRECT = 'pages:home'
 
 if int(env('DEBUG')) == 0:
     SECURE_BROWSER_XSS_FILTER = True

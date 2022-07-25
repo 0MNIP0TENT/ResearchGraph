@@ -10,7 +10,7 @@ def display_verified_entitys_view(request,entity=None):
 
     if "GET" == request.method:
 
-        G = h.create_graph('Verified')
+        G = h.create_graph(request,'Verified')
 
         context['entities'] = sorted(list(G.nodes()))
 
@@ -61,7 +61,7 @@ def display_unverified_entitys_view(request,entity=None):
 
     if "GET" == request.method:
 
-        G = h.create_graph('UnVerified')
+        G = h.create_graph(request,'UnVerified')
 
         context['entities'] = sorted(list(G.nodes()))
 

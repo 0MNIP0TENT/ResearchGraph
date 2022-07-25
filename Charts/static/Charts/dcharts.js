@@ -43,7 +43,7 @@ var chart = new Chart("canv", {
   options: {
     title: {
       display: true,
-      text: 'Degree Of Node',
+      text: 'Degree Of Entities',
     },
   scales: {
     yAxes: [{

@@ -1,5 +1,7 @@
 from .models import Triple
 from .models import Verified
+from users.models import UserDataset
+from django.contrib.auth import get_user_model
 from collections import Counter
 import networkx as nx
 import matplotlib
@@ -194,12 +196,17 @@ def fix_relations(col):
 
 
 
-def fix_names(col):
+def fix_names(col,verified):
     # the slashes in the names are converted to hyphens be changed in order
     # to be passed through the url.
     names = list()
     for row in col:
-        name = row.split("|")[1]
+    #    if verified:
+    #        name = row.split("|")[1]
+    #    else:
+    #        name = row.split("|")[0]
+        name = row.split("|")[0]
+
         if '/' in name:
             a = name.replace('/','-')
             names.append(a)
@@ -218,7 +225,7 @@ def get_semantic_types(entity):
         If we know the the full name from the dictionary, we use that.
     """
     temp = entity.replace(",","|")
-    translated = [semantic_types[t.lstrip().lower()].upper() if t.lstrip().lower() in semantic_types else t.lstrip() for t in set(temp.split('|')[2:])]
+    translated = [semantic_types[t.lstrip().lower()].upper() if t.lstrip().lower() in semantic_types else t.lstrip() for t in set(temp.split('|')[1:])]
     return translated 
 
 def get_image_planar(edge_list):
@@ -272,10 +279,10 @@ def get_bar_image(G):
         plt.text(value,index, str(value))
 
     plt.yticks([])
-    plt.ylabel("Nodes")
-    plt.ylabel("# of connections")
+    plt.ylabel("Entities")
+    plt.ylabel("# of times appeared in triple")
     plt.legend(handles, labels)
-    plt.title('Nodes with the most connections')
+    plt.title('Entities in the most connections')
     plt.savefig(buf,format='svg',transparent=True) 
 
     image_bytes = buf.getvalue().decode('utf-8')
@@ -313,9 +320,9 @@ def get_relation_bar(relations):
 
     plt.yticks([])
     plt.ylabel("Relations")
-    plt.ylabel("# of edges")
+    plt.ylabel("# of relations found")
     plt.legend(handles, labels)
-    plt.title('Relations with the most edges')
+    plt.title('Relations that appear in the most triples')
 
     # add value to end of bar
     for index, value in enumerate(y[:5]):
@@ -342,22 +349,27 @@ def get_entity_data(G, entity):
     return G.nodes[entity]['types']
 
 
-def create_graph(dataset):
+def create_graph(request,dataset):
     G = nx.MultiDiGraph()
     if dataset == "Verified":
         colA = [d['entityA'].upper() for d in Verified.objects.values('entityA')] 
         colB = [d['relation'] for d in Verified.objects.values('relation')] 
         colC = [d['entityB'].upper() for d in Verified.objects.values('entityB')] 
 
+        entA = fix_names(colA,True)
+        entB = fix_names(colC,True)
+
     else:
-        colA = [d['entityA'].upper() for d in Triple.objects.values('entityA')] 
-        colB = [d['relation'] for d in Triple.objects.values('relation')] 
-        colC = [d['entityB'].upper() for d in Triple.objects.values('entityB')] 
+        dataset = UserDataset.objects.filter(dataset=request.user)
+        colA = [d['entityA'].upper() for d in dataset.values('entityA')] 
+        colB = [d['relation'] for d in dataset.values('relation')] 
+        colC = [d['entityB'].upper() for d in dataset.values('entityB')] 
 
           
-    entA = fix_names(colA)
+        entA = fix_names(colA,False)
+        entB = fix_names(colC,False)
+
     rel = fix_relations(colB) 
-    entB = fix_names(colC)
 
     # add nodes first to add node attribs
     for data in range(len(entA)):

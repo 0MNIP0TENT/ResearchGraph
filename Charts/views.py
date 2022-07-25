@@ -12,7 +12,7 @@ def charts_verified_view(request):
 
 def display_verified_relation_view(request):
     context = dict()
-    G = h.create_graph('Verified')
+    G = h.create_graph(request,'Verified')
     counter = Counter(sorted(nx.get_edge_attributes(G,'relation').values()))
     context['data']=dict(counter)
 
@@ -23,7 +23,7 @@ def display_verified_relation_view(request):
 def display_verified_degree_view(request):
 
     context = dict()
-    G = h.create_graph('Verified')
+    G = h.create_graph(request,'Verified')
     data = G.degree
     context['data'] = dict(sorted(data))
 
@@ -35,7 +35,7 @@ def display_verified_degree_view(request):
 
 def display_verified_out_relations_view(request):
     context = dict()
-    G = h.create_graph('Verified') 
+    G = h.create_graph(request,'Verified') 
     node_relations = dict()
     relations = list()
     for node in G.nodes():
@@ -59,7 +59,7 @@ def charts_unverified_view(request):
 
 def display_unverified_relation_view(request):
     context = dict()
-    G = h.create_graph('UnVerified')
+    G = h.create_graph(request,'UnVerified')
     counter = Counter(sorted(nx.get_edge_attributes(G,'relation').values()))
     context['data']=dict(counter)
 
@@ -70,7 +70,7 @@ def display_unverified_relation_view(request):
 def display_unverified_degree_view(request):
 
     context = dict()
-    G = h.create_graph('UnVerified')
+    G = h.create_graph(request,'UnVerified')
     data = G.degree
     context['data'] = dict(sorted(data))
 
@@ -82,7 +82,7 @@ def display_unverified_degree_view(request):
 
 def display_unverified_out_relations_view(request):
     context = dict()
-    G = h.create_graph('UnVerified') 
+    G = h.create_graph(request,'UnVerified') 
     node_relations = dict()
     relations = list()
     for node in G.nodes():

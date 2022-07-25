@@ -8,7 +8,7 @@ def display_verified_relations_view(request,relation=None):
 
     context = dict()
 
-    G = h.create_graph('Verified')
+    G = h.create_graph(request,'Verified')
     edge_attribs = nx.get_edge_attributes(G,'relation')
     relation_data = list()
     [relation_data.append([tup[0][0],tup[0][1],tup[1]]) for tup  in set(edge_attribs.items()) if tup[1] == relation]
@@ -31,7 +31,7 @@ def display_unverified_relations_view(request,relation=None):
 
     context = dict()
 
-    G = h.create_graph('UnVerified')
+    G = h.create_graph(request,'UnVerified')
     edge_attribs = nx.get_edge_attributes(G,'relation')
     relation_data = list()
     [relation_data.append([tup[0][0],tup[0][1],tup[1]]) for tup  in set(edge_attribs.items()) if tup[1] == relation]

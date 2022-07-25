@@ -1,6 +1,7 @@
 from django.shortcuts import render
 import networkx as nx
 import openpyxl
+from users.models import UserDataset as dataset 
 
 # Create your views here.
 
@@ -11,7 +12,7 @@ def fix_names(col):
     # to pass them thru the url
     names = list()
     for row in col:
-        name = row.split("|")[1]
+        name = row.split("|")[0]
         if '/' in name:
             a = name.replace('/','-')
             names.append(a)
@@ -52,11 +53,17 @@ def upload_data_view(request):
             excel_data.append(row_data) 
 
         G = nx.MultiDiGraph() 
+
+        datasets = list()
+
         for triple in excel_data:
             colA.append(triple[0])
             colB.append(triple[1])
             colC.append(triple[2])
-    
+            datasets.append(dataset(entityA=triple[0],relation=triple[1],entityB=triple[2],dataset=request.user))
+
+        # ds is initialized in loop 
+        dataset.objects.bulk_create(datasets)
         entA = fix_names(colA)
         entB = fix_names(colC)
         relations = [triple[1] for triple in excel_data]

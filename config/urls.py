@@ -32,4 +32,5 @@ urlpatterns = [
     path('Types/', include('Types.urls')),
     path('Relations/', include('Relations.urls')),
     path('Charts/', include('Charts.urls')),
+    path('Audit/', include('Audit.urls')),
 ]

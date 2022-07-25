@@ -8,7 +8,7 @@ def display_verified_types_view(request,s_type=None):
 
     context = dict()
 
-    G = h.create_graph('Verified')
+    G = h.create_graph(request,'Verified')
     node_attribs = nx.get_node_attributes(G,'types') 
 
     s_types = list()
@@ -38,7 +38,7 @@ def display_unverified_types_view(request,s_type=None):
 
     context = dict()
 
-    G = h.create_graph('UnVerified')
+    G = h.create_graph(request,'UnVerified')
     node_attribs = nx.get_node_attributes(G,'types') 
 
     s_types = list()

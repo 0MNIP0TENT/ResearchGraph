@@ -40,7 +40,7 @@ chart = new Chart(document.getElementById("canv"), {
     options: {
       title: {
         display: true,
-        text: 'Outbound Relations'
+        text: 'Out Edge Relations'
       }
     }
 });

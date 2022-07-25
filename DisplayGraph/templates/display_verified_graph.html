@@ -5,10 +5,10 @@
 {% include 'verified_graph_menu.html' %}
 <h1 class="text-center py-2">Verified</h1>
 <h1>Info: {{ info }}</h1>
-<div class="container-fluid">
+<div class="row">
   {{ bar | safe }}
 </div>
-<div class="container-fluid">
+<div class="row">
   {{ relation_bar | safe }}
-<div class="container-fluid">
+</div>
 {% endblock content %}

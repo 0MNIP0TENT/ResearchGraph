@@ -6,7 +6,7 @@ import networkx as nx
 def display_verified_graph_view(request):
     if "GET" == request.method:
         context = dict()
-        G = h.create_graph('Verified')
+        G = h.create_graph(request,'Verified')
         context['info'] = nx.info(G)
         context['relation_bar'] = h.get_relation_bar(nx.get_edge_attributes(G,'relation'))
         context['bar'] = h.get_bar_image(G)
@@ -16,7 +16,7 @@ def display_verified_graph_view(request):
 def display_unverified_graph_view(request):
     if "GET" == request.method:
         context = dict()
-        G = h.create_graph('UnVerified')
+        G = h.create_graph(request,'UnVerified')
         context['info'] = nx.info(G)
         context['relation_bar'] = h.get_relation_bar(nx.get_edge_attributes(G,'relation'))
         context['bar'] = h.get_bar_image(G)

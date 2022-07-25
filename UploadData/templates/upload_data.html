@@ -1,28 +1,28 @@
 
 <!-- templates/upload_data.html -->
 {% extends '_base.html' %}
-{% block title %}Research Graph{% endblock title %}
-{% block content %}
-<div class="row">
+{% block title %}Upload New Dataset{% endblock title %}
+{% block content %} 
+<div class="container">
   <form action="{% url 'UploadData:upload' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
-    <input type="file"
+<div class="mb-3">
+  <label for="formFile" class="form-label">Input a excel file with the correct format</label>
+  <input class="form-control" type="file" id="formFile"
       title="Upload excel file"
       name="excel_file"
       style="border: 1px solid black; padding: 5px;"
       required="required">
-      <p>
-        <input type="submit" value="Upload" style="border: 1px solid green; padding:5px; border-radius: 2px; cursor: pointer;">
+</div>
+    <input type="submit" value="Upload" style="border: 1px solid green; padding:5px; border-radius: 2px; cursor: pointer;">
   </form>
 
-     <p></p>
-    <hr>
 
+</div>
      {% for row in excel_data %}
         {% for cell in row %}
                 {{ cell }}&nbsp;&nbsp;
             {% endfor %}
             <br>
         {% endfor %}
-</div>
 {% endblock content %}

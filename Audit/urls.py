@@ -1,8 +1,9 @@
 from django.urls import path
-from .views import AuditList, AuditUpdate
+from .views import EntityList, EntityUpdate
 
 app_name = 'Audit'
 urlpatterns = [
-    path('list/', AuditList.as_view(), name='audit_list'),
-    path('<pk>/update/', AuditUpdate.as_view(), name='update_list'),
+    path('list/', AuditHome.as_view(), name='audit_home'),
+    path('list/', EntityList.as_view(), name='entity_list'),
+    path('Entity/<pk>/update/', EntityUpdate.as_view(), name='entity_update_list'),
 ]

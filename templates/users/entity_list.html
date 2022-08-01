@@ -10,10 +10,7 @@
   <tbody>
     <tr>
     {% for object in object_list %}
-    <td><a href="{% url 'Audit:update_list' object.pk %}">{{ object.entityA }}</td>
-    </tr>
-    <tr>
-      <td><a href="{% url 'Audit:update_list' object.pk %}">{{ object.entityB }}</td>
+    <td><a href="{% url 'Audit:entity_update_list' object.pk %}">{{ object.name }}</td>
     </tr>
     {% endfor %}
   </tbody>

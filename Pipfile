@@ -12,6 +12,7 @@ matplotlib = "*"
 networkx = "*"
 scipy = "*"
 django-environ = "*"
+pynvim = "*"
 
 [dev-packages]
 

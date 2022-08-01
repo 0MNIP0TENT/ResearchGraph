@@ -1,4 +1,4 @@
-from .models import Triple
+from .models import Triple, Relation, Entity, SemanticType
 from .models import Verified
 from users.models import UserDataset
 from django.contrib.auth import get_user_model
@@ -360,10 +360,14 @@ def create_graph(request,dataset):
         entB = fix_names(colC,True)
 
     else:
-        dataset = UserDataset.objects.filter(dataset=request.user)
-        colA = [d['entityA'].upper() for d in dataset.values('entityA')] 
-        colB = [d['relation'] for d in dataset.values('relation')] 
-        colC = [d['entityB'].upper() for d in dataset.values('entityB')] 
+    #    dataset = UserDataset.objects.filter(dataset=request.user)
+    #    colA = [d['entityA'].upper() for d in dataset.values('entityA')] 
+    #    colB = [d['relation'] for d in dataset.values('relation')] 
+    #    colC = [d['entityB'].upper() for d in dataset.values('entityB')] 
+        triples = Triple.objects.all()
+        colA = [str(d['entityA']) for d in triples.values('entityA')] 
+        colB = [str(d['relation']) for d in triples.values('relation')] 
+        colC = [str(d['entityB']) for d in triples.values('entityB')] 
 
           
         entA = fix_names(colA,False)

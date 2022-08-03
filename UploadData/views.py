@@ -7,28 +7,10 @@ from users.models import Entity, SemanticType, Relation, Triple
 
 context = {}
 
-def fix_names(col):
-    # some of the entity names must be changed in order
-    # to pass them thru the url
-    names = list()
-    for row in col:
-        name = row.split("|")[0]
-        if '/' in name:
-            a = name.replace('/','-')
-            names.append(a)
-
-        elif name == '':
-            name = 'NO NAME'
-            names.append(name)
-
-        else:
-            names.append(name)
-
-    return names
-
 def upload_data_view(request):
     if "GET" == request.method:
        return render(request,'upload_data.html',context)
+    
     else:
         excel_file = request.FILES["excel_file"]
 
@@ -41,115 +23,135 @@ def upload_data_view(request):
 
         excel_data = list()
 
-        semantic_types = list()
-        entities = list()
-        relations = list()
-        triples = list()
-
         # iterating over the rows and
         # getting value from each cell in row
+        # excel_data is list of lists containing the triples
         for row in worksheet.iter_rows():
             row_data = list()
             for cell in row:
                 row_data.append(str(cell.value))
             excel_data.append(row_data) 
 
-        G = nx.MultiDiGraph() 
 
         # create and save semantic type objects first, because they must be added to entities
-        typesA = list()
-        typesB = list()
-        typesAll = list()
+        semantic_types = list()
 
-        entity_type_mapA = {}
-        entity_type_mapB = {}
-
-
+        # going through excel triples adding semantic types to list
         for triple in excel_data:
-            type_list = triple[0].split("|")[1:]
+            type_list = triple[0].split("|")[1:] + triple[2].split("|")[1:]
             for t in type_list: 
-                typesA.append(t)
-
-            entity_type_mapA[triple[0].split("|")[0]] = type_list
-
-        for triple in excel_data:
-            type_list = triple[2].split("|")[1:]
-            for t in type_list: 
-                typesB.append(t)
-
-            entity_type_mapB[triple[2].split("|")[0]] = type_list
-
-        # might need to be list form beginning
-        akeys = list(entity_type_mapA.keys())
-        bkeys = list(entity_type_mapB.keys())
-        allkeys = [val for pair in zip(akeys,bkeys) for val in pair]
-
-        avals = list(entity_type_mapA.values())
-        bvals = list(entity_type_mapB.values())
-        allvals = [val for pair in zip(avals,bvals) for val in pair]
-
-        alldatadict = {k:v for k,v in zip(allkeys,allvals)}
+                semantic_types.append(t)
 
 
-        print('zipped', list(zip(akeys,bkeys)))
-        print(alldatadict)
+        # removing duplicates if they exist in semantic_types
+        types_no_dupes = list()
+        [types_no_dupes.append(t) for t in semantic_types if t not in types_no_dupes]
 
-        typesAll = [val for pair in zip(typesA,typesB) for val in pair]
+        # create list of semantic_type_objects 
+        semantic_type_objects = list()
+        for t in types_no_dupes:
+            semantic_type_objects.append(SemanticType(user=request.user,name=t))
 
-        # remove duplicates if they exist
-        no_dupe_types = list()
-        [no_dupe_types.append(t) for t in typesAll if t not in no_dupe_types]
+        # create semantic type object 
+        SemanticType.objects.bulk_create(semantic_type_objects)
 
-        # create semantic types in database
-        for t in no_dupe_types:
-            semantic_types.append(SemanticType(user=request.user,name=t))
-
-        
-        SemanticType.objects.bulk_create(semantic_types)
+        # getting the objects directly from database
         semantic_type_objects = SemanticType.objects.all()
-       
+
+        # repeating for entities
+
+        entities = list()
+        entities_no_dupes = list()
+        entity_objects = list()
+
+        # adding all entities from excel triples
         for triple in excel_data:
-            entities.append(Entity(user=request.user,name=triple[0].split("|")[0]))
-            relations.append(Relation(user=request.user,name=triple[1]))
-            entities.append(Entity(user=request.user,name=triple[2].split("|")[0]))
+            entities.append(triple[0].split("|")[0])
+            entities.append(triple[2].split("|")[0])
+        
+        # removing duplicates if they exist
+        [entities_no_dupes.append(ent) for ent in entities if ent not in entities_no_dupes]
+        print(entities_no_dupes)
+
+        # creating a list of entity objects
+        for ent in entities_no_dupes:
+            entity_objects.append(Entity(user=request.user,name=ent))
 
         # save entitys before adding semantic types 
-        Entity.objects.bulk_create(entities)
+        Entity.objects.bulk_create(entity_objects)
 
-        # adding semantic_types to entities in database
-        entity_objects = Entity.objects.all()
+        # repeat with relations
+
+        relations = list()
+        relations_no_dupes = list()
+        relation_objects = list()
+        for triple in excel_data:
+            relations.append(triple[1])
+
+        [relations_no_dupes.append(rel) for rel in relations if rel not in relations_no_dupes]
+
+        # creating a list of relation objects
+        for rel in relations_no_dupes:
+            relation_objects.append(Relation(user=request.user,name=rel))
+
+        # save relations in database 
+        Relation.objects.bulk_create(relation_objects)
+
+
+        # initializing dict with entities as keys and a empty list as a the value
+        entity_type_dict = { ent:list() for ent in entities_no_dupes }
+        
+        # map the entities to its types 
+        for ent in entity_type_dict:
+            for triple in excel_data:
+                if ent == triple[0].split("|")[0]:
+                    for t in triple[0].split("|")[1:]:
+                        if t not in entity_type_dict[ent]:
+                            entity_type_dict[ent].append(t)
+
+                
+                if ent == triple[2].split("|")[0]:
+                    for t in triple[2].split("|")[1:]:
+                        if t not in entity_type_dict[ent]:
+                            entity_type_dict[ent].append(t)
+       
+
+        # getting the filtered database objects 
+        entity_objects = Entity.objects.filter(user=request.user)
+        semantic_type_objects = SemanticType.objects.filter(user=request.user)
 
         for n in range(len(entity_objects)):
             entity_objects[n].semantic_type.set = semantic_type_objects
 
        # adding the specific types to the entities
+        print(entity_type_dict)
         for ent in entity_objects:
-            for t in alldatadict[ent.name]:
-                objs = SemanticType.objects.filter(name=str(t))
+            for t in entity_type_dict[ent.name]:
+                objs = SemanticType.objects.filter(user=request.user,name=str(t))
                 for obj in objs:
                     ent.semantic_type.add(obj)
 
 
-        Relation.objects.bulk_create(relations)
-
         # create the triples
-        for n in range(len(Relation.objects.all())):
-            triples.append(Triple(user=request.user,entityA=Entity.objects.all()[n],entityB=Entity.objects.all()[n+1], relation=Relation.objects.all()[n]))
+        triples = list()
+        triples_no_dupes = list()
+        triple_objects = list()
+        for triple in excel_data:
+            triples.append((triple[0].split("|")[0], triple[1], triple[2].split("|")[0]))
 
-        Triple.objects.bulk_create(triples)
+        # remove duplicate triples if they exist
+        [triples_no_dupes.append(trip) for trip in triples if trip not in triples_no_dupes]
+
+        # create a list of triple objects
+        relation_objects = Relation.objects.filter(user=request.user)
+        for trip in triples_no_dupes: 
+            triple_objects.append(Triple(user=request.user,entityA=entity_objects.get(name=trip[0]),relation=relation_objects.get(name=trip[1]),entityB=entity_objects.get(name=trip[2])))
+
+
+        Triple.objects.bulk_create(triple_objects)
         #[triples.append(Triple(user=request.user,entityA=trip[0],relation=trip[1],entityB=trip[2]) for trip in zip())]
 
 
-        al = list()
-      #  for data in range(len(entA)):
-      #      al.append((entA[data],entB[data],relations[data]))
-
-        G.add_edges_from(al)
-
-        entitys = list(G.nodes())
-        
         context["excel_data"] = excel_data 
-        context["entitys"] = entitys 
-        context["G"] = G 
         
         return render(request, 'upload_data.html', context)

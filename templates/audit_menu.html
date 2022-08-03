@@ -1,0 +1,19 @@
+<!-- templates/audit_menu.html -->
+<ul class="nav nav-pills">
+  <!-- <li class="nav-item">
+    <a class="nav-link" aria-current="page" href="{% url 'UploadData:upload' %}">UploadData</a>
+  </li> -->
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'Audit:entity_list'%}" style="color:black;text-decoration:none;">Entities</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'Audit:relation_list'%}" style="color:black;text-decoration:none;">Relations</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'Audit:type_list'%}" style="color:black;text-decoration:none;">Types</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" href="{% url 'Audit:triple_list'%}" style="color:black;text-decoration:none;">Triples</a>
+  </li>
+</ul>
+

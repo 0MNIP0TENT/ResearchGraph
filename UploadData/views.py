@@ -56,8 +56,6 @@ def upload_data_view(request):
 
         G = nx.MultiDiGraph() 
 
-        datasets = list()
-
         # create and save semantic type objects first, because they must be added to entities
         typesA = list()
         typesB = list()
@@ -66,7 +64,6 @@ def upload_data_view(request):
         entity_type_mapA = {}
         entity_type_mapB = {}
 
-        entity_type_map = {}
 
         for triple in excel_data:
             type_list = triple[0].split("|")[1:]
@@ -82,6 +79,7 @@ def upload_data_view(request):
 
             entity_type_mapB[triple[2].split("|")[0]] = type_list
 
+        # might need to be list form beginning
         akeys = list(entity_type_mapA.keys())
         bkeys = list(entity_type_mapB.keys())
         allkeys = [val for pair in zip(akeys,bkeys) for val in pair]
@@ -90,10 +88,10 @@ def upload_data_view(request):
         bvals = list(entity_type_mapB.values())
         allvals = [val for pair in zip(avals,bvals) for val in pair]
 
-        alldata = [val for pair in zip(allkeys,allvals) for val in pair]
         alldatadict = {k:v for k,v in zip(allkeys,allvals)}
 
 
+        print('zipped', list(zip(akeys,bkeys)))
         print(alldatadict)
 
         typesAll = [val for pair in zip(typesA,typesB) for val in pair]

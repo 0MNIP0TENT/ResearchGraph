@@ -2,16 +2,23 @@
 {% load static %}
 {% block content %}
 {% include 'audit_menu.html' %}
+<h3>Edit Entities</h3>
 <table class="table table-striped table-hover">
   <thead>
     <tr>
       <th>Entites:</th>
+      <th>Types:</th>
     </tr>
       </thead>
   <tbody>
     <tr>
     {% for object in object_list %}
-    <td><a href="{% url 'Audit:entity_update_list' object.pk %}">{{ object.name }}</td>
+    <td>{{ object.name }}</td>
+    <td>{% for object in object.semantic_type.all %}
+        {{object.name}}
+    {% endfor %}</td>
+    <td><a href="{% url 'Audit:entity_update_list' object.pk %}" class="btn btn-success role="button">Update</td>
+    <td><a href="{% url 'Audit:entity_delete' object.pk %}" class="btn btn-danger role="button">Delete</td>
     </tr>
     {% endfor %}
   </tbody>

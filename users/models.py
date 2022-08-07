@@ -8,7 +8,7 @@ class CustomUser(AbstractUser):
 
 class SemanticType(models.Model):
     # DO_NOTHING makes so if a Entity is deleted the semantic types will remain
-    user = models.ForeignKey(CustomUser,on_delete=models.DO_NOTHING,default='')
+    user = models.ForeignKey(CustomUser,on_delete=models.CASCADE,default='')
     name = models.CharField(max_length=255)
 
     def __str__(self):
@@ -16,7 +16,7 @@ class SemanticType(models.Model):
 
 class Entity(models.Model):
     user = models.ForeignKey(CustomUser,on_delete=models.CASCADE,default='')
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255,null=True)
     semantic_type = models.ManyToManyField(SemanticType)
 
     def __str__(self):
@@ -31,9 +31,9 @@ class Relation(models.Model):
 
 class Triple(models.Model):
     user = models.ForeignKey(CustomUser,on_delete=models.CASCADE)
-    entityA = models.ForeignKey(Entity,on_delete=models.DO_NOTHING,related_name='entA')
-    entityB = models.ForeignKey(Entity,on_delete=models.DO_NOTHING,related_name='entB')
-    relation = models.ForeignKey(Relation,on_delete=models.DO_NOTHING,related_name='rel')
+    entityA = models.ForeignKey(Entity,on_delete=models.SET_NULL,null=True,related_name='entA')
+    entityB = models.ForeignKey(Entity,on_delete=models.SET_NULL,null=True,related_name='entB')
+    relation = models.ForeignKey(Relation,on_delete=models.SET_NULL,null=True,related_name='rel')
 
     def __str__(self):
         return '{} --> {} --> {}'.format(self.entityA,self.relation,self.entityB)

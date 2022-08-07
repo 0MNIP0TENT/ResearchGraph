@@ -1,7 +1,5 @@
-from .models import Triple, Relation, Entity, SemanticType
 from .models import Verified
-from users.models import UserDataset
-from django.contrib.auth import get_user_model
+from users.models import Triple,Entity,SemanticType
 from collections import Counter
 import networkx as nx
 import matplotlib
@@ -196,15 +194,11 @@ def fix_relations(col):
 
 
 
-def fix_names(col,verified):
+def fix_names(col):
     # the slashes in the names are converted to hyphens be changed in order
     # to be passed through the url.
     names = list()
     for row in col:
-    #    if verified:
-    #        name = row.split("|")[1]
-    #    else:
-    #        name = row.split("|")[0]
         name = row.split("|")[0]
 
         if '/' in name:
@@ -227,6 +221,22 @@ def get_semantic_types(entity):
     temp = entity.replace(",","|")
     translated = [semantic_types[t.lstrip().lower()].upper() if t.lstrip().lower() in semantic_types else t.lstrip() for t in set(temp.split('|')[1:])]
     return translated 
+
+def get_semantic_types_unverified(types):
+    """
+        If we know the the full name from the dictionary, we use that.
+    """
+    temp = types.split('|') 
+    translated = list()
+
+    for t in temp:
+        if t in semantic_types:
+            translated.append(semantic_types[t])
+        else:
+            translated.append(t)
+
+    return translated
+
 
 def get_image_planar(edge_list):
     buf = io.BytesIO()
@@ -356,32 +366,30 @@ def create_graph(request,dataset):
         colB = [d['relation'] for d in Verified.objects.values('relation')] 
         colC = [d['entityB'].upper() for d in Verified.objects.values('entityB')] 
 
-        entA = fix_names(colA,True)
-        entB = fix_names(colC,True)
+        entA = fix_names(colA)
+        entB = fix_names(colC)        
+
+        rel = fix_relations(colB) 
+
+        # add nodes first to add node attribs
+        for data in range(len(entA)):
+            G.add_node(entA[data],types=get_semantic_types(colA[data])) 
+            G.add_node(entB[data],types=get_semantic_types(colC[data])) 
+
+        for data in range(len(entA)):
+            G.add_edge(entA[data],entB[data],relation=rel[data])
+
 
     else:
-    #    dataset = UserDataset.objects.filter(dataset=request.user)
-    #    colA = [d['entityA'].upper() for d in dataset.values('entityA')] 
-    #    colB = [d['relation'] for d in dataset.values('relation')] 
-    #    colC = [d['entityB'].upper() for d in dataset.values('entityB')] 
         triples = Triple.objects.all()
-        colA = [str(d['entityA']) for d in triples.values('entityA')] 
-        colB = [str(d['relation']) for d in triples.values('relation')] 
-        colC = [str(d['entityB']) for d in triples.values('entityB')] 
+        # add nodes first to add node attribs
+        for ent in Entity.objects.filter(user=request.user):
+            types = [e.name for e in ent.semantic_type.all()]
+            types = "|".join(types)
+            G.add_node(ent.name,types=get_semantic_types_unverified(types))
 
-          
-        entA = fix_names(colA,False)
-        entB = fix_names(colC,False)
+        for trip in triples.filter(user=request.user):
+            G.add_edge(str(trip.entityA),str(trip.entityB),relation=str(trip.relation))
 
-    rel = fix_relations(colB) 
-
-    # add nodes first to add node attribs
-    for data in range(len(entA)):
-        G.add_node(entA[data],types=get_semantic_types(colA[data])) 
-        G.add_node(entB[data],types=get_semantic_types(colC[data])) 
-
-    for data in range(len(entA)):
-        G.add_edge(entA[data],entB[data],relation=rel[data])
 
     return G
-

@@ -2,10 +2,8 @@ function getEntityValue(check){
   // Selecting the input element and get its value 
   var inputVal = document.getElementById("myInput").value;
     
-    upperCase = inputVal.toUpperCase(); 
-
-    if (check.includes(upperCase)) {
-      window.location.replace("/Entities/UnVerified/"+upperCase);
+    if (check.includes(inputVal)) {
+      window.location.replace("/Entities/UnVerified/"+inputVal);
     }
     else {
       alert('You Entered an invalid input.');
@@ -15,9 +13,9 @@ function getEntityValue(check){
 function getRelationValue(check){
   // Selecting the input element and get its value 
   var inputVal = document.getElementById("myInput").value;
-  upperCase = inputVal.toUpperCase(); 
+
     if (check.includes(upperCase)) {
-      window.location.replace("/Relations/UnVerified/"+upperCase);
+      window.location.replace("/Relations/UnVerified/"+inputVal);
     }
     else {
       alert('You Entered an invalid input.');

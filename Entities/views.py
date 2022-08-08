@@ -62,8 +62,9 @@ def display_unverified_entitys_view(request,entity=None):
     if "GET" == request.method:
 
         G = h.create_graph(request,'UnVerified')
-
-        context['entities'] = sorted(list(G.nodes()))
+        # remove None from user choice list
+        entities = sorted(list(G.nodes()))
+        context['entities'] = [ent for ent in entities if ent != 'None'] 
 
         in_edges = G.in_edges(entity,data=True)
         out_edges = G.out_edges(entity,data=True)

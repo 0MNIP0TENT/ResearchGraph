@@ -384,9 +384,14 @@ def create_graph(request,dataset):
         triples = Triple.objects.all()
         # add nodes first to add node attribs
         for ent in Entity.objects.filter(user=request.user):
+
             types = [e.name for e in ent.semantic_type.all()]
-            types = "|".join(types)
-            G.add_node(ent.name,types=get_semantic_types_unverified(types))
+
+            if not types:
+                G.add_node(ent.name,types=['None'])
+            else:
+                types = "|".join(types)
+                G.add_node(ent.name,types=get_semantic_types_unverified(types))
 
         for trip in triples.filter(user=request.user):
             G.add_edge(str(trip.entityA),str(trip.entityB),relation=str(trip.relation))

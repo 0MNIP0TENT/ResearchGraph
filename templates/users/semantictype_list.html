@@ -1,17 +1,28 @@
 {% extends '_base.html' %}
 {% load static %}
+{% load crispy_forms_tags %}
 {% block content %}
 {% include 'audit_menu.html' %}
-<h3>Edit Semantic Types</h3>
-<table class="table table-striped table-hover">
+<div class="container">
+<h3 class="text-center">Edit Semantic Types</h3>
+    <form method="GET">
+      <label>Filter with a Type name.</label>
+      {% csrf_token %}
+      {{ filter.form | crispy }}
+      <br/>
+      <input style="inline-block" type="submit" class="btn btn-primary" value="Search"> 
+<a href="{% url 'Audit:type_create' %}" class="btn btn-primary" role="button">Create Type</a>
+<table class="table table-striped table-hover" style="table-layout: fixed; word-wrap: break-word;">
   <thead>
     <tr>
+      <th>#</th>
       <th>Semantic Types:</th>
     </tr>
       </thead>
   <tbody>
     <tr>
-    {% for object in object_list %}
+    {% for object in filter.qs %}
+    <td>{{ forloop.counter }}</td>
     <td>{{ object.name }}</td>
     <td><a href="{% url 'Audit:type_update_list' object.pk %}" class="btn btn-success" role="button">Rename</td>
     <td><a href="{% url 'Audit:type_delete' object.pk %}" class="btn btn-danger" role="button">Delete</td>
@@ -19,5 +30,5 @@
     {% endfor %}
   </tbody>
 </table>
-
+</div>
 {% endblock content %}

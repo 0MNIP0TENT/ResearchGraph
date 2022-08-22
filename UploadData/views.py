@@ -1,6 +1,6 @@
 from django.shortcuts import render
-import networkx as nx
 import openpyxl
+from UploadData import helper_methods as h
 from users.models import Entity, SemanticType, Relation, Triple 
 
 # Create your views here.
@@ -68,17 +68,20 @@ def upload_data_view(request):
         for triple in excel_data:
             entities.append(triple[0].split("|")[0])
             entities.append(triple[2].split("|")[0])
+
         
         # removing duplicates if they exist
         [entities_no_dupes.append(ent) for ent in entities if ent not in entities_no_dupes]
-        print(entities_no_dupes)
 
-        # creating a list of entity objects
+        # cleaning entity names so that they may be passed in the url
+        entities_no_dupes = h.fix_names(entities_no_dupes)
+
+        # creating a list of entity objects 
         for ent in entities_no_dupes:
             entity_objects.append(Entity(user=request.user,name=ent))
 
         # save entitys before adding semantic types 
-        Entity.objects.bulk_create(entity_objects)
+        just_saved = Entity.objects.bulk_create(entity_objects)
 
         # repeat with relations
 
@@ -90,6 +93,9 @@ def upload_data_view(request):
 
         [relations_no_dupes.append(rel) for rel in relations if rel not in relations_no_dupes]
 
+        # cleaning relation names so that they may be passed in the url
+        relations_no_dupes = h.fix_relations(relations_no_dupes)
+
         # creating a list of relation objects
         for rel in relations_no_dupes:
             relation_objects.append(Relation(user=request.user,name=rel))
@@ -97,10 +103,9 @@ def upload_data_view(request):
         # save relations in database 
         Relation.objects.bulk_create(relation_objects)
 
-
         # initializing dict with entities as keys and a empty list as a the value
         entity_type_dict = { ent:list() for ent in entities_no_dupes }
-        
+
         # map the entities to its types 
         for ent in entity_type_dict:
             for triple in excel_data:
@@ -120,12 +125,13 @@ def upload_data_view(request):
         entity_objects = Entity.objects.filter(user=request.user)
         semantic_type_objects = SemanticType.objects.filter(user=request.user)
 
-        for n in range(len(entity_objects)):
+        for n in range(len(just_saved)):
             entity_objects[n].semantic_type.set = semantic_type_objects
 
        # adding the specific types to the entities
-        print(entity_type_dict)
         for ent in entity_objects:
+            if ent.name not in entity_type_dict:
+                continue
             for t in entity_type_dict[ent.name]:
                 objs = SemanticType.objects.filter(user=request.user,name=str(t))
                 for obj in objs:
@@ -136,8 +142,9 @@ def upload_data_view(request):
         triples = list()
         triples_no_dupes = list()
         triple_objects = list()
+
         for triple in excel_data:
-            triples.append((triple[0].split("|")[0], triple[1], triple[2].split("|")[0]))
+            triples.append((h.fix_name(triple[0].split("|")[0]), h.fix_name(triple[1]), h.fix_name(triple[2].split("|")[0])))
 
         # remove duplicate triples if they exist
         [triples_no_dupes.append(trip) for trip in triples if trip not in triples_no_dupes]
@@ -146,7 +153,6 @@ def upload_data_view(request):
         relation_objects = Relation.objects.filter(user=request.user)
         for trip in triples_no_dupes: 
             triple_objects.append(Triple(user=request.user,entityA=entity_objects.get(name=trip[0]),relation=relation_objects.get(name=trip[1]),entityB=entity_objects.get(name=trip[2])))
-
 
         Triple.objects.bulk_create(triple_objects)
         #[triples.append(Triple(user=request.user,entityA=trip[0],relation=trip[1],entityB=trip[2]) for trip in zip())]

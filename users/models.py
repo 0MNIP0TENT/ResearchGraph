@@ -14,10 +14,15 @@ class SemanticType(models.Model):
     def __str__(self):
         return self.name 
 
+    class Meta:
+        ordering = ('name',)
+
 class Entity(models.Model):
     user = models.ForeignKey(CustomUser,on_delete=models.CASCADE,default='')
     name = models.CharField(max_length=255,null=True)
-    semantic_type = models.ManyToManyField(SemanticType)
+    semantic_type = models.ManyToManyField(SemanticType,blank=True)
+    class Meta:
+        ordering = ('name',)
 
     def __str__(self):
         return self.name 
@@ -25,6 +30,9 @@ class Entity(models.Model):
 class Relation(models.Model):
     user = models.ForeignKey(CustomUser,on_delete=models.CASCADE,default='')
     name = models.CharField(max_length=255)
+
+    class Meta:
+        ordering = ('name',)
 
     def __str__(self):
         return self.name 
@@ -35,9 +43,11 @@ class Triple(models.Model):
     entityB = models.ForeignKey(Entity,on_delete=models.SET_NULL,null=True,related_name='entB')
     relation = models.ForeignKey(Relation,on_delete=models.SET_NULL,null=True,related_name='rel')
 
+    class Meta:
+        ordering = ('relation',)
+
     def __str__(self):
         return '{} --> {} --> {}'.format(self.entityA,self.relation,self.entityB)
-
 
 class UserDataset(models.Model):
     dataset = models.ForeignKey(CustomUser,on_delete=models.CASCADE)

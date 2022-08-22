@@ -13,6 +13,7 @@ networkx = "*"
 scipy = "*"
 django-environ = "*"
 pynvim = "*"
+django-filter = "*"
 
 [dev-packages]
 

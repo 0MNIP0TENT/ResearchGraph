@@ -5,15 +5,13 @@
 {% block content %}
 {% include 'verified_graph_menu.html' %}
 
-<div class="row col-lg-3">
 <form class="d-flex">
   <input class="form-control me-2" type="text" id="myInput" placeholder="Enter a entity" aria-label="Search">
   <button class="btn btn-outline-success" onClick="getEntityValue({{entities}});" id="myBtn" type="button">Search</button>
-  </form>
-</div>
+</form>
 
-  <div class="row">
-    <div class="container col-md-3">
+<div class="row">
+  <div class="col-md-3">
     <form>
       <label for="entitys">Entities:</label>
       <ul class="list-group">
@@ -21,58 +19,49 @@
         <li class="list-group-item list-group-item-secondary list-group-item-action text-break"><a href={% url 'Entities:display_verified' ent %} style="color:black;text-decoration:none;">{{ent}}</a></li>
         {% endfor %}
       </ul>
-  </form>
+    </form>
   </div>
 
-  <div class="container col-md-9">
+  <div class="col-md-9 order-1">
+    <h1 class="text-center">Verified Entities</h1>
+<hr>
     <div class="row">
-      <div class="container">
-        <h1 class="text-center">Verified</h1>
-        <h1>Entities: {{ entity }} </h1>
+      <div class="col-6">
+        <h3>Entity: {{ entity }} </h3>
+      </div>
+
+      <div class="col-6">
+        <h3>Edges: {{ unique_degree }}</h3>
       </div>
     </div>
 
 <hr>
-
-    <div class="row">
-      <h3>Edges: {{ unique_degree }}</h3>
-    </div>
-
-<hr>
-
    <div class="row">
-     <div class="col-md-6">
+     <div class="col-6">
        <h3 style=>Relations:</h3>
        {% for rel in relation_set %}
        <h5><a href="{% url 'Relations:display_verified' rel %}" style="text-decoration:none;">{{ rel }}</a></h5>
        {% endfor %}
      </div>
 
-   <div class="col-md-6">
+   <div class="col-6">
      <h3>Semantic Types:</h3>
      {% for type in types %}
      <h5><a href="{% url 'Types:display_verified' type %}" style="text-decoration:none;">{{ type }}</a></h5>
      {% endfor %}
    </div>
-</div>
+ </div>
 
 <hr>
 
   {% if draw_out_edges %}
-  <div class=row>
-    <div class="col-md-12">
       <h3>Connected To:</h3>
-      <div class="container offset-lg-2">
+      <div class="offset-lg-2">
         {{ draw_out_edges | safe }}
       </div>
-      </div>
-    </div>
   {% endif %}
 
 <hr>
-
-  <div class=row>
-    <div class="col-md-12">
      <table class="table table-striped table-hover">
       <thead>
         <tr>
@@ -95,26 +84,18 @@
 	    {% endfor %}
       </tbody>
     </table>
-    </div>
-  </div>
 
 <hr>
 
   {% if draw_in_edges %}
-  <div class=row>
-    <div class="col-md-12">
       <h3>Connected From:</h3>
-      <div class="container offset-lg-2">
-      {{ draw_in_edges | safe }}>
-      </div>
+      <div class="offset-lg-2">
+      {{ draw_in_edges | safe }}
     </div>
-   </div>
 {% endif %}
 
 <hr>
 
-<div class=row>
-    <div >
      <table class="table table-striped able-hover">
       <thead>
         <tr>
@@ -138,11 +119,8 @@
       </tbody>
     </table>
 
-    </div>
-  </div>
 
-      </div>
-    </div>
+  </div>
   </div>
   <script src="{% static 'UploadData/search_verified.js' %}"></script>
 

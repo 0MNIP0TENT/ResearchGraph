@@ -193,6 +193,21 @@ def fix_relations(col):
     return relations
 
 
+def fix_name(name):
+    # the slashes in the names are converted to hyphens be changed in order
+    # to be passed through the url.
+
+    if '/' in name:
+        name = name.replace('/','-')
+
+    if '_' in name:
+        name = name.replace('_',' ')
+
+    elif name == '':
+        name = 'NO NAME'
+
+
+    return name
 
 def fix_names(col):
     # the slashes in the names are converted to hyphens be changed in order
@@ -202,15 +217,15 @@ def fix_names(col):
         name = row.split("|")[0]
 
         if '/' in name:
-            a = name.replace('/','-')
-            names.append(a)
+            name = name.replace('/','-')
+
+        if '_' in name:
+            name = name.replace('_',' ')
 
         elif name == '':
             name = 'NO NAME'
-            names.append(name)
 
-        else:
-            names.append(name)
+        names.append(name)
 
     return names
 

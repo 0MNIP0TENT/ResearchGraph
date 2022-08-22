@@ -3,13 +3,10 @@
 {% block content %}
 {% load crispy_forms_tags %}
 {% include 'audit_menu.html' %}
-<div class="container">
-  <br>
 <form method="post"> 
     {% csrf_token %} 
     {{ form | crispy }} 
     <br/>
-    <input class="btn btn-success" type="submit" value="Save"> 
+    <input type="submit" value="Save"> 
 </form> 
-<div>
 {% endblock content %}

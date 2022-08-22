@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'Audit.apps.AuditConfig',
 
     # third party
+    'django_filters',
     'crispy_forms',
     'allauth',
     'allauth.account',

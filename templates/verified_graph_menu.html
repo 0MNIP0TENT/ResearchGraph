@@ -1,7 +1,6 @@
+<div class="row">
+<div class="container col-6">
 <ul class="nav nav-pills">
-  <!-- <li class="nav-item">
-    <a class="nav-link" aria-current="page" href="{% url 'UploadData:upload' %}">UploadData</a>
-  </li> -->
   <li class="nav-item">
     <a class="nav-link" href="{% url 'DisplayGraph:display_verified'%}" style="color:black;text-decoration:none;">Info</a>
   </li>
@@ -18,4 +17,6 @@
     <a class="nav-link" href="{% url 'Charts:degree_verified'%}" style="color:black;text-decoration:none;">Charts</a>
   </li>
 </ul>
-
+</div>
+<div class="container col-6">{% if user.is_authenticated%}<p class="text-end">Logged in as {{ user.username }}</p>{%endif%}</div>
+</div>

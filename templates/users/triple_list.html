@@ -10,6 +10,7 @@
   <label>Filter by a relation, entityA, entityB or any combination of the three.</label>
   {% csrf_token %}
   {{ filter.form | crispy }}
+  <br/>
     <input style="inline-block" type="submit" class="btn btn-primary" value="Search"> 
     <a href="{% url 'Audit:triple_create' %}" class="btn btn-primary" role="button">Create Triple</a>
   </form>

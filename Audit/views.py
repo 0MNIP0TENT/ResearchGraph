@@ -188,7 +188,8 @@ class TripleUpdate(UpdateView):
     def get_queryset(self):
         # original qs
         qs = super().get_queryset() 
-        return qs.filter(user=self.request.user)
+        #return qs.filter(user=self.request.user)
+        return self.request.user.triple_set 
 
     def get_success_url(self):
         return reverse('Audit:triple_list')

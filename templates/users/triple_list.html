@@ -6,8 +6,9 @@
 <div class="container">
   <h3 class="text-center">Edit Triples</h3>
   <br/>
+  <h6>Filter by a relation, entityA, entityB or any combination of the three.</h6>
+  <br/>
   <form method="GET">
-  <label>Filter by a relation, entityA, entityB or any combination of the three.</label>
   {% csrf_token %}
   {{ filter.form | crispy }}
   <br/>

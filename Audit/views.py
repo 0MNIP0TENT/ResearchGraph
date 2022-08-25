@@ -147,19 +147,19 @@ class TypeDelete(DeleteView):
 
 class TripleList(ListView):
     model = Triple 
-
-    # add form
-    def get_context_data(self, **kwargs):
-        context = super(TripleList, self).get_context_data(**kwargs)
-        context['filter'] = TripleFilter(self.request.GET,queryset=self.get_queryset())
-        return context
+    filterset_class = TripleFilter
 
     # filter results based on the user
     def get_queryset(self):
         # original qs
         qs = super().get_queryset() 
-        #return qs.filter(user=self.request.user)
-        return self.request.user.triple_set 
+        return qs.filter(user=self.request.user)
+
+    # add form
+    def get_context_data(self, **kwargs):
+        context = super(TripleList, self).get_context_data(**kwargs)
+        context['filter'] = TripleFilter(self.request.GET,queryset=Triple.objects.filter(user=self.request.user),request=self.request)
+        return context
 
 class TripleCreate(CreateView):
     model = Triple
@@ -184,12 +184,6 @@ class TripleUpdate(UpdateView):
       "relation",
       "entityB",
     ]
-
-    # filter results based on the user
-    def get_queryset(self):
-        # original qs
-        qs = super().get_queryset() 
-        return qs.filter(user=self.request.user)
 
     def get_success_url(self):
         return reverse('Audit:triple_list')

@@ -18,7 +18,6 @@ from .views import (
         TripleUpdate,
         TripleDelete
 )
-
 app_name = 'Audit'
 urlpatterns = [
     path('home/', AuditHome.as_view(), name='audit_home'),

@@ -6,8 +6,8 @@ class TripleFilter(django_filters.FilterSet):
     class Meta:
         model = Triple
         fields = ('relation','entityA','entityB')
-    
 
+    # overriding init to pass the request object to the filter   
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
         self.form.fields['relation'].queryset = Relation.objects.filter(user=kwargs['request'].user)
@@ -22,6 +22,7 @@ class EntityFilter(django_filters.FilterSet):
         model = Entity
         exclude = ['semantic_type','user']
 
+    # changing field widget attribs 
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
         self.form.fields['name'].label='Name'
@@ -35,6 +36,7 @@ class RelationFilter(django_filters.FilterSet):
         model = Relation
         exclude = ['user']
 
+    # changing field widget attribs 
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
         self.form.fields['name'].label='Name'
@@ -48,6 +50,7 @@ class SemanticTypeFilter(django_filters.FilterSet):
         model = SemanticType
         exclude = ['user']
 
+    # changing field widget attribs 
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
         self.form.fields['name'].label='Name'

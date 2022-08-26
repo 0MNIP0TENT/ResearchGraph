@@ -31,9 +31,9 @@
       <tr>
       {% for object in filter.qs %}
       <td>{{ forloop.counter }}</td>
-      <td><a href="{% url 'Audit:entity_update_list' object.entityA.pk %}" style="color:black;text-decoration:none;">{{ object.entityA }}</a></td>
-      <td><a href="{% url 'Audit:relation_update_list' object.relation.pk %}" style="color:black;text-decoration:none;">{{ object.relation }}</a></td>
-      <td><a href="{% url 'Audit:entity_update_list' object.entityB.pk %}" style="color:black;text-decoration:none;">{{ object.entityB }}</a></td>
+      <td><a href="{% url 'Audit:entity_update_list' object.entityA.pk %}">{{ object.entityA }}</a></td>
+      <td><a href="{% url 'Audit:relation_update_list' object.relation.pk %}">{{ object.relation }}</a></td>
+      <td><a href="{% url 'Audit:entity_update_list' object.entityB.pk %}">{{ object.entityB }}</a></td>
       <td><a href="{% url 'Audit:triple_update_list' object.pk %}" class="btn btn-success" role="button">Update</td>
       <td><a href="{% url 'Audit:triple_delete' object.pk %}" class="btn btn-danger" role="button">Delete</td>
       </tr>

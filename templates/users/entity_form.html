@@ -5,6 +5,7 @@
 {% include 'audit_menu.html' %}
 <div class="container">
   <br>
+  <h1 class="text-center">Entity Change Form</h1>
   <form method="post"> 
     {% csrf_token %} 
     {{ form | crispy }} 

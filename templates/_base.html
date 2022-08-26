@@ -7,15 +7,21 @@
     <!-- Getting Bootstrap from cdn-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
     <title>{% block title %}{% endblock title %}</title><!-- JavaScript Bundle with Popper -->
+    <style type="text/css">
+      A:visited { COLOR: black; TEXT-DECORATION: none; font-weight: normal }
+      A:link { COLOR: black; TEXT-DECORATION: none; font-weight: normal }
+      A:hover { COLOR: blue; TEXT-DECORATION: none; font-weight: none }
+    </style>
+   </head>
   <body class="bg-light">
   <nav class="navbar navbar-dark navbar-expand-md bg-dark">
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'pages:home' %}">Home</a>
+          <a class="nav-link" href="{% url 'pages:home' %}"style="color:white;text-decoration:none;">Home</a>
         </li>
 	<li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"style="color:white;text-decoration:none;">
             Datasets
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -28,8 +34,8 @@
           </ul>
         </li>
         {% if user.is_authenticated %}
-        <li class="nav-item"><a class="nav-link" href="{% url 'UploadData:upload' %}" role="button">UploadData</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'Audit:audit_home' %}" role="button">Audit</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'UploadData:upload' %}" role="button" style="color:white;text-decoration:none;">UploadData</a></li>
+        <li class="nav-item"><a class="nav-link" href="{% url 'Audit:audit_home' %}" role="button" style="color:white;text-decoration:none;">Audit</a></li>
         {% endif %}
       </ul> 
       <ul class="navbar-nav me-right mb-2 mb-lg-0">

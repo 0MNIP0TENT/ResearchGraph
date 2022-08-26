@@ -4,7 +4,8 @@
 {% load crispy_forms_tags %}
 {% include 'audit_menu.html' %}
 <div class="container">
-  <br>
+<br>
+<h1 class="text-center">Type Change Form</h1>
 <form method="post"> 
     {% csrf_token %} 
     {{ form | crispy }} 

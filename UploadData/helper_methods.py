@@ -398,10 +398,9 @@ def create_graph(request,dataset):
     else:
         triples = Triple.objects.all()
         # add nodes first to add node attribs
-        t = SemanticType.objects.all()
         for ent in Entity.objects.filter(user=request.user):
 
-            types = [e.name for e in t]
+            types = [e.name for e in ent.semantic_type.all()]
 
             if not types:
                 G.add_node(ent.name,types=['None'])

@@ -16,7 +16,7 @@
       <label for="entitys">Entities:</label>
       <ul class="list-group">
         {% for ent in entities%}
-        <li class="list-group-item list-group-item-secondary list-group-item-action text-break"><a href={% url 'Entities:display_unverified' ent %} style="color:black;text-decoration:none;">{{ent}}</a></li>
+        <li class="list-group-item list-group-item-secondary list-group-item-action text-break"><a href={% url 'Entities:display_unverified' ent %}>{{ent}}</a></li>
         {% endfor %}
       </ul>
   </form>
@@ -117,7 +117,6 @@
       </tbody>
     </table>
 
-  </div>
   </div>
   <script src="{% static 'UploadData/search_unverified.js' %}"></script>
 

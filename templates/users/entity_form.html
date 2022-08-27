@@ -7,6 +7,7 @@
   <br>
   <h1 class="text-center">Entity Change Form</h1>
   <form method="post"> 
+    <label>Hold Ctrl to select multiple types.</label>
     {% csrf_token %} 
     {{ form | crispy }} 
     <br/>

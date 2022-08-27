@@ -5,13 +5,16 @@
 {% include 'audit_menu.html' %}
 <div class="container">
     <h3 class="text-center">Edit Entities</h3>
+    <h6>Click on a type to change the name of the type for all entities. Click on update
+    to change the name of an entity or change its types.</h6>
+    <br/>
     <form method="GET">
       <label>Filter with an Entity name.</label>
       {% csrf_token %}
       {{ filter.form | crispy }}
       <br/>
       <input type="submit" class="btn btn-primary" value="Search"> 
-    <a href="{% url 'Audit:entity_create' %}" class="btn btn-primary" role="button">Create Entity</a>
+      <a href="{% url 'Audit:entity_create' %}" class="btn btn-primary" role="button">Create Entity</a>
     </form>
 
 <table class="table table-striped table-hover">
@@ -28,7 +31,7 @@
     <td>{{ forloop.counter }}</td>
     <td>{{ object.name }}</td>
     <td>{% for object in object.semantic_type.all %}
-        {{object.name}}
+      <a href="{% url 'Audit:type_update_list' object.pk %}">{{object.name}}</a>
     {% endfor %}</td>
     <td><a href="{% url 'Audit:entity_update_list' object.pk %}" class="btn btn-success role="button">Update</td>
     <td><a href="{% url 'Audit:entity_delete' object.pk %}" class="btn btn-danger role="button">Delete</td>

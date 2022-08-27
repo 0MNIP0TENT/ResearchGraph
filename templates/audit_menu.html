@@ -1,6 +1,6 @@
 <!-- templates/audit_menu.html -->
 <div class="row">
-<div class="container col-6">
+<div class="col-8">
 <ul class="nav nav-pills">
 <ul class="nav nav-pills">
   <li class="nav-item">
@@ -17,5 +17,5 @@
   </li>
 </ul>
 </div>
-<div class="container col-6">{% if user.is_authenticated%}<p class="text-end">Logged in as {{ user.username }}</p>{%endif%}</div>
+<div class="col-4">{% if user.is_authenticated%}<p class="text-end">Logged in as {{ user.username }}</p>{%endif%}</div>
 </div>

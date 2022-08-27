@@ -5,7 +5,6 @@
 {% include 'audit_menu.html' %}
 <div class="container">
   <h3 class="text-center">Edit Triples</h3>
-  <br/>
   <h6>Filter by a relation, entityA, entityB or any combination of the three.</h6>
   <br/>
   <form method="GET">
@@ -16,8 +15,10 @@
     <a href="{% url 'Audit:triple_create' %}" class="btn btn-primary" role="button">Create Triple</a>
   </form>
   <br/>
-  <h6>Click on a relation or entity to change its name in all triple corresponding triples.
-  Update the triple to swap out the entities and relations for different ones.</h6>
+  <h6>Click on a relation or entity to change its name in all corresponding triples.
+  Update the triple to swap out the entities and relations for different ones. To change
+  a entity or relation name for a specific triple only, you can create a new relation or entity
+  then swap them out</h6>
   <table class="table table-striped table-hover" style="table-layout: fixed; word-wrap: break-word;">
     <thead>
       <tr>

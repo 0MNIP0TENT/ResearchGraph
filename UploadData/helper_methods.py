@@ -377,9 +377,9 @@ def get_entity_data(G, entity):
 def create_graph(request,dataset):
     G = nx.MultiDiGraph()
     if dataset == "Verified":
-        colA = [d['entityA'].upper() for d in Verified.objects.values('entityA')] 
-        colB = [d['relation'] for d in Verified.objects.values('relation')] 
-        colC = [d['entityB'].upper() for d in Verified.objects.values('entityB')] 
+        colA = [d['entityA'].upper() for d in Verified.objects.filter('entityA')] 
+        colB = [d['relation'] for d in Verified.objects.values.filter('relation')] 
+        colC = [d['entityB'].upper() for d in Verified.objects.filter('entityB')] 
 
         entA = fix_names(colA)
         entB = fix_names(colC)        
@@ -398,9 +398,10 @@ def create_graph(request,dataset):
     else:
         triples = Triple.objects.all()
         # add nodes first to add node attribs
+        t = SemanticType.objects.all()
         for ent in Entity.objects.filter(user=request.user):
 
-            types = [e.name for e in ent.semantic_type.all()]
+            types = [e.name for e in t]
 
             if not types:
                 G.add_node(ent.name,types=['None'])
@@ -409,7 +410,7 @@ def create_graph(request,dataset):
                 G.add_node(ent.name,types=get_semantic_types_unverified(types))
 
         for trip in triples.filter(user=request.user):
-            G.add_edge(str(trip.entityA),str(trip.entityB),relation=str(trip.relation))
+            G.add_edge(trip.entityA.name,trip.entityB.name,relation=trip.relation.name)
 
 
     return G

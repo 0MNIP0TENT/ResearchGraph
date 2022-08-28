@@ -10,9 +10,10 @@ class TripleFilter(django_filters.FilterSet):
     # overriding init to pass the request object to the filter   
     def __init__(self,*args,**kwargs):
         super().__init__(*args,**kwargs)
+        entities = Entity.objects.filter(user=kwargs['request'].user)
         self.form.fields['relation'].queryset = Relation.objects.filter(user=kwargs['request'].user)
-        self.form.fields['entityA'].queryset = Entity.objects.filter(user=kwargs['request'].user)
-        self.form.fields['entityB'].queryset = Entity.objects.filter(user=kwargs['request'].user)
+        self.form.fields['entityA'].queryset = entities 
+        self.form.fields['entityB'].queryset = entities 
 
 class EntityFilter(django_filters.FilterSet):
 

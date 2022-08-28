@@ -23,8 +23,8 @@ class EntityList(ListView):
     def get_queryset(self):
         # original qs
         qs = super().get_queryset() 
-        # filter by a variable captured from url, for example
-        return qs.filter(user=self.request.user)
+
+        return qs.filter(user=self.request.user).prefetch_related('semantic_type')
 
 class EntityUpdate(UpdateView):
     model = Entity 
@@ -147,18 +147,17 @@ class TypeDelete(DeleteView):
 
 class TripleList(ListView):
     model = Triple 
-    filterset_class = TripleFilter
 
     # filter results based on the user
     def get_queryset(self):
-        # original qs
-        qs = super().get_queryset() 
-        return qs.filter(user=self.request.user)
+       # original qs
+       qs = super().get_queryset() 
+       return qs.filter(user=self.request.user).select_related('entityA','relation','entityB')
 
     # add form
     def get_context_data(self, **kwargs):
         context = super(TripleList, self).get_context_data(**kwargs)
-        context['filter'] = TripleFilter(self.request.GET,queryset=Triple.objects.filter(user=self.request.user),request=self.request)
+        context['filter'] = TripleFilter(self.request.GET,queryset=self.get_queryset(),request=self.request)
         return context
 
 class TripleCreate(CreateView):

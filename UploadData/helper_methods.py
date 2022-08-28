@@ -377,9 +377,9 @@ def get_entity_data(G, entity):
 def create_graph(request,dataset):
     G = nx.MultiDiGraph()
     if dataset == "Verified":
-        colA = [d['entityA'].upper() for d in Verified.objects.filter('entityA')] 
-        colB = [d['relation'] for d in Verified.objects.values.filter('relation')] 
-        colC = [d['entityB'].upper() for d in Verified.objects.filter('entityB')] 
+        colA = [d['entityA'].upper() for d in Verified.objects.values('entityA')] 
+        colB = [d['relation'] for d in Verified.objects.values('relation')] 
+        colC = [d['entityB'].upper() for d in Verified.objects.values('entityB')] 
 
         entA = fix_names(colA)
         entB = fix_names(colC)        
@@ -396,11 +396,12 @@ def create_graph(request,dataset):
 
 
     else:
-        triples = Triple.objects.all()
+        triples = Triple.objects.filter(user=request.user).select_related('entityA','relation','entityB') 
         # add nodes first to add node attribs
-        for ent in Entity.objects.filter(user=request.user):
+        entities = Entity.objects.filter(user=request.user).prefetch_related('semantic_type') 
+        for ent in entities:
 
-            types = [e.name for e in ent.semantic_type.all()]
+            types = [t.name for t in ent.semantic_type.all()]
 
             if not types:
                 G.add_node(ent.name,types=['None'])
@@ -408,7 +409,7 @@ def create_graph(request,dataset):
                 types = "|".join(types)
                 G.add_node(ent.name,types=get_semantic_types_unverified(types))
 
-        for trip in triples.filter(user=request.user):
+        for trip in triples:
             G.add_edge(trip.entityA.name,trip.entityB.name,relation=trip.relation.name)
 
 

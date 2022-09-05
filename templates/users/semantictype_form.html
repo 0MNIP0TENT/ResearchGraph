@@ -5,12 +5,17 @@
 {% load crispy_forms_tags %}
 <div class="container">
  <br>
-<h1 class="text-center">Type Change Form</h1>
+<h1 class="text-center">Type Update Form</h1>
+<h5>Change the name of the type.</h5>
+  <h5>Changing the name of the type will also change its name in the entities its in.</h5>
+  <h5>If you want to change the name of a type for just one entity create a new
+  type then update the entity.</h5>
 <form method="post"> 
     {% csrf_token %} 
     {{ form | crispy }} 
     <br/>
     <input class="btn btn-success" type="submit" value="Save"> 
+    <a href="{% url 'Audit:type_create' %}" class="btn btn-primary" style="color:white;text-decoration:none;" role="button">create new type</a>
 </form> 
 </div>
 {% endblock content %}

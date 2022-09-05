@@ -18,5 +18,7 @@
   </li>
 </ul>
 </div>
-<div class="col-4">{% if user.is_authenticated%}<p class="text-end">Logged in as {{ user.username }}</p>{%endif%}</div>
+<div class="col-4">{% if user.is_authenticated%}<p class="text-end">Logged in as {{ user.username }}</p>
+{% else %}<p class="text-end">You are not logged in</p>
+	{%endif%}</div>
 </div>

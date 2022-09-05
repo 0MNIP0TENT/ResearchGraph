@@ -5,12 +5,17 @@
 {% include 'audit_menu.html' %}
 <div class="container">
 <br>
-<h1 class="text-center">Triple Change Form</h1>
+<h1 class="text-center">Triple Update Form</h1>
+<br>
+<h5>Change the relation or entities of this triple for new ones.</h5>
+<br>
 <form method="post"> 
     {% csrf_token %} 
     {{ form | crispy }} 
     <br/>
     <input class="btn btn-success" type="submit" value="Save"> 
+    <a href="{% url 'Audit:entity_create' %}" class="btn btn-success" style="color:white;text-decoration:none;">create new entity</a>
+    <a href="{% url 'Audit:relation_create' %}" class="btn btn-success" style="color:white;text-decoration:none;">create new relation</a>
 </form> 
 <div>
 {% endblock content %}

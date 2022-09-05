@@ -33,16 +33,30 @@ class EntityUpdate(UpdateView):
       "semantic_type",
     ]
 
+    # override get_form to make only the users data available
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['semantic_type'].queryset = SemanticType.objects.filter(user=self.request.user) 
+        return form
+
     def get_success_url(self):
         return reverse('Audit:entity_list')
 
 class EntityCreate(CreateView):
     model = Entity
+    
+    template_name = 'users/entity_create.html'
 
     fields = [
       "name",
       "semantic_type",
     ] 
+
+    # override get_form to make only the users data available
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['semantic_type'].queryset = SemanticType.objects.filter(user=self.request.user) 
+        return form
 
     def form_valid(self,form):
         form.instance.user = self.request.user
@@ -74,6 +88,8 @@ class RelationList(ListView):
 
 class RelationCreate(CreateView):
     model = Relation
+
+    template_name = 'users/relation_create.html'
 
     fields = [
       "name",
@@ -119,6 +135,8 @@ class TypeList(ListView):
 class TypeCreate(CreateView):
     model = SemanticType
 
+    template_name = 'users/type_create.html'
+
     fields = [
       "name",
     ] 
@@ -163,11 +181,21 @@ class TripleList(ListView):
 class TripleCreate(CreateView):
     model = Triple
 
+    template_name = 'users/triple_create.html'
+
     fields = [
       "entityA",
       "relation",
       "entityB",
     ] 
+    
+    # override get_form to make only the users data available
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['entityA'].queryset = Entity.objects.filter(user=self.request.user) 
+        form.fields['relation'].queryset = Relation.objects.filter(user=self.request.user) 
+        form.fields['entityB'].queryset = Entity.objects.filter(user=self.request.user) 
+        return form
 
     def form_valid(self,form):
         form.instance.user = self.request.user

@@ -4,14 +4,23 @@
 {% load crispy_forms_tags %}
 {% include 'audit_menu.html' %}
 <div class="container">
-  <br>
-  <h1 class="text-center">Entity Change Form</h1>
+  <br/>
+  <h1 class="text-center">Entity Update Form</h1>
+  <br/>
+  <h5>Changing the name of the entity will also change the name of it in the triples. Changing an
+  entity's types will change the types for all occurences of that entity.</h5>
+
+  <h5>If you want to change the name of an entity for just one triple create a new
+  entity then update the triple</h5>
+
   <form method="post"> 
     <label>Hold Ctrl to select multiple types.</label>
     {% csrf_token %} 
     {{ form | crispy }} 
     <br/>
     <input class="btn btn-success" type="submit" value="Save"> 
+    <a href="{% url 'Audit:entity_create' %}" class="btn btn-success" style="color:white;text-decoration:none;">create new entity</a>
+    <a href="{% url 'Audit:type_create' %}" class="btn btn-success" style="color:white;text-decoration:none;">create new type</a>
   </form> 
 </div>
 {% endblock content %}

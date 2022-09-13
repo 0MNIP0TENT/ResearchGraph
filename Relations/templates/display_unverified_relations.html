@@ -5,13 +5,10 @@
 {% block title %}Relation's{% endblock title %}
 {% block content %}
 {% include 'unverified_graph_menu.html' %}
-
-<div class="row col-lg-3">
  <form class="d-flex">
   <input class="form-control me-2" type="text" id="myInput" placeholder="Enter a relation" aria-label="Search">
   <button class="btn btn-outline-success" onClick="getRelationValue({{relations}});" id="myBtn" type="button">Search</button>
   </form>
-</div>
 
   <div class="row">
     <div class="container col-md-3">
@@ -26,10 +23,10 @@
   </div>
 
   <div class="container col-md-9">
+    <h1 class="text-center">YourDataset</h1>
+<br>
+<br>
     <div class="row">
-    <h1 class="text-center">UnVerified</h1>
-<br>
-<br>
     <div class="col-6">
       <h1>Relation: {{ relation }}</h1>
   </div>

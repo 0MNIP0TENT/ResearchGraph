@@ -2,7 +2,7 @@ from django.views.generic.list import ListView
 from django.urls import reverse
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
-from users.models import Entity, Relation, SemanticType, Triple 
+from users.models import Entity, Relation, SemanticType, Triple, CustomUser 
 from .filters import TripleFilter, EntityFilter, RelationFilter, SemanticTypeFilter
   
 # Create your views here.
@@ -17,6 +17,16 @@ class EntityList(ListView):
     def get_context_data(self, **kwargs):
         context = super(EntityList, self).get_context_data(**kwargs)
         context['filter'] = EntityFilter(self.request.GET,queryset=self.get_queryset())
+        user_set = set()
+        other_users_set = set()
+
+        for obj in Entity.objects.filter(user=self.request.user):
+           user_set.add(obj.name)
+
+        for obj in Entity.objects.exclude(user=self.request.user):
+           other_users_set.add(obj.name)
+
+        context['simularity'] = len(user_set & other_users_set)/len(user_set | other_users_set)
         return context
 
     # filter results based on the user
@@ -31,6 +41,7 @@ class EntityUpdate(UpdateView):
     fields = [
       "name",
       "semantic_type",
+      "verified",
     ]
 
     # override get_form to make only the users data available
@@ -78,6 +89,16 @@ class RelationList(ListView):
     def get_context_data(self, **kwargs):
         context = super(RelationList, self).get_context_data(**kwargs)
         context['filter'] = RelationFilter(self.request.GET,queryset=self.get_queryset())
+        user_set = set()
+        other_users_set = set()
+
+        for obj in Relation.objects.filter(user=self.request.user):
+           user_set.add(obj.name)
+
+        for obj in Relation.objects.exclude(user=self.request.user):
+           other_users_set.add(obj.name)
+
+        context['simularity'] = len(user_set & other_users_set)/len(user_set | other_users_set)
         return context
 
     # filter results based on the user
@@ -106,6 +127,7 @@ class RelationUpdate(UpdateView):
     model = Relation 
     fields = [
       "name",
+      "verified",
     ] 
 
     def get_success_url(self):
@@ -124,6 +146,16 @@ class TypeList(ListView):
     def get_context_data(self, **kwargs):
         context = super(TypeList, self).get_context_data(**kwargs)
         context['filter'] = SemanticTypeFilter(self.request.GET,queryset=self.get_queryset())
+        user_set = set()
+        other_users_set = set()
+
+        for obj in SemanticType.objects.filter(user=self.request.user):
+           user_set.add(obj.name)
+
+        for obj in SemanticType.objects.exclude(user=self.request.user):
+           other_users_set.add(obj.name)
+
+        context['simularity'] = len(user_set & other_users_set)/len(user_set | other_users_set)
         return context
 
     # filter results based on the user
@@ -152,6 +184,7 @@ class TypeUpdate(UpdateView):
     model = SemanticType
     fields = [
       "name",
+      "verified",
     ]
 
     def get_success_url(self):
@@ -176,6 +209,18 @@ class TripleList(ListView):
     def get_context_data(self, **kwargs):
         context = super(TripleList, self).get_context_data(**kwargs)
         context['filter'] = TripleFilter(self.request.GET,queryset=self.get_queryset(),request=self.request)
+
+        user_set = set()
+        other_users_set = set()
+
+        for obj in Triple.objects.filter(user=self.request.user).select_related('entityA','relation','entityB'):
+           user_set.add((obj.entityA.name,obj.relation.name,obj.entityB.name))
+
+        for obj in Triple.objects.exclude(user=self.request.user).select_related('entityA','relation','entityB'):
+           other_users_set.add((obj.entityA.name,obj.relation.name,obj.entityB.name))
+
+        context['simularity'] = len(user_set & other_users_set)/len(user_set | other_users_set)
+
         return context
 
 class TripleCreate(CreateView):
@@ -212,6 +257,14 @@ class TripleUpdate(UpdateView):
       "entityB",
     ]
 
+    # override get_form to make only the users data available
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        form.fields['entityA'].queryset = Entity.objects.filter(user=self.request.user) 
+        form.fields['relation'].queryset = Relation.objects.filter(user=self.request.user) 
+        form.fields['entityB'].queryset = Entity.objects.filter(user=self.request.user) 
+        return form
+
     def get_success_url(self):
         return reverse('Audit:triple_list')
 
@@ -219,4 +272,4 @@ class TripleDelete(DeleteView):
     model = Triple 
 
     def get_success_url(self):
-        return reverse('Audit:triple_list')
+        return reverse('Audit:triple_list')  

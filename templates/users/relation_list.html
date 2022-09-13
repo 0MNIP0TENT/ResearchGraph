@@ -12,11 +12,14 @@
       <br/>
       <input style="inline-block" type="submit" class="btn btn-primary" value="Search"> 
       <a href="{% url 'Audit:relation_create' %}" class="btn btn-primary" style="color:white;text-decoration:none;" role="button">Create Relation</a>
+      <h5 class="text-end">Simularity:{{simularity}}</h5>
+    </form>
 <table class="table table-striped table-hover" style="table-layout: fixed; word-wrap: break-word;">
   <thead>
     <tr>
       <th>#</th>
       <th>Relations:</th>
+      <th>Verified:</th>
     </tr>
       </thead>
   <tbody>
@@ -24,7 +27,9 @@
     {% for object in filter.qs %}
     <td>{{ forloop.counter }}</td>
     <td>{{ object.name }}</td>
-    <td><a href="{% url 'Audit:relation_update_list' object.pk %}"class="btn btn-success" role="button">Rename</td>
+    <td>{{ object.verified }}</td>
+    <td>{{ object.verified }}</td>
+    <td><a href="{% url 'Audit:relation_update_list' object.pk %}"class="btn btn-success" role="button">Update</td>
     <td><a href="{% url 'Audit:relation_delete' object.pk %}"class="btn btn-danger" role="button">Delete</td>
     </tr>
     {% endfor %}

@@ -11,12 +11,15 @@
       {{ filter.form | crispy }}
       <br/>
       <input style="inline-block" type="submit" class="btn btn-primary" value="Search"> 
-<a href="{% url 'Audit:type_create' %}" class="btn btn-primary" style="color:white;text-decoration:none;" role="button">Create Type</a>
+      <a href="{% url 'Audit:type_create' %}" class="btn btn-primary" style="color:white;text-decoration:none;" role="button">Create Type</a>
+      <h5 class="text-end">Simularity:{{simularity}}</h5>
+    </form>
 <table class="table table-striped table-hover" style="table-layout: fixed; word-wrap: break-word;">
   <thead>
     <tr>
       <th>#</th>
       <th>Semantic Types:</th>
+      <th>Verified:</th>
     </tr>
       </thead>
   <tbody>
@@ -24,7 +27,8 @@
     {% for object in filter.qs %}
     <td>{{ forloop.counter }}</td>
     <td>{{ object.name }}</td>
-    <td><a href="{% url 'Audit:type_update_list' object.pk %}" class="btn btn-success" role="button">Rename</td>
+    <td>{{ object.verified }}</td>
+    <td><a href="{% url 'Audit:type_update_list' object.pk %}" class="btn btn-success" role="button">Update</td>
     <td><a href="{% url 'Audit:type_delete' object.pk %}" class="btn btn-danger" role="button">Delete</td>
     </tr>
     {% endfor %}

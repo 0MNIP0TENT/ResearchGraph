@@ -10,6 +10,7 @@ class SemanticType(models.Model):
     # DO_NOTHING makes so if a Entity is deleted the semantic types will remain
     user = models.ForeignKey(CustomUser,on_delete=models.CASCADE,default='')
     name = models.CharField(max_length=255)
+    verified = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name 
@@ -21,6 +22,8 @@ class Entity(models.Model):
     user = models.ForeignKey(CustomUser,on_delete=models.CASCADE,default='')
     name = models.CharField(max_length=255,null=True)
     semantic_type = models.ManyToManyField(SemanticType,blank=True)
+    verified = models.BooleanField(default=False)
+
     class Meta:
         ordering = ('name',)
 
@@ -30,6 +33,7 @@ class Entity(models.Model):
 class Relation(models.Model):
     user = models.ForeignKey(CustomUser,on_delete=models.CASCADE,default='')
     name = models.CharField(max_length=255)
+    verified = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('name',)
@@ -57,4 +61,3 @@ class UserDataset(models.Model):
 
     def __str__(self):
         return '{} --> {} --> {}'.format(self.entityA,self.relation,self.entityB)
-

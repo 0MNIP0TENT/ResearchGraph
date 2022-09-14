@@ -5,7 +5,7 @@ class TripleFilter(django_filters.FilterSet):
 
     class Meta:
         model = Triple
-        fields = ('relation','entityA','entityB')
+        fields = ('relation','entityA','entityB','verified')
 
     # overriding init to pass the request object to the filter   
     def __init__(self,*args,**kwargs):

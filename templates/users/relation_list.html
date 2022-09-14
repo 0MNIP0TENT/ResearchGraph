@@ -28,7 +28,6 @@
     <td>{{ forloop.counter }}</td>
     <td>{{ object.name }}</td>
     <td>{{ object.verified }}</td>
-    <td>{{ object.verified }}</td>
     <td><a href="{% url 'Audit:relation_update_list' object.pk %}"class="btn btn-success" role="button">Update</td>
     <td><a href="{% url 'Audit:relation_delete' object.pk %}"class="btn btn-danger" role="button">Delete</td>
     </tr>

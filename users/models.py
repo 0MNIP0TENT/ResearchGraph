@@ -46,6 +46,7 @@ class Triple(models.Model):
     entityA = models.ForeignKey(Entity,on_delete=models.SET_NULL,null=True,related_name='entA')
     entityB = models.ForeignKey(Entity,on_delete=models.SET_NULL,null=True,related_name='entB')
     relation = models.ForeignKey(Relation,on_delete=models.SET_NULL,null=True,related_name='rel')
+    verified = models.BooleanField(default=False)
 
     class Meta:
         ordering = ('relation',)

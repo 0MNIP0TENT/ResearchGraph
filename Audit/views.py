@@ -255,6 +255,7 @@ class TripleUpdate(UpdateView):
       "entityA",
       "relation",
       "entityB",
+      "verified",
     ]
 
     # override get_form to make only the users data available

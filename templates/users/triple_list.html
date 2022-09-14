@@ -25,6 +25,7 @@
         <th scope="col">EntityA</th>
         <th scope="col">Relation</th>
         <th scope="col">EntityB</th>
+        <th scope="col">Verified</th>
       </tr>
     </thead>
     <tbody>
@@ -35,8 +36,8 @@
 
         <td><a href="{% url 'Audit:relation_update_list' object.relation.pk %}">{{ object.relation }}</a></td>
         <td><a href="{% url 'Audit:entity_update_list' object.entityB.pk %}">{{ object.entityB }}</a></td>
+        <td>{{ object.verified }}</td>
 
-       
 
         <td><a href="{% url 'Audit:triple_update_list' object.pk %}" class="btn btn-success" role="button">Update</td>
         <td><a href="{% url 'Audit:triple_delete' object.pk %}" class="btn btn-danger" role="button">Delete</td>

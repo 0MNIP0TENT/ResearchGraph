@@ -25,6 +25,7 @@
       <th>#</th>
       <th>Entites:</th>
       <th>Types:</th>
+      <th>Verified:</th>
     </tr>
       </thead>
   <tbody>
@@ -35,7 +36,7 @@
     <td>{% for object in object.semantic_type.all %}
       <a href="{% url 'Audit:type_update_list' object.pk %}">{{object.name}}</a>
     {% endfor %}</td>
-    <td>{{ object.name }}</td>
+    <td>{{ object.verified }}</td>
     <td><a href="{% url 'Audit:entity_update_list' object.pk %}" class="btn btn-success role="button">Update</td>
     <td><a href="{% url 'Audit:entity_delete' object.pk %}" class="btn btn-danger role="button">Delete<a/></td>
     </tr>

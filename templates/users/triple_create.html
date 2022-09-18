@@ -3,7 +3,6 @@
 {% block content %}
 {% load crispy_forms_tags %}
 {% include 'audit_menu.html' %}
-<div class="container">
   <h1 class="text-center">Triple Create Form</h1>
   <form method="post"> 
     {% csrf_token %} 
@@ -13,5 +12,4 @@
     <a href="{% url 'Audit:entity_create' %}" class="btn btn-success" style="color:white;text-decoration:none;">create new entity</a>
     <a href="{% url 'Audit:relation_create' %}" class="btn btn-success" style="color:white;text-decoration:none;">create new relation</a>
   </form> 
-</div>
 {% endblock content %}

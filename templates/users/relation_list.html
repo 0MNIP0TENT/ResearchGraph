@@ -3,8 +3,8 @@
 {% load crispy_forms_tags %}
 {% block content %}
 {% include 'audit_menu.html' %}
-<div class="container">
   <h3 class="text-center">Edit Relations</h3>
+  <h6 class="text-center">You can change the name of a relation by either clicking its name or clicking update.</h6>
     <form method="GET">
       <label>Filter with a Relation name.</label>
       {% csrf_token %}
@@ -26,13 +26,27 @@
     <tr>
     {% for object in filter.qs %}
     <td>{{ forloop.counter }}</td>
-    <td>{{ object.name }}</td>
+    <td><a href="{% url 'Audit:relation_update_list' object.id %}">{{ object.name }}</a></td>
     <td>{{ object.verified }}</td>
     <td><a href="{% url 'Audit:relation_update_list' object.pk %}"class="btn btn-success" role="button">Update</td>
+    <!-- A Hidden form to allow faster verification -->
+	<form method="POST" action="/Audit/Relation/{{object.id}}/update/">
+          {% csrf_token %}
+          <input type="hidden" name="verified" value="true" />
+          <input type="hidden" name="name" value="{{object.name}}" />
+          <td><button type="submit" class="btn btn-warning">Verify</button></td>
+        </form>
+
+       <!-- A Hidden form to allow faster unverification -->
+        <form method="POST" action="/Audit/Relation/{{object.id}}/update/">
+          {% csrf_token %}
+          <input type="hidden" name="verified" value="false" />
+          <input type="hidden" name="name" value="{{object.name}}" />
+          <td><button type="submit" class="btn btn-warning">UnVerify</button></td>
+       </form>
     <td><a href="{% url 'Audit:relation_delete' object.pk %}"class="btn btn-danger" role="button">Delete</td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
-</div>
 {% endblock content %}

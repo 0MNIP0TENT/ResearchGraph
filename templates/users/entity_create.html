@@ -3,7 +3,6 @@
 {% block content %}
 {% load crispy_forms_tags %}
 {% include 'audit_menu.html' %}
-<div class="container">
   <h1 class="text-center">Entity Create Form</h1>
   <h5>Create a new entity.</h5>
   <form method="post"> 
@@ -14,5 +13,4 @@
     <input class="btn btn-success" type="submit" value="Save"> 
     <a href="{% url 'Audit:type_create' %}" class="btn btn-success" style="color:white;text-decoration:none;">create new type</a>
   </form> 
-</div>
 {% endblock content %}

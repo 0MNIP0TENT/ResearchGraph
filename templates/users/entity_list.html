@@ -3,11 +3,9 @@
 {% load crispy_forms_tags %}
 {% block content %}
 {% include 'audit_menu.html' %}
-<div class="container">
     <h3 class="text-center">Edit Entities</h3>
-    <h6>Click on a type to change the name of the type for all entities that contain it. Click on update
-    to change the name of an entity or to change its types. Changes made to the entity here will
-    carry over to the triples that contain them.</h6>
+    <h6> Click on the entity name update to change the name of an entity or to change its types. Changes
+    made to the entity here will carry over to the triples that contain them.</h6>
     <br/>
     <form method="GET">
       <label>Filter with an Entity name.</label>
@@ -32,16 +30,37 @@
     <tr>
     {% for object in filter.qs %}
     <td>{{ forloop.counter }}</td>
-    <td>{{ object.name }}</td>
+    <td><a href="{% url 'Audit:entity_update_list' object.id %}">{{ object.name }}</a></td>
     <td>{% for object in object.semantic_type.all %}
       <a href="{% url 'Audit:type_update_list' object.pk %}">{{object.name}}</a>
     {% endfor %}</td>
     <td>{{ object.verified }}</td>
     <td><a href="{% url 'Audit:entity_update_list' object.pk %}" class="btn btn-success role="button">Update</td>
+
+    <!-- A Hidden form to allow faster verification -->
+	<form method="POST" action="/Audit/Entity/{{object.id}}/update/">
+          {% csrf_token %}
+          <input type="hidden" name="verified" value="true" />
+          <input type="hidden" name="name" value="{{object.name}}" />
+          {% for type in object.semantic_type.all %}
+            <input type="hidden" name="semantic_type" value="{{type.pk}}" />
+	  {% endfor %}
+          <td><button type="submit" class="btn btn-warning">Verify</button></td>
+        </form>
+
+       <!-- A Hidden form to allow faster unverification -->
+        <form method="POST" action="/Audit/Entity/{{object.id}}/update/">
+          {% csrf_token %}
+          <input type="hidden" name="verified" value="false" />
+          <input type="hidden" name="name" value="{{object.name}}" />
+          {% for type in object.semantic_type.all %}
+            <input type="hidden" name="semantic_type" value="{{type.pk}}" />
+	  {% endfor %}
+          <td><button type="submit" class="btn btn-warning">UnVerify</button></td>
+       </form>
     <td><a href="{% url 'Audit:entity_delete' object.pk %}" class="btn btn-danger role="button">Delete<a/></td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
-</div>
 {% endblock content %}

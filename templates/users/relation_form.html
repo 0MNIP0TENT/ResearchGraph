@@ -3,7 +3,6 @@
 {% block content %}
 {% include 'audit_menu.html' %}
 {% load crispy_forms_tags %}
-<div class="container">
 <br>
 <h1 class="text-center">Relation Update Form</h1>
   <h5>Changing the name of the relation will also change its name in the triples its in.</h5>
@@ -16,5 +15,4 @@
     <input class="btn btn-success" type="submit" value="Save"> 
     <a href="{% url 'Audit:relation_create' %}" class="btn btn-primary" style="color:white;text-decoration:none;" role="button">create new relation</a>
 </form> 
-<div>
 {% endblock content %}

@@ -1,5 +1,6 @@
 from .models import Verified
 from users.models import Triple,Entity,SemanticType
+from Audit.models import AuditTriple
 from collections import Counter
 import networkx as nx
 import matplotlib
@@ -396,21 +397,40 @@ def create_graph(request,dataset):
 
 
     else:
-        triples = Triple.objects.filter(user=request.user).select_related('entityA','relation','entityB') 
-        # add nodes first to add node attribs
-        entities = Entity.objects.filter(user=request.user).prefetch_related('semantic_type') 
-        for ent in entities:
+     #   triples = Triple.objects.filter(user=request.user).select_related('entityA','relation','entityB') 
+     #   # add nodes first to add node attribs
+     #   entities = Entity.objects.filter(user=request.user).prefetch_related('semantic_type') 
+     #   for ent in entities:
 
-            types = [t.name for t in ent.semantic_type.all()]
+     #       types = [t.name for t in ent.semantic_type.all()]
 
-            if not types:
-                G.add_node(ent.name,types=['None'])
-            else:
-                types = "|".join(types)
-                G.add_node(ent.name,types=get_semantic_types_unverified(types))
+#            if not types:
+#                G.add_node(ent.name,types=['None'])
+#            else:
+#                types = "|".join(types)
+#                G.add_node(ent.name,types=get_semantic_types_unverified(types))
+
+#        for trip in triples:
+#            G.add_edge(trip.entityA.name,trip.entityB.name,relation=trip.relation.name)
+    
+        triples = AuditTriple.objects.filter(user=request.user).prefetch_related('entityA_types','entityB_types') 
+
+        entities = list()
 
         for trip in triples:
-            G.add_edge(trip.entityA.name,trip.entityB.name,relation=trip.relation.name)
+            entities.append(trip.entityA)
+            entities.append(trip.entityB)
 
+            typesA = list() 
+            typesB = list()
+
+            [typesA.append(t.name) for t in trip.entityA_types.all()]
+            [typesB.append(t.name) for t in trip.entityB_types.all()]
+
+            G.add_node(trip.entityA,types=typesA)
+            G.add_node(trip.entityB,types=typesB)
+
+        for trip in triples:
+            G.add_edge(trip.entityA,trip.entityB,relation=trip.relation)
 
     return G

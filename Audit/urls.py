@@ -16,7 +16,10 @@ from .views import (
         TripleList, 
         TripleCreate, 
         TripleUpdate,
-        TripleDelete
+        TripleDelete,
+        AuditTripleList,
+        AuditTripleUpdate,
+        AuditTypeCreate,
 )
 app_name = 'Audit'
 urlpatterns = [
@@ -40,4 +43,9 @@ urlpatterns = [
     path('Triple/<pk>/update/', TripleUpdate.as_view(), name='triple_update_list'),
     path('Triple/<pk>/delete/', TripleDelete.as_view(), name='triple_delete'),
     path('Triple/create/', TripleCreate.as_view(), name='triple_create'),
+
+    path('AuditTriple/List/', AuditTripleList.as_view(), name='audit_triple_list'),
+
+    path('AuditType/create/', AuditTypeCreate.as_view(), name='audit_type_create'),
+    path('AuditTriple/<uuid:pk>/Update/', AuditTripleUpdate.as_view(), name='audit_triple_update'),
 ]

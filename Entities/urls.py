@@ -7,5 +7,5 @@ urlpatterns = [
     path('Verified/<str:entity>/', views.display_verified_entitys_view, name='display_verified'),
 
     path('UnVerified/', views.display_unverified_entitys_view, name='display_unverified'),
-    path('UnVerified/<str:entity>/', views.display_unverified_entitys_view, name='display_unverified'),
+    path('UnVerified/<path:entity>/', views.display_unverified_entitys_view, name='display_unverified'),
 ]

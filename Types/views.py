@@ -40,7 +40,7 @@ def display_unverified_types_view(request,s_type=None):
 
     G = h.create_graph(request,'UnVerified')
     node_attribs = nx.get_node_attributes(G,'types') 
-
+    
     s_types = list()
     [s_types.extend(t) for t in node_attribs.values()]
 

@@ -2,9 +2,10 @@ from django.views.generic.list import ListView
 from django.urls import reverse
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import UpdateView, DeleteView, CreateView
-from users.models import Entity, Relation, SemanticType, Triple 
+from users.models import Entity, Relation, SemanticType, Triple, CustomUser
 from .models import AuditTriple, Type
 from .filters import TripleFilter, EntityFilter, RelationFilter, SemanticTypeFilter, AuditTripleFilter
+from django.db.models import prefetch_related_objects, Prefetch
   
 # Create your views here.
 
@@ -290,6 +291,45 @@ class AuditTripleList(ListView):
     def get_context_data(self, **kwargs):
         context = super(AuditTripleList, self).get_context_data(**kwargs)
         context['filter'] = AuditTripleFilter(self.request.GET,queryset=self.get_queryset(),request=self.request)
+
+        # get simularity
+        group = self.request.user.groups.all()
+        users = CustomUser.objects.filter(groups__name=group[0])
+        other_user = [u for u in users if u != self.request.user][0]
+
+        a = AuditTriple.objects.filter(user=self.request.user)
+        b = AuditTriple.objects.filter(user=other_user)
+#        a = AuditTriple.objects.filter(user=self.request.user).values_list('entityA','entityA_types','relation','entityB')
+#        b = AuditTriple.objects.filter(user=other_user).values('entityA','entityA_types','relation','entityB')
+        # get the types of the entitys
+#        at = [x.entityA_types.values_list('name') for x in a] 
+#        bt = [x.entityB_types.all() for x in a] 
+         
+
+
+#        a_set = set()
+#        b_set = set()
+
+        
+#        for obj in a:
+#            ad = obj.entityA_types.values('name')
+#            enta_types = tuple([name['name'] for name in ad])
+#            entb_types = tuple([name['name'] for name in obj.entityB_types.values('name')])
+#            a_set.add((obj.entityA,enta_types,obj.relation, obj.entityB, entb_types))
+#
+#        for obj in b:
+#            enta_types = tuple([name['name'] for name in obj.entityA_types.values('name')])
+#            entb_types = tuple([name['name'] for name in obj.entityB_types.values('name')])
+#            b_set.add((obj.entityA,enta_types,obj.relation,obj.entityB, entb_types))
+#
+
+        a_set = set([(trip.entityA, trip.relation, trip.entityB) for trip in a])
+        b_set = set([(trip.entityA, trip.relation, trip.entityB) for trip in b])
+
+        intersection = len((a_set & b_set))
+        union = len((a_set | b_set))
+
+        context['simularity'] = round(intersection / union,2) 
         return context
 
 class AuditTripleUpdate(UpdateView):
@@ -337,4 +377,3 @@ class AuditTypeCreate(CreateView):
 
     def get_success_url(self):
         return reverse('Audit:audit_triple_list')
-

@@ -17,8 +17,6 @@ def upload_data_view(request):
         user = request.user
         user_list = [usr for usr in CustomUser.objects.all() if  not usr.is_staff]
 
-        print(user_list)
-
         excel_file = request.FILES["excel_file"]
 
         # you may put validations here to check extension or file size

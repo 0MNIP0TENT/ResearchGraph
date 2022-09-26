@@ -1,5 +1,4 @@
 from .models import Verified
-from users.models import Triple,Entity,SemanticType
 from Audit.models import AuditTriple
 from collections import Counter
 import networkx as nx

@@ -1,7 +1,6 @@
 from django.shortcuts import render
 import openpyxl
 from UploadData import helper_methods as h
-from users.models import Entity, SemanticType, Relation, Triple 
 from Audit.models import AuditTriple, Type
 from users.models import CustomUser
 

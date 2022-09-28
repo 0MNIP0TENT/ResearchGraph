@@ -13,8 +13,8 @@ def upload_data_view(request):
        return render(request,'upload_data.html',context)
     
     else:
-        user = request.user
-        user_list = [usr for usr in CustomUser.objects.all() if  not usr.is_staff]
+        #user_list = [usr for usr in CustomUser.objects.all() if  not usr.is_staff]
+        user_list = CustomUser.objects.all()
 
         excel_file = request.FILES["excel_file"]
 

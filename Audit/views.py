@@ -4,12 +4,59 @@ from django.views.generic.base import TemplateView
 from django.views.generic.edit import UpdateView,CreateView
 from .models import AuditTriple, Type
 from users.models import CustomUser
-from .filters import  AuditTripleFilter
+from django.contrib.auth.models import Group
+from .filters import  AuditTripleFilter, AuditUserTripleFilter
   
 # Create your views here.
 
 class AuditHome(TemplateView): 
     template_name = 'audit_home.html'
+
+class UserTripleView(ListView):
+    model = AuditTriple
+    template_name = 'audit_user_triple_list.html'
+
+
+    def get_queryset(self):
+       # original qs
+       return super().get_queryset().filter().select_related('user')
+
+    # add filter form
+    def get_context_data(self, **kwargs):
+        context = super(UserTripleView, self).get_context_data(**kwargs)
+        context['filter'] = AuditUserTripleFilter(self.request.GET,queryset=self.get_queryset(),request=self.request)
+        return context
+
+class GroupsView(TemplateView):
+    template_name = "audit_groups.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(GroupsView,self).get_context_data()
+        group_user_dict = {group.name: group.user_set.values_list('id', flat=True) for group in Group.objects.all()}
+        simularity = []
+        for group in group_user_dict:
+            # There are 2 users per group
+            user1, user2 = group_user_dict[group]  
+            
+            # initial queries
+            a = AuditTriple.objects.filter(user=user1).values_list('entityA','relation','entityB','verified')
+            b = AuditTriple.objects.filter(user=user2).values_list('entityA','relation','entityB','verified')
+
+            a_set = set() 
+            b_set = set() 
+
+            for trip in a:
+              a_set.add((trip[0],trip[1],trip[2],trip[3])) 
+
+            for trip in b:
+              b_set.add((trip[0],trip[1],trip[2],trip[3])) 
+
+            simularity.append(round(len(a_set&b_set)/len(a_set|b_set),4))
+
+        group_data = list(zip(group_user_dict.keys(),simularity))
+        context['group_data'] = group_data
+
+        return context
 
 class AuditTripleList(ListView):
     model = AuditTriple 
@@ -21,7 +68,7 @@ class AuditTripleList(ListView):
        qs = super().get_queryset() 
        return qs.filter(user=self.request.user).prefetch_related('entityA_types','entityB_types')
 
-    # add form
+    # add filter form
     def get_context_data(self, **kwargs):
         context = super(AuditTripleList, self).get_context_data(**kwargs)
         context['filter'] = AuditTripleFilter(self.request.GET,queryset=self.get_queryset(),request=self.request)
@@ -44,7 +91,7 @@ class AuditTripleList(ListView):
         union = len((a_set | b_set))
         
         # calulate simularity
-        context['simularity'] = round(intersection / union,2) 
+        context['simularity'] = round(intersection / union,4) 
         return context
 
 class AuditTripleUpdate(UpdateView):
@@ -56,6 +103,7 @@ class AuditTripleUpdate(UpdateView):
       "relation",
       "entityB",
       "entityB_types",
+      "verified",
     ]
 
     # override get_form to make only the users data available
@@ -63,10 +111,10 @@ class AuditTripleUpdate(UpdateView):
         form = super().get_form(form_class)
         query = Type.objects.filter(user=self.request.user)
       #  form.fields['entityA'].queryset = Entity.objects.filter(user=self.request.user) 
-        form.fields['entityA_types'].queryset = Type.objects.filter(user=self.request.user) 
+        form.fields['entityA_types'].queryset = query 
       #  form.fields['relation'].queryset = Relation.objects.filter(user=self.request.user) 
       #  form.fields['entityB'].queryset = Entity.objects.filter(user=self.request.user) 
-        form.fields['entityB_types'].queryset = Type.objects.filter(user=self.request.user) 
+        form.fields['entityB_types'].queryset = query
         return form
 
     # if updated make verified False

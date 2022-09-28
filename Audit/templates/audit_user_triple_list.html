@@ -1,0 +1,44 @@
+<!--AuditUserTripleList-->
+{% extends '_base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% if user.is_authenticated%}
+  <p class="text-end">Logged in as {{ user.username }}</p>
+{% else %}
+ <p class="text-end">You are not logged in</p>
+{%endif%}
+  <h1 class="text-center">User Triples</h1>
+  <br/>
+  <form method="GET">
+  {% csrf_token %}
+  {{ filter.form | crispy }}
+  <br/>
+    <input style="inline-block" type="submit" class="btn btn-primary" value="Search"> 
+  </form>
+
+  <table class="table table-striped table-hover" style="table-layout: fixed; word-wrap: break-word;">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">User</th>
+        <th scope="col">EntityA</th>
+        <th scope="col">Relation</th>
+        <th scope="col">EntityB</th>
+        <th scope="col">Verified</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+      {% for object in filter.qs %}
+        <td>{{ forloop.counter }}</td>
+        <td>{{ object.user }}</td>
+        <td>{{ object.entityA }}</td>
+        <td>{{ object.relation }}</td>
+        <td>{{ object.entityB }}</td>
+        <td>{{ object.verified }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock content %}

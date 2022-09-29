@@ -5,6 +5,7 @@ from .views import (
     AuditTypeCreate,
     UserTripleView,
     GroupsView,
+    get_simularity,
 )
 app_name = 'Audit'
 urlpatterns = [
@@ -15,4 +16,5 @@ urlpatterns = [
 
     path('UserTripleView/List/', UserTripleView.as_view(), name='audit_user_triple_list'),
     path('Groups/', GroupsView.as_view(), name='audit_groups'),
+    path('Groups/simularity', get_simularity, name='get_simularity'),
 ]

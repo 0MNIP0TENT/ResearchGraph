@@ -2,6 +2,11 @@
 {% extends '_base.html' %}
 {% load static %}
 {% block content %}
+{% if user.is_authenticated%}
+  <p class="text-end">Logged in as {{ user.username }}</p>
+{% else %}
+ <p class="text-end">You are not logged in</p>
+{%endif%}
 <div class="container">
   <br/>
   <h1>Group simularity</h1>

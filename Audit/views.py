@@ -7,10 +7,14 @@ from .models import AuditTriple, Type, Dataset
 from users.models import CustomUser
 from django.contrib.auth.models import Group
 from .filters import  AuditTripleFilter, AuditUserTripleFilter
-  
+
+# used to redirect login on certain pages
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 # Create your views here.
 
-class UserTripleView(ListView):
+class UserTripleView(LoginRequiredMixin, ListView):
+    login_url = '/accounts/login/login/' 
     model = AuditTriple
     template_name = 'audit_user_triple_list.html'
 
@@ -102,7 +106,8 @@ def get_simularity(request):
 
 
 
-class AuditTripleList(ListView):
+class AuditTripleList(LoginRequiredMixin, ListView):
+    login_url = '/accounts/login/login/' 
     model = AuditTriple 
     template_name = 'audit_triple_list.html'
 
@@ -148,7 +153,8 @@ class AuditTripleList(ListView):
      #   context['simularity'] = round(intersection / union * 100,2) 
         return context
 
-class AuditTripleUpdate(UpdateView):
+class AuditTripleUpdate(LoginRequiredMixin, UpdateView):
+    login_url = '/accounts/login/login/' 
     model = AuditTriple
     template_name = 'audit_triple_form.html'
     fields = [
@@ -166,7 +172,8 @@ class AuditTripleUpdate(UpdateView):
     def get_success_url(self):
         return reverse('Audit:audit_triple_list')
 
-class AuditTypeCreate(CreateView):
+class AuditTypeCreate(LoginRequiredMixin, CreateView):
+    login_url = '/accounts/login/login/' 
     model = Type
 
     template_name = 'audit_type_create.html'
@@ -182,11 +189,13 @@ class AuditTypeCreate(CreateView):
     def get_success_url(self):
         return reverse('Audit:audit_triple_list')
 
-class ListDatasets(ListView):
+class ListDatasets(LoginRequiredMixin, ListView):
+    login_url = '/accounts/login/login/' 
     model = Dataset
     template_name = 'audit_list_datasets.html'
 
-class DeleteDataset(DeleteView):
+class DeleteDataset(LoginRequiredMixin, DeleteView):
+    login_url = '/accounts/login/login/' 
     model = Dataset
     template_name = 'audit_dataset_confirm_delete.html'
 

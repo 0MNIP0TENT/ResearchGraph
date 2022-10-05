@@ -1,0 +1,17 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% if user.is_authenticated%}
+<p class="text-end">Logged in as {{ user.username }}</p>
+{% else %}
+ <p class="text-end">You are not logged in</p>
+{%endif%}
+<div class="container">
+<form method="post">{% csrf_token %}
+    <p>Are you sure you want to delete "{{ object }}"?</p>
+    {{ form }}
+    <input class="btn btn-danger" type="submit" value="Confirm">
+</form>
+</div>
+{% endblock content %}

@@ -21,17 +21,19 @@
     <thead>
       <tr>
         <th scope="col">#</th>
-        <th scope="col">User</th>
-        <th scope="col">EntityA</th>
-        <th scope="col">Relation</th>
-        <th scope="col">EntityB</th>
-        <th scope="col">Verified</th>
+        <th scope="col">Dataset:</th>
+        <th scope="col">User:</th>
+        <th scope="col">EntityA:</th>
+        <th scope="col">Relation:</th>
+        <th scope="col">EntityB:</th>
+        <th scope="col">Verified:</th>
       </tr>
     </thead>
     <tbody>
       <tr>
       {% for object in filter.qs %}
         <td>{{ forloop.counter }}</td>
+        <td>{{ object.dataset }}</td>
         <td>{{ object.user }}</td>
         <td>{{ object.entityA }}</td>
         <td>{{ object.relation }}</td>

@@ -1,13 +1,19 @@
 from django.db import models
 import uuid
-#from users.models import CustomUser
 from django.contrib.auth import get_user_model
 
 # Create your models here.
 
+class Dataset(models.Model):
+    name = models.CharField(max_length=255,)
+
+    def __str__(self):
+        return self.name 
+
 class Type(models.Model):
 
     user = models.ForeignKey(get_user_model(),on_delete=models.CASCADE,default='')
+    dataset = models.ForeignKey(Dataset,on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
 
     def __str__(self):
@@ -25,6 +31,8 @@ class AuditTriple(models.Model):
         editable=False
 
     ) 
+
+    dataset = models.ForeignKey(Dataset,on_delete=models.CASCADE)
 
     user = models.ForeignKey(get_user_model(),on_delete=models.CASCADE,default='')
 

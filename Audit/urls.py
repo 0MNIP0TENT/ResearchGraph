@@ -4,6 +4,8 @@ from .views import (
     AuditTripleUpdate,
     AuditTypeCreate,
     UserTripleView,
+    ListDatasets,
+    DeleteDataset,
     GroupsView,
     get_simularity,
 )
@@ -17,4 +19,7 @@ urlpatterns = [
     path('UserTripleView/List/', UserTripleView.as_view(), name='audit_user_triple_list'),
     path('Groups/', GroupsView.as_view(), name='audit_groups'),
     path('Groups/simularity', get_simularity, name='get_simularity'),
+
+    path('delete/dataset/<pk>/', DeleteDataset.as_view(), name='audit_delete_dataset'),
+    path('list/dataset/', ListDatasets.as_view(), name='audit_list_datasets'),
 ]

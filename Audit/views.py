@@ -141,6 +141,22 @@ def audit_triples(request):
     context['page_obj'] = page_obj
     return render(request,'audit_triple_list.html',context=context)
 
+def admin_view_triples(request):
+    context = {}
+
+    triple_filter = AuditUserTripleFilter(
+        request.GET,
+        queryset=AuditTriple.objects.all()
+    )
+
+    paginated_triple_filter = Paginator(triple_filter.qs,50)
+
+    context['triple_filter'] = triple_filter 
+    page_number = request.GET.get('page')
+    page_obj = paginated_triple_filter.get_page(page_number)
+    context['page_obj'] = page_obj
+    return render(request,'audit_triple_list.html',context=context)
+
 class AuditTripleUpdate(LoginRequiredMixin, UpdateView):
     login_url = '/accounts/login/login/' 
     model = AuditTriple

@@ -8,7 +8,8 @@ from .views import (
     DeleteDataset,
     GroupsView,
     get_simularity,
-    audit_triples
+    audit_triples,
+    admin_view_triples
 )
 app_name = 'Audit'
 urlpatterns = [
@@ -17,7 +18,7 @@ urlpatterns = [
     path('AuditType/create/', AuditTypeCreate.as_view(), name='audit_type_create'),
     path('AuditTriple/<uuid:pk>/Update/', AuditTripleUpdate.as_view(), name='audit_triple_update'),
 
-    path('UserTripleView/List/', UserTripleView.as_view(), name='audit_user_triple_list'),
+    path('UserTripleView/List/',admin_view_triples, name='audit_user_triple_list'),
     path('Groups/', GroupsView.as_view(), name='audit_groups'),
     path('Groups/simularity', get_simularity, name='get_simularity'),
 

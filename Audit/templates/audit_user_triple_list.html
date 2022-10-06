@@ -31,7 +31,7 @@
     </thead>
     <tbody>
       <tr>
-      {% for object in filter.qs|slice:":2000" %}
+      {% for object in page_obj %}
         <td>{{ forloop.counter }}</td>
         <td>{{ object.dataset }}</td>
         <td>{{ object.user }}</td>
@@ -43,4 +43,22 @@
       {% endfor %}
     </tbody>
   </table>
+
+  <div class="pagination">
+    <span class="step-links">
+    {% if page_obj.has_previous %}
+      <a class="btn btn-outline-primary btn-sm" href={% my_url page_obj.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
+      <a class="btn btn-outline-primary btn-sm" href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
+    {% endif %}
+      <span class="current">
+        Page {{ page_obj.number}} of {{ page_obj.paginator.num_pages }}.
+      </span>
+
+     {% if page_obj.has_next %}
+       <a class="btn btn-outline-primary btn-sm" href="{% my_url page_obj.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
+       <a class="btn btn-outline-primary btn-sm" href="{% my_url page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
+     {% endif %}
+     </span>
+
+  </div>
 {% endblock content %}

@@ -1,11 +1,12 @@
 from django.views.generic.list import ListView
-from django.urls import reverse, reverse_lazy
+from django.urls import reverse
+from django.shortcuts import render
 from django.http import JsonResponse
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import UpdateView,CreateView,DeleteView
 from .models import AuditTriple, Type, Dataset
-from users.models import CustomUser
 from django.contrib.auth.models import Group
+from django.core.paginator import Paginator
 from .filters import  AuditTripleFilter, AuditUserTripleFilter
 
 # used to redirect login on certain pages
@@ -98,8 +99,6 @@ def get_simularity(request):
 
         group_data = dict(zip(group_user_dict.keys(),simularity))
         simularity_dict[dataset.name] = simularity
-    print('simdict',simularity_dict)
-
 
     #return JsonResponse({'group_data':group_data,'simularity_dict':simularity_dict})
     return JsonResponse({'group_data':group_data,'simularity_dict':simularity_dict})
@@ -124,34 +123,23 @@ class AuditTripleList(LoginRequiredMixin, ListView):
         context = super(AuditTripleList, self).get_context_data(**kwargs)
         context['filter'] = AuditTripleFilter(self.request.GET,queryset=self.get_queryset(),request=self.request)
 
-     #   # get user and other group user
-     #   group = self.request.user.groups.all()
-     #   users = CustomUser.objects.filter(groups__name=group[0])
-     #   other_user = [u for u in users if u != self.request.user][0] 
-     #   a = list()
-     #   b = list()
-     #   
-     #   # get user's triples
-     #   a = AuditTriple.objects.filter(user=self.request.user).values_list('dataset','entityA','relation','entityB','verified')
-     #   b = AuditTriple.objects.filter(user=other_user).values_list('dataset','entityA','relation','entityB','verified')
-
-     #   a_set = set()
-     #   b_set = set()
-     #   
-     #   # make set
-     #   for trip in a: 
-     #       a_set.add((trip[0],trip[1],trip[2],trip[3],trip[4])) 
-     #   
-     #   for trip in b: 
-     #       b_set.add((trip[0],trip[1],trip[2],trip[3],trip[4])) 
-
-     #   # calculate union and intersection
-     #   intersection = len((a_set & b_set))
-     #   union = len((a_set | b_set))
-     #   
-     #   # calulate simularity
-     #   context['simularity'] = round(intersection / union * 100,2) 
         return context
+
+def audit_triples(request):
+    context = {}
+
+    triple_filter = AuditTripleFilter(
+        request.GET,
+        queryset=AuditTriple.objects.filter(user=request.user)
+    )
+
+    paginated_triple_filter = Paginator(triple_filter.qs,50)
+
+    context['triple_filter'] = triple_filter 
+    page_number = request.GET.get('page')
+    page_obj = paginated_triple_filter.get_page(page_number)
+    context['page_obj'] = page_obj
+    return render(request,'audit_triple_list.html',context=context)
 
 class AuditTripleUpdate(LoginRequiredMixin, UpdateView):
     login_url = '/accounts/login/login/' 

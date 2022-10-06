@@ -2,6 +2,7 @@
 {% extends '_base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% load audit_extras %}
 {% block content %}
 {% if user.is_authenticated%}
   <p class="text-end">Logged in as {{ user.username }}</p>
@@ -13,7 +14,7 @@
   <h6>Filter by a relation, entityA, entityB or any combination of the three.</h6>
   <form method="GET">
   {% csrf_token %}
-  {{ filter.form | crispy }}
+  {{ triple_filter.form | crispy }}
   <br/>
     <input style="inline-block" type="submit" class="btn btn-primary" value="Search"> 
   </form>
@@ -32,7 +33,7 @@
     </thead>
     <tbody>
       <tr>
-        {% for object in filter.qs %}
+        {% for object in page_obj %}
         <td>{{ forloop.counter }}</td>
         <td>{{ object.dataset }}</td>
         <td>{{ object.entityA }}</td>
@@ -47,6 +48,24 @@
         
       </tr>
       {% endfor %}
-    </tbody>
+        </tbody>
   </table>
+
+  <div class="pagination">
+    <span class="step-links">
+    {% if page_obj.has_previous %}
+    <a href="{% my_url 1 'page' request.GET.urlencode %}">&laquo;First</a>
+      <a href={% my_url page_obj.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
+    {% endif %}
+      <span class="current">
+        Page {{ page_obj.number}} of {{ page_obj.paginator.num_pages }}.
+      </span>
+
+     {% if page_obj.has_next %}
+       <a href="{% my_url page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
+       <a href="{% my_url page_obj.paginator.num_pages 'page' request.GET.urlencode %}">&raquo;Last</a>
+     {% endif %}
+     </span>
+
+  </div>
 {% endblock content %}

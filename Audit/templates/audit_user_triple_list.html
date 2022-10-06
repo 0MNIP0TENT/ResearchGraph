@@ -31,7 +31,7 @@
     </thead>
     <tbody>
       <tr>
-      {% for object in filter.qs %}
+      {% for object in filter.qs|slice:":2000" %}
         <td>{{ forloop.counter }}</td>
         <td>{{ object.dataset }}</td>
         <td>{{ object.user }}</td>

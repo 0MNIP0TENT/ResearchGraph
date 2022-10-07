@@ -2,6 +2,7 @@
 {% extends '_base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
+{% load audit_extras %}
 {% block content %}
 {% if user.is_authenticated%}
   <p class="text-end">Logged in as {{ user.username }}</p>
@@ -12,7 +13,7 @@
   <br/>
   <form method="GET">
   {% csrf_token %}
-  {{ filter.form | crispy }}
+  {{ triple_filter.form | crispy }}
   <br/>
     <input style="inline-block" type="submit" class="btn btn-primary" value="Search"> 
   </form>

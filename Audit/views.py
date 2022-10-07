@@ -155,7 +155,7 @@ def admin_view_triples(request):
     page_number = request.GET.get('page')
     page_obj = paginated_triple_filter.get_page(page_number)
     context['page_obj'] = page_obj
-    return render(request,'audit_triple_list.html',context=context)
+    return render(request,'audit_user_triple_list.html',context=context)
 
 class AuditTripleUpdate(LoginRequiredMixin, UpdateView):
     login_url = '/accounts/login/login/' 

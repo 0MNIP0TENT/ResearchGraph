@@ -1,13 +1,14 @@
 from django.views.generic.list import ListView
 from django.urls import reverse
 from django.shortcuts import render
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseRedirect
 from django.views.generic.base import TemplateView
 from django.views.generic.edit import UpdateView,CreateView,DeleteView
 from .models import AuditTriple, Type, Dataset
 from django.contrib.auth.models import Group
 from django.core.paginator import Paginator
 from .filters import  AuditTripleFilter, AuditUserTripleFilter
+from django.core.exceptions import PermissionDenied
 
 # used to redirect login on certain pages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -104,7 +105,6 @@ def get_simularity(request):
     return JsonResponse({'group_data':group_data,'simularity_dict':simularity_dict})
 
 
-
 class AuditTripleList(LoginRequiredMixin, ListView):
     login_url = '/accounts/login/login/' 
     model = AuditTriple 
@@ -128,6 +128,9 @@ class AuditTripleList(LoginRequiredMixin, ListView):
 def audit_triples(request):
     context = {}
 
+    if not request.user.is_authenticated:
+        raise PermissionDenied
+
     triple_filter = AuditTripleFilter(
         request.GET,
         queryset=AuditTriple.objects.filter(user=request.user)
@@ -144,6 +147,9 @@ def audit_triples(request):
 def admin_view_triples(request):
     context = {}
 
+    if not request.user.is_staff:
+        raise PermissionDenied
+
     triple_filter = AuditUserTripleFilter(
         request.GET,
         queryset=AuditTriple.objects.all()
@@ -157,7 +163,15 @@ def admin_view_triples(request):
     context['page_obj'] = page_obj
     return render(request,'audit_user_triple_list.html',context=context)
 
-class AuditTripleUpdate(LoginRequiredMixin, UpdateView):
+def update_bulk_triples(request):
+    # if not logged in cant update
+    if not request.user.is_authenticated:
+        raise PermissionDenied
+
+    if "POST" == request.method:
+        pass
+
+class AuditTripleUpdate(LoginRequiredMixin,UpdateView):
     login_url = '/accounts/login/login/' 
     model = AuditTriple
     template_name = 'audit_triple_form.html'
@@ -165,7 +179,7 @@ class AuditTripleUpdate(LoginRequiredMixin, UpdateView):
       "entityA",
       "relation",
       "entityB",
-      "verified",
+      #"verified",
     ]
 
     # if updated make verified False
@@ -174,7 +188,7 @@ class AuditTripleUpdate(LoginRequiredMixin, UpdateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('Audit:audit_triple_list')
+        return self.request.GET.get('next','/')
 
 class AuditTypeCreate(LoginRequiredMixin, CreateView):
     login_url = '/accounts/login/login/' 
@@ -198,10 +212,20 @@ class ListDatasets(LoginRequiredMixin, ListView):
     model = Dataset
     template_name = 'audit_list_datasets.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_staff:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
 class DeleteDataset(LoginRequiredMixin, DeleteView):
     login_url = '/accounts/login/login/' 
     model = Dataset
     template_name = 'audit_dataset_confirm_delete.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_staff:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
 
     def get_success_url(self):
         return reverse('Audit:audit_list_datasets')

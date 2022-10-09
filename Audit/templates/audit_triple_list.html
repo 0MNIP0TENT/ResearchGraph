@@ -29,6 +29,7 @@
         <th scope="col">EntityB:</th>
         <!--<th scope="col">Types:</th>-->
         <th scope="col">Verified:</th>
+        <th scope="col">Checkbox:</th>
       </tr>
     </thead>
     <tbody>
@@ -37,35 +38,29 @@
         <td>{{ forloop.counter }}</td>
         <td>{{ object.dataset }}</td>
         <td>{{ object.entityA }}</td>
-
-	
         <td>{{ object.relation }}</td>
         <td>{{ object.entityB }}</td>
-
         <td>{{ object.verified }}</td>
-
-        <td><a href="{% url 'Audit:audit_triple_update' object.id %}" class="btn btn-success" role="button">Update</td>
-        
+	<td><a href="{% url 'Audit:audit_triple_update' object.id %}?next={{request.get_full_path|urlencode}}" class="btn btn-success" role="button">Update</td>
       </tr>
       {% endfor %}
+        </form>
         </tbody>
   </table>
-
   <div class="pagination">
     <span class="step-links">
     {% if page_obj.has_previous %}
       <a class="btn btn-outline-primary btn-sm" href={% my_url page_obj.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
-      <a class="btn btn-outline-primary btn-sm" href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
+      <a class="btn btn-outline-primary btn-sm" href="{% my_url 1 'page' request.POST.urlencode %}">First</a>
     {% endif %}
       <span class="current">
         Page {{ page_obj.number}} of {{ page_obj.paginator.num_pages }}.
       </span>
-
      {% if page_obj.has_next %}
        <a class="btn btn-outline-primary btn-sm" href="{% my_url page_obj.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
        <a class="btn btn-outline-primary btn-sm" href="{% my_url page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
      {% endif %}
      </span>
-
   </div>
+  <br/>
 {% endblock content %}

@@ -10,14 +10,16 @@
 <div class="container">
 <h1 class="text-center">AuditTriple Update Form</h1>
 <br>
-<h5>Change the relation or entities of this triple for new ones.</h5>
+<h5>Rename the relation or entities of this triple or just unverify.</h5>
 <br>
 <form method="post"> 
     {% csrf_token %} 
     {{ form | crispy }} 
     <br/>
-    <input class="btn btn-success" type="submit" value="Save"> 
+    <input class="btn btn-success" type="submit" value="Unverify"> 
+    <br/>
     <!--<a href="{% url 'Audit:audit_type_create' %}" class="btn btn-success" style="color:white;text-decoration:none;">create new type</a>-->
 </form> 
+<br/>
 </div>
 {% endblock content %}

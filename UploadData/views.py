@@ -1,18 +1,23 @@
 from django.shortcuts import render
 import openpyxl
-from UploadData import helper_methods as h
-from Audit.models import AuditTriple, Type, Dataset
+from Audit.models import AuditTriple, Dataset
 from users.models import CustomUser
+from django.core.exceptions import PermissionDenied
 
 # Create your views here.
 
 context = {}
 
 def upload_data_view(request):
+    # Check is user is staff. Only users with is_staff attribute can upload_data new data sets
+    if not request.user.is_staff:
+        raise PermissionDenied()
+
     if "GET" == request.method:
        return render(request,'upload_data.html',context)
     
     else:
+
         #user_list = [usr for usr in CustomUser.objects.all() if  not usr.is_staff]
         user_list = CustomUser.objects.all()
 

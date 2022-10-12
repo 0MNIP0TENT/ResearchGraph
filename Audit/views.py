@@ -156,34 +156,41 @@ class AuditTripleList(LoginRequiredMixin, ListView):
         return context
 
 class AuditFunctionalForm(forms.Form):
-    
+        
     verified_choices = (
         ('Unknown', 'Unknown'),
         ('Yes', 'Yes'),
         ('No', 'No')
     )
-    relation_choices = ['a','z','d','b','w','g','q','i','t','o','s']
-    
-            
-    
+
     helper = FormHelper()
     helper.form_method = 'GET'
-    
+
     # seems to work without defining these
     # helper.form_action = reverse_lazy('Audit/AuditTriple/List/')
     # helper.form_action = 'index'
-    
+
     # submit
     helper.add_input(Submit('submit', 'Submit'))
-    
+
     # fields
-    dataset = forms.ModelChoiceField(required=False, queryset=Dataset.objects.all())
-    relation_qs=AuditTriple.objects.values('relation').distinct()
+    # user = ForeignKey(get_user_model(),on_delete=models.CASCADE,default='')
+
+    dataset = forms.ModelChoiceField(required=False, queryset=Dataset.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
+    relation_qs = AuditTriple.objects.values_list('relation').distinct()
     relation = forms.CharField(required=False, widget=ListTextWidget(relation_qs, 'relation_list'))
     entityA = forms.CharField(required=False)
     entityB = forms.CharField(required=False)
-    verified = forms.ChoiceField(choices=verified_choices)
-    
+    verified = forms.ChoiceField(choices=verified_choices, widget=forms.Select(attrs={'class': 'form-control'}))
+
+    # def __init__(self, *args, **kwargs):
+    #         request = kwargs.pop("request")
+            
+    #         super().__init__(*args, **kwargs)
+    #         user = kwargs['request'].user
+            
+    #         if request:
+    #             self.fields['dataset'].queryset = Dataset.objects.get(id__exact=user)
      
      
 def audit_triples(request):

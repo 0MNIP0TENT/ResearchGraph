@@ -1,3 +1,4 @@
+from pickle import FALSE
 from django.views.generic.list import ListView
 from django.urls import reverse
 from django.shortcuts import render
@@ -12,6 +13,14 @@ from django.core.exceptions import PermissionDenied
 
 # used to redirect login on certain pages
 from django.contrib.auth.mixins import LoginRequiredMixin
+
+#forms imports
+from django import forms
+from django.urls import reverse_lazy
+from django.forms import ModelForm
+from crispy_forms.helper import FormHelper
+from crispy_forms.layout import Layout, Field, HTML, Submit
+from Audit.fields import ListTextWidget
 
 # Create your views here.
 
@@ -104,12 +113,33 @@ def get_simularity(request):
     #return JsonResponse({'group_data':group_data,'simularity_dict':simularity_dict})
     return JsonResponse({'group_data':group_data,'simularity_dict':simularity_dict})
 
+class AuditTripleModelForm(ModelForm):
+    # NOT IN USE
+    class Meta:
+        model = AuditTriple
+        fields = ['dataset','relation','entityA','entityB','verified']
+    @property
+    def helper(self):
+        helper = FormHelper()
+        helper.form_method = 'GET'
+        helper.layout = Layout(
+            HTML('<h1> hiiiiii </h1>'),
+            Field('dataset'),
+            Field('relation'),
+            Field('entityA'),
+            Field('entityB'),
+            Field('verified'),
+            Submit('submit','Submit', css_class='btn-success')
+        )
+        return helper
 
 class AuditTripleList(LoginRequiredMixin, ListView):
+    # NOT IN USE
     login_url = '/accounts/login/login/' 
     model = AuditTriple 
     template_name = 'audit_triple_list.html'
-
+    form_class = AuditTripleModelForm
+    paginate_by = 50
     # filter results based on the user
     def get_queryset(self):
        # original qs
@@ -122,9 +152,40 @@ class AuditTripleList(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(AuditTripleList, self).get_context_data(**kwargs)
         context['filter'] = AuditTripleFilter(self.request.GET,queryset=self.get_queryset(),request=self.request)
-
+        context['form'] = AuditTripleModelForm()
         return context
 
+class AuditFunctionalForm(forms.Form):
+    
+    verified_choices = (
+        ('Unknown', 'Unknown'),
+        ('Yes', 'Yes'),
+        ('No', 'No')
+    )
+    relation_choices = ['a','z','d','b','w','g','q','i','t','o','s']
+    
+            
+    
+    helper = FormHelper()
+    helper.form_method = 'GET'
+    
+    # seems to work without defining these
+    # helper.form_action = reverse_lazy('Audit/AuditTriple/List/')
+    # helper.form_action = 'index'
+    
+    # submit
+    helper.add_input(Submit('submit', 'Submit'))
+    
+    # fields
+    dataset = forms.ModelChoiceField(required=False, queryset=Dataset.objects.all())
+    relation_qs=AuditTriple.objects.values('relation').distinct()
+    relation = forms.CharField(required=False, widget=ListTextWidget(relation_qs, 'relation_list'))
+    entityA = forms.CharField(required=False)
+    entityB = forms.CharField(required=False)
+    verified = forms.ChoiceField(choices=verified_choices)
+    
+     
+     
 def audit_triples(request):
     context = {}
 
@@ -137,11 +198,12 @@ def audit_triples(request):
     )
 
     paginated_triple_filter = Paginator(triple_filter.qs,50)
-
+    context = {'form': AuditFunctionalForm()}
     context['triple_filter'] = triple_filter 
     page_number = request.GET.get('page')
     page_obj = paginated_triple_filter.get_page(page_number)
     context['page_obj'] = page_obj
+    
     return render(request,'audit_triple_list.html',context=context)
 
 def admin_view_triples(request):

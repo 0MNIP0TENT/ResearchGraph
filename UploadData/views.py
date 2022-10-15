@@ -18,8 +18,7 @@ def upload_data_view(request):
     
     else:
 
-        #user_list = [usr for usr in CustomUser.objects.all() if  not usr.is_staff]
-        user_list = CustomUser.objects.all()
+        user_list = [usr for usr in CustomUser.objects.all() if  not usr.is_staff]
 
         excel_file = request.FILES["excel_file"]
 
@@ -45,46 +44,123 @@ def upload_data_view(request):
                 row_data.append(str(cell.value))
             excel_data.append(row_data) 
 
-      #  # Worry about implementing types later 
-      #  # create and save semantic type objects first, because they must be added to triples
-      #  types = list()
 
-      #  # going through excel triples adding semantic types to list
-      #  for triple in excel_data:
-      #      type_list = triple[0].split("|")[1:] + triple[2].split("|")[1:]
-      #      for t in type_list: 
-      #          types.append(t)
-
-      #  # removing duplicates if they exist in semantic_types
-      #  types_no_dupes = list()
-      #  [types_no_dupes.append(t) for t in types if t not in types_no_dupes]
-
-        # create list of semantic_type_objects 
-      #  type_objects = list()
-
-      #  for t in types_no_dupes:
-      #      # add for every user
-      #      for usr in user_list: 
-      #         type_objects.append(Type(dataset=name,user=usr,name=t))
-
-      #  # create semantic type object 
-      #  Type.objects.bulk_create(type_objects)
-      #  types = list()
+        # Each group gets different data to audit.
+        row_num = worksheet.max_row  
+        group_dataset_size = worksheet.max_row  // 6 
 
         triple_data = list()
 
-        for data in excel_data:
+        n = group_dataset_size 
+  
+        # using list comprehension divide the list into 6 lists
+        print('user_list',user_list)
+        group_data_list = [excel_data[i:i + n] for i in range(0, row_num, n)]
+        
+        # Group 1
+        for data in group_data_list[0]:
+            usr = user_list[0]
             entA = data[0].split('|')[0] 
-        #    entA_types = data[0].split('|')[1:] 
-
             rel = data[1]
-
             entB = data[2].split('|')[0] 
-        #    entB_types = data[2].split('|')[1:] 
+            triple_data.append([usr,entA,rel,entB])
+            
+        for data in group_data_list[0]:
+            usr = user_list[1]
+            entA = data[0].split('|')[0] 
+            rel = data[1]
+            entB = data[2].split('|')[0] 
+            triple_data.append([usr,entA,rel,entB])
 
-            for usr in user_list:
-                 triple_data.append([usr,entA,rel,entB])
-                 #triple_data.append([usr,entA,entA_types,rel,entB,entB_types])
+        # Group 2
+        for data in group_data_list[1]:
+            usr = user_list[2]
+            entA = data[0].split('|')[0] 
+            rel = data[1]
+            entB = data[2].split('|')[0] 
+            triple_data.append([usr,entA,rel,entB])
+
+        for data in group_data_list[1]:
+            usr = user_list[3]
+            entA = data[0].split('|')[0] 
+            rel = data[1]
+            entB = data[2].split('|')[0] 
+            triple_data.append([usr,entA,rel,entB])
+
+        # Group 3
+        for data in group_data_list[2]:
+            usr = user_list[4]
+            entA = data[0].split('|')[0] 
+            rel = data[1]
+            entB = data[2].split('|')[0] 
+            triple_data.append([usr,entA,rel,entB])
+
+        for data in group_data_list[2]:
+            usr = user_list[5]
+            entA = data[0].split('|')[0] 
+            rel = data[1]
+            entB = data[2].split('|')[0] 
+            triple_data.append([usr,entA,rel,entB])
+
+        # Group 4
+        for data in group_data_list[3]:
+            usr = user_list[6]
+            entA = data[0].split('|')[0] 
+            rel = data[1]
+            entB = data[2].split('|')[0] 
+            triple_data.append([usr,entA,rel,entB])
+
+        for data in group_data_list[3]:
+            usr = user_list[7]
+            entA = data[0].split('|')[0] 
+            rel = data[1]
+            entB = data[2].split('|')[0] 
+            triple_data.append([usr,entA,rel,entB])
+
+        # Group 5
+        for data in group_data_list[4]:
+            usr = user_list[8]
+            entA = data[0].split('|')[0] 
+            rel = data[1]
+            entB = data[2].split('|')[0] 
+            triple_data.append([usr,entA,rel,entB])
+
+        for data in group_data_list[4]:
+            usr = user_list[9]
+            entA = data[0].split('|')[0] 
+            rel = data[1]
+            entB = data[2].split('|')[0] 
+            triple_data.append([usr,entA,rel,entB])
+
+        # Group 6
+        for data in group_data_list[5]:
+            usr = user_list[10]
+            entA = data[0].split('|')[0] 
+            rel = data[1]
+            entB = data[2].split('|')[0] 
+            triple_data.append([usr,entA,rel,entB])
+
+        for data in group_data_list[5]:
+            usr = user_list[11]
+            entA = data[0].split('|')[0] 
+            rel = data[1]
+            entB = data[2].split('|')[0] 
+            triple_data.append([usr,entA,rel,entB])
+
+#       # changing before here
+#
+#        for data in excel_data:
+#            entA = data[0].split('|')[0] 
+#        #    entA_types = data[0].split('|')[1:] 
+#
+#            rel = data[1]
+#
+#            entB = data[2].split('|')[0] 
+#        #    entB_types = data[2].split('|')[1:] 
+#
+#            for usr in user_list:
+#                 triple_data.append([usr,entA,rel,entB])
+#                 #triple_data.append([usr,entA,entA_types,rel,entB,entB_types])
 
         triple_object_list = list()
         for data in triple_data:

@@ -248,6 +248,7 @@ class AuditTripleUpdate(LoginRequiredMixin,UpdateView):
       "entityA",
       "relation",
       "entityB",
+      "comment",
       #"verified",
     ]
 

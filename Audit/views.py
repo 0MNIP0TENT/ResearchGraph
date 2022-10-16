@@ -4,6 +4,7 @@ from django.urls import reverse
 from django.shortcuts import render
 from django.http import JsonResponse, HttpResponseRedirect
 from django.views.generic.base import TemplateView
+from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView,CreateView,DeleteView
 from .models import AuditTriple, Type, Dataset
 from django.contrib.auth.models import Group
@@ -259,6 +260,11 @@ class AuditTripleUpdate(LoginRequiredMixin,UpdateView):
 
     def get_success_url(self):
         return self.request.GET.get('next','/')
+
+# Detail view for admins to view comments
+class AuditTripleDetailView(DetailView):
+    model = AuditTriple
+    template_name = 'audit_triple_detail.html'
 
 class AuditTypeCreate(LoginRequiredMixin, CreateView):
     login_url = '/accounts/login/login/' 

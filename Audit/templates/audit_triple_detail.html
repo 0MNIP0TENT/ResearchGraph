@@ -1,0 +1,18 @@
+{% extends '_base.html' %}
+{% load static %}
+{% block content %}
+{% if user.is_authenticated%}
+<p class="text-end">Logged in as {{ user.username }}</p>
+{% else %}
+ <p class="text-end">You are not logged in</p>
+{%endif%}
+
+<div class="container">
+  <h1>View auditor's comment.</h1>
+  <div class="card">
+    <div class="card-header">Auditor: {{object.user}}</div>
+    <div class="card-body">Triple: {{object.entityA}}---->{{object.relation}}---->{{object.entityB}}</div>
+    <div class="card-footer">Comment: {{object.comment}}</div>
+  </div>
+</div>
+{% endblock content %}

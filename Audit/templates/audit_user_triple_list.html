@@ -28,6 +28,7 @@
         <th scope="col">Relation:</th>
         <th scope="col">EntityB:</th>
         <th scope="col">Verified:</th>
+        <th scope="col">Comment:</th>
       </tr>
     </thead>
     <tbody>
@@ -40,6 +41,7 @@
         <td>{{ object.relation }}</td>
         <td>{{ object.entityB }}</td>
         <td>{{ object.verified }}</td>
+	<td><a class="btn btn-success" href="{% url 'Audit:audit_triple_detail' object.pk %}">View Comment</a></td>
       </tr>
       {% endfor %}
     </tbody>

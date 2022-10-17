@@ -28,11 +28,26 @@
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 	    <li><a class="dropdown-item" href="{% url 'Entities:display_verified' %}">Verified</a></li>
             {% if user.is_authenticated %}
-	    <li><a class="dropdown-item" href="{% url 'Entities:display_unverified'%}">YourDatasets</a></li>
+	    <li><a class="dropdown-item" href="{% url 'Entities:display_unverified'%}">Your Datasets</a></li>
             {% endif %}
 	    <!-- <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Something else here</a></li>-->
           </ul>
+          {% if user.is_staff %}
+	  <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false"style="color:white;text-decoration:none;">
+           Audit Datasets
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+	    <li><a class="dropdown-item" href="{% url 'UploadData:upload' %}">Upload Datasets</a></li>
+            {% if user.is_authenticated %}
+	    <li><a class="dropdown-item" href="{% url 'Audit:audit_list_datasets'%}">Delete Datasets</a></li>
+            {% endif %}
+	    <!-- <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>-->
+          </ul>
+        </li>
+        {% endif %}
         </li>
         <li class="nav-item"><a class="nav-link" href="{% url 'Audit:audit_groups' %}" role="button" style="color:white;text-decoration:none;">GroupSimularity</a></li>
         {% if user.is_authenticated and not user.is_staff %}
@@ -40,8 +55,6 @@
         {% endif %}
         {% if user.is_staff %}
         <li class="nav-item"><a class="nav-link" href="{% url 'Audit:audit_user_triple_list' %}" role="button" style="color:white;text-decoration:none;">UserTriples</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'UploadData:upload' %}" role="button" style="color:white;text-decoration:none;">UploadData</a></li>
-        <li class="nav-item"><a class="nav-link" href="{% url 'Audit:audit_list_datasets' %}" role="button" style="color:white;text-decoration:none;">DeleteDatasets</a></li>
         {% endif %}
       </ul> 
       <ul class="navbar-nav me-right mb-2 mb-0">

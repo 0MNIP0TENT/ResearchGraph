@@ -1,8 +1,7 @@
-
 {% extends '_base.html' %}
 {% load static %}
 {% block content %}
-{% if user.is_authenticated%}
+{% if user.is_authenticated %}
 <p class="text-end">Logged in as {{ user.username }}</p>
 {% else %}
  <p class="text-end">You are not logged in</p>
@@ -27,43 +26,6 @@
       {% endfor %}
       </tbody>
   </table>
-
   {% endfor %}
-
-
-  <script>
-//  $(document).ready(function() {
-//    setInterval(function(){
-//
-//      $.ajax({
-//        type:'GET',
-//	url:"{% url 'Audit:get_simularity' %}",
-//	success: function(response) {
-//	console.log(response.simularity_dict);
-//
-//	$(".sim").empty();
-//	for(var dataset in response.simularity_dict) {
-//	  for(var simlist in response.simularity_dict[dataset])
-//	    var data = "<tr><td>"+dataset+"</td><td>"+response.simularity_dict[dataset]+"%</td></tr>";
-//	    console.log(data);
-//	    $(".sim").append(data);
-//
-//	}
-//
-//
-//	 $(".simularity").empty();
-//	 for (var key in response.group_data) {
-//	   var data = "<tr><td>"+key+"</td><td>"+response.group_data[key]+"%</td></tr>";
-//	   $(".simularity").append(data);
-//	 }
-//       },
-//
-//	error: function(response) {
-//	  alert('error fetching data');
-//	}
-//        });
-//      },3000);
-// });
-  </script>
 </div>
   {% endblock content %}

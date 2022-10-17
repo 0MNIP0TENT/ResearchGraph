@@ -51,21 +51,25 @@ class GroupsView(TemplateView):
 
         a_set = set() 
         b_set = set() 
+
+
+        
+
         for dataset in Dataset.objects.all():
             simularity = []
-            # There are 2 users per group
+           # There are 2 users per group
             for group in group_user_dict:
                 user1, user2 = group_user_dict[group]  
-            
-                # initial queries
+           
+               # initial queries
                 a = AuditTriple.objects.filter(user=user1,dataset=dataset).values_list('entityA','relation','entityB','verified')
                 b = AuditTriple.objects.filter(user=user2,dataset=dataset).values_list('entityA','relation','entityB','verified')
 
                 for trip in a:
-                  a_set.add((trip[0],trip[1],trip[2],trip[3])) 
+                    a_set.add((trip[0],trip[1],trip[2],trip[3])) 
 
                 for trip in b:
-                  b_set.add((trip[0],trip[1],trip[2],trip[3])) 
+                    b_set.add((trip[0],trip[1],trip[2],trip[3])) 
 
                 simularity.append(round(len(a_set&b_set)/len(a_set|b_set)*100,2))
 
@@ -75,11 +79,11 @@ class GroupsView(TemplateView):
 
                 simularity_dict[dataset] = simularity
 
-        group_data = list(zip(group_user_dict.keys(),simularity))
-        context['group_data'] = group_data
-        context['simularity_dict'] = simularity_dict
+            group_data = list(zip(group_user_dict.keys(),simularity))
+            context['group_data'] = group_data
+            context['simularity_dict'] = simularity_dict
 
-        return context
+            return context
 
 def get_simularity(request):
     group_user_dict = {group.name: group.user_set.values_list('id', flat=True) for group in Group.objects.all()}

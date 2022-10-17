@@ -44,9 +44,6 @@ def upload_data_view(request):
                 row_data.append(str(cell.value))
             excel_data.append(row_data) 
 
-
-       
-
         # Remove duplicates from excel_data
         excel_data_no_dupes = list()
 
@@ -60,11 +57,7 @@ def upload_data_view(request):
 
         triple_data = list()
 
-        print('with dupes',len(excel_data))
-        print('without dupes',len(excel_data_no_dupes))
-  
         # using list comprehension divide the list into 6 lists
-        print('user_list',user_list)
         group_data_list = [excel_data_no_dupes[i:i + n] for i in range(0, row_num, n)]
         
         # Group 1
@@ -157,20 +150,6 @@ def upload_data_view(request):
             entB = data[2].split('|')[0] 
             triple_data.append([usr,entA,rel,entB])
 
-#       # changing before here
-#
-#        for data in excel_data:
-#            entA = data[0].split('|')[0] 
-#        #    entA_types = data[0].split('|')[1:] 
-#
-#            rel = data[1]
-#
-#            entB = data[2].split('|')[0] 
-#        #    entB_types = data[2].split('|')[1:] 
-#
-#            for usr in user_list:
-#                 triple_data.append([usr,entA,rel,entB])
-#                 #triple_data.append([usr,entA,entA_types,rel,entB,entB_types])
 
         triple_object_list = list()
         for data in triple_data:
@@ -178,27 +157,11 @@ def upload_data_view(request):
                 dataset=name,
                 user = data[0],
                 entityA = data[1],
-              #  entityA_types = data[2],
                 relation = data[2],
                 entityB = data[3],
-              #  entityB_types = data[5],
 
             ))
 
         AuditTriple.objects.bulk_create(triple_object_list)
-        
-     #   audit_tiple_query = AuditTriple.objects.all().prefetch_related('entityA_types','entityB_types')
-
-     #   for x in range(len(triple_data)):
-     #       for t in triple_data[x][2]: 
-     #           usr = triple_data[x][0]
-     #           audit_tiple_query[x].entityA_types.add(Type.objects.get(dataset=name,user=usr))
-     #           #audit_tiple_query[x].entityA_types.add(Type.objects.get(dataset=name,user=usr,name=t))
-
-     #   for x in range(len(triple_data)):
-     #       for t in triple_data[x][5]: 
-     #           usr = triple_data[x][0]
-     #           audit_tiple_query[x].entityB_types.add(Type.objects.get(dataset=name,user=usr))
-                #audit_tiple_query[x].entityB_types.add(Type.objects.get(dataset=name,user=usr,name=t))
       
         return render(request, 'upload_data.html', context)

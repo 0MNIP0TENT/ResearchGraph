@@ -12,7 +12,6 @@ class AuditTripleFilter(django_filters.FilterSet):
         model = AuditTriple
         fields = ('dataset','relation','entityA','entityB','verified')
 
-
 # for admin users
 class AuditUserTripleFilter(django_filters.FilterSet):
 

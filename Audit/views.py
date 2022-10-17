@@ -309,3 +309,16 @@ class DeleteDataset(LoginRequiredMixin, DeleteView):
 
     def get_success_url(self):
         return reverse('Audit:audit_list_datasets')
+
+class CommentView(LoginRequiredMixin, ListView):
+    model = AuditTriple
+    login_url = '/accounts/login/login/' 
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_staff:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_context_data(self,**kwargs):
+        context = super(CommentView,self).get_context_data()
+        context['com']

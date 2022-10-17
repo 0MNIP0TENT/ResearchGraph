@@ -45,17 +45,27 @@ def upload_data_view(request):
             excel_data.append(row_data) 
 
 
+       
+
+        # Remove duplicates from excel_data
+        excel_data_no_dupes = list()
+
+        [excel_data_no_dupes.append(row) for row in excel_data if row not in excel_data_no_dupes]
+
         # Each group gets different data to audit.
-        row_num = worksheet.max_row  
-        group_dataset_size = worksheet.max_row  // 6 
+        #row_num = worksheet.max_row  
+        row_num = len(excel_data_no_dupes)
+        group_dataset_size = row_num  // 6 
+        n = group_dataset_size 
 
         triple_data = list()
 
-        n = group_dataset_size 
+        print('with dupes',len(excel_data))
+        print('without dupes',len(excel_data_no_dupes))
   
         # using list comprehension divide the list into 6 lists
         print('user_list',user_list)
-        group_data_list = [excel_data[i:i + n] for i in range(0, row_num, n)]
+        group_data_list = [excel_data_no_dupes[i:i + n] for i in range(0, row_num, n)]
         
         # Group 1
         for data in group_data_list[0]:

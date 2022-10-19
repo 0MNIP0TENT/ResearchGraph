@@ -312,13 +312,9 @@ class DeleteDataset(LoginRequiredMixin, DeleteView):
 
 class CommentView(LoginRequiredMixin, ListView):
     model = AuditTriple
+    template_name = 'audit_comments.html'
     login_url = '/accounts/login/login/' 
 
-    def dispatch(self, request, *args, **kwargs):
-        if not self.request.user.is_staff:
-            raise PermissionDenied
-        return super().dispatch(request, *args, **kwargs)
-
-    def get_context_data(self,**kwargs):
-        context = super(CommentView,self).get_context_data()
-        context['com']
+    def get_queryset(self): 
+        qs = super(CommentView, self).get_queryset()
+        return qs.exclude(comment='').order_by('user')

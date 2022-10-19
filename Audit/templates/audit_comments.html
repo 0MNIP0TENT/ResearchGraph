@@ -1,0 +1,25 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% if user.is_authenticated%}
+<p class="text-end">Logged in as {{ user.username }}</p>
+{% else %}
+ <p class="text-end">You are not logged in</p>
+{%endif%}
+<div class="container">
+<h1>User Comment's</h1>
+<br/>
+{% for object in object_list %}
+<p>Dataset: {{ object.dataset }}<p> 
+<ul class="list-group">
+  <li class="list-group-item">User: {{ object.user }}</li>
+  <li class="list-group-item">Triple: {{ object }}</li>
+  <li class="list-group-item">Comment: {{ object.comment }}</li>
+</ul>
+<br/>
+<br/>
+
+{% endfor  %}
+</div>
+{% endblock content%}

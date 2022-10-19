@@ -44,7 +44,7 @@ class AuditTriple(models.Model):
     entityB = models.CharField(max_length=255)
     entityB_types = models.ManyToManyField(Type,blank=True,related_name="entityB_types")
 
-    comment = models.TextField(blank=True,null=True,verbose_name="comments",help_text="Enter a optional reason for un verifing")
+    comment = models.TextField(blank=True,verbose_name="comments",help_text="Enter a optional reason for un verifing")
 
     verified = models.BooleanField(default=True)
 
@@ -52,4 +52,4 @@ class AuditTriple(models.Model):
         ordering = ('relation',)
 
     def __str__(self):
-        return self.entityA + '----' + self.relation + '---->' + self.entityB 
+        return self.entityA + '---->' + self.relation + '---->' + self.entityB 

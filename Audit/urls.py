@@ -10,7 +10,8 @@ from .views import (
     GroupsView,
     get_simularity,
     audit_triples,
-    admin_view_triples
+    admin_view_triples,
+    CommentView,
 )
 app_name = 'Audit'
 urlpatterns = [
@@ -25,6 +26,7 @@ urlpatterns = [
 
     # urls for admins
     path('UserTripleView/List/',admin_view_triples, name='audit_user_triple_list'),
+    path('UserComments/',CommentView.as_view(), name='audit_comments'),
     path('<pk>/', AuditTripleDetailView.as_view(), name='audit_triple_detail'),
 
     path('delete/dataset/<pk>/', DeleteDataset.as_view(), name='audit_delete_dataset'),

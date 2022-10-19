@@ -1,0 +1,30 @@
+{% extends '_base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+{% if user.is_authenticated%}
+<p class="text-end">Logged in as {{ user.username }}</p>
+{% else %}
+ <p class="text-end">You are not logged in</p>
+{%endif%}
+<h1>Group Differences:</h1>
+{% for difference in differences %}
+{{difference.arr}}
+<div class="card" style="width: 18rem;">
+  <div class="card-header">
+    Featured
+  </div>
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">An item</li>
+    <li class="list-group-item">A second item</li>
+    <li class="list-group-item">A third item</li>
+  </ul>
+</div>
+
+{% endfor %}
+
+
+
+
+<h1>Group6:</h1>
+{% endblock content %}

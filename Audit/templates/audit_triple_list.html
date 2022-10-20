@@ -20,24 +20,21 @@
         <th scope="col" colspan="1">#</th>
         <th scope="col" colspan="1">Dataset:</th>
         <th scope="col" colspan="3">EntityA:</th>
-	<!--<th scope="col">Types:</th>-->
         <th scope="col" colspan="3">Relation:</th>
         <th scope="col" colspan="3">EntityB:</th>
-        <!--<th scope="col">Types:</th>-->
-        <th scope="col" colspan="1">Verified:</th>
-        <th scope="col" colspan="1">Checkbox:</th>
+        <th scope="col" colspan="2">Verified:</th>
       </tr>
     </thead>
     <tbody>
       <tr>
         {% for object in page_obj %}
         <td colspan="1">{{ forloop.counter }}</td>
-        <td colspan="1">{{ object.dataset }}</td>
+	<td colspan="1">{{ object.dataset }}</td>
         <td colspan="3">{{ object.entityA }}</td>
         <td colspan="3">{{ object.relation }}</td>
         <td colspan="3">{{ object.entityB }}</td>
-        <td colspan="1">{{ object.verified }}</td>
-	<td><a href="{% url 'Audit:audit_triple_update' object.id %}?next={{request.get_full_path|urlencode}}" class="btn btn-success" role="button">Update</td>
+        <td colspan="2">{{ object.verified }}</td>
+	<td colspan="1"><a href="{% url 'Audit:audit_triple_update' object.id %}?next={{request.get_full_path|urlencode}}" class="btn btn-success" role="button">Update</td>
       </tr>
       {% endfor %}
         </form>

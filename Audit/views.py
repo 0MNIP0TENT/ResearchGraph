@@ -218,6 +218,26 @@ def audit_triples(request):
     
     return render(request,'audit_triple_list.html',context=context)
 
+def audit_triple_cards(request):
+    context = {}
+
+    if not request.user.is_authenticated:
+        raise PermissionDenied
+
+    triple_filter = AuditTripleFilter(
+        request.GET,
+        queryset=AuditTriple.objects.filter(user=request.user)
+    )
+
+    paginated_triple_filter = Paginator(triple_filter.qs,25)
+    context = {'form': AuditFunctionalForm()}
+    context['triple_filter'] = triple_filter 
+    page_number = request.GET.get('page')
+    page_obj = paginated_triple_filter.get_page(page_number)
+    context['page_obj'] = page_obj
+    
+    return render(request,'audit_triple_cards.html',context=context)
+
 def admin_view_triples(request):
     context = {}
 

@@ -12,6 +12,7 @@ from .views import (
     audit_triples,
     admin_view_triples,
     CommentView,
+    audit_triple_cards,
 )
 app_name = 'Audit'
 urlpatterns = [
@@ -20,7 +21,8 @@ urlpatterns = [
     path('Groups/', GroupsView.as_view(), name='audit_groups'),
 
     # urls for auditors
-    path('AuditTriple/List/', audit_triples, name='audit_triple_list'),
+    path('AuditTripleList/', audit_triples, name='audit_triple_list'),
+    path('AuditTripleCards/', audit_triple_cards, name='audit_triple_cards'),
     path('AuditType/create/', AuditTypeCreate.as_view(), name='audit_type_create'),
     path('AuditTriple/<uuid:pk>/Update/', AuditTripleUpdate.as_view(), name='audit_triple_update'),
 

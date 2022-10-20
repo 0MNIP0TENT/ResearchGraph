@@ -40,7 +40,7 @@
         <td colspan="3">{{ object.entityA }}</td>
         <td colspan="3">{{ object.relation }}</td>
         <td colspan="3">{{ object.entityB }}</td>
-        <td colspan="1">{{ object.verified }}</td>
+        <td colspan="2">{{ object.verified }}</td>
 	<td colspan="1"><a class="btn btn-success" href="{% url 'Audit:audit_triple_detail' object.id %}">View Comment</a></td>
       </tr>
       {% endfor %}

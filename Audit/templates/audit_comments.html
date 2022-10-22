@@ -20,13 +20,13 @@
  <br/>
 {% for object in page_obj %}
   <p>#{{forloop.counter}}  Dataset: {{ object.dataset }}<p> 
-  <div class="card" style="width: 100%;">
+  <div class="card border-danger" style="width: 100%;">
+    <h5 class="card-header">User:  {{object.user}}</h5>
   <div class="card-body">
-    <h5 class="card-title">User:  {{object.user}}</h5>
     <h5 class="card-text">EntityA:  {{object.entityA}}</h5>
     <h5 class="card-text">Relation:  {{object.relation}}</h5>
-    <h5 class="card-text">EntityB:  {{object.entityB}}</h5>
-    <p class="card-text"><b>Comment:</b>  {{object.comment}}</p>
+    <h5 class="card-text text-start">EntityB:  {{object.entityB}}</h5>
+    <p class="card-footer"><b>Comment:</b>  {{object.comment}}</p>
   </div>
 </div>
 <br/>

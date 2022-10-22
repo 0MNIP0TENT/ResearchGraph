@@ -16,7 +16,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 #forms imports
 from django import forms
-from django.urls import reverse_lazy
 from django.forms import ModelForm
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout, Field, HTML, Submit
@@ -43,7 +42,7 @@ class UserTripleView(LoginRequiredMixin, ListView):
 class GroupsView(TemplateView):
     template_name = "audit_groups.html"
 
-    def get_context_data(self, **kwargs):
+    def get_context_data(self):
         context = super(GroupsView,self).get_context_data()
         group_user_dict = {group.name: group.user_set.values_list('id', flat=True) for group in Group.objects.all()}
         simularity_dict = dict()
@@ -51,9 +50,8 @@ class GroupsView(TemplateView):
         a_set = set() 
         b_set = set() 
 
-
         for dataset in Dataset.objects.all():
-            simularity = []
+            simularity_list = []
            # There are 2 users per group
             for group in group_user_dict:
                 user1, user2 = group_user_dict[group]  
@@ -68,21 +66,22 @@ class GroupsView(TemplateView):
                 for trip in b:
                     b_set.add((trip[0],trip[1],trip[2],trip[3])) 
 
-                simularity.append(round(len(a_set&b_set)/len(a_set|b_set)*100,2))
+                simularity_list.append(round(len(a_set&b_set)/len(a_set|b_set)*100,2))
 
                 # clear set for next group
                 a_set.clear()
                 b_set.clear()
 
-                simularity_dict[dataset] = simularity
+                simularity_dict[dataset] = simularity_list
 
-            group_data = list(zip(group_user_dict.keys(),simularity))
+            group_data = list(zip(group_user_dict.keys(),simularity_list))
             context['group_data'] = group_data
             context['simularity_dict'] = simularity_dict
 
-            return context
+        return context
 
 def get_simularity(request):
+    # NOT IN USE
     group_user_dict = {group.name: group.user_set.values_list('id', flat=True) for group in Group.objects.all()}
     simularity_dict = dict()
     a_set = set() 
@@ -178,6 +177,7 @@ class AuditFunctionalForm(forms.Form):
     # fields
     # user = ForeignKey(get_user_model(),on_delete=models.CASCADE,default='')
 
+
     dataset = forms.ModelChoiceField(required=False, queryset=Dataset.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
     relation_qs = AuditTriple.objects.values_list('relation').distinct()
     relation = forms.CharField(required=False, widget=ListTextWidget(relation_qs, 'relation_list'))
@@ -203,7 +203,7 @@ def audit_triples(request):
 
     triple_filter = AuditTripleFilter(
         request.GET,
-        queryset=AuditTriple.objects.filter(user=request.user)
+        queryset=AuditTriple.objects.filter(user=request.user).select_related('dataset')
     )
 
     paginated_triple_filter = Paginator(triple_filter.qs,50)
@@ -223,7 +223,7 @@ def audit_triple_cards(request):
 
     triple_filter = AuditTripleFilter(
         request.GET,
-        queryset=AuditTriple.objects.filter(user=request.user)
+        queryset=AuditTriple.objects.filter(user=request.user).select_related('dataset')
     )
 
     paginated_triple_filter = Paginator(triple_filter.qs,25)
@@ -262,7 +262,7 @@ def admin_view_triple_cards(request):
 
     triple_filter = AuditUserTripleFilter(
         request.GET,
-        queryset=AuditTriple.objects.all()
+        queryset=AuditTriple.objects.all().select_related('user')
     )
 
     paginated_triple_filter = Paginator(triple_filter.qs,25)

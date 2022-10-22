@@ -17,16 +17,29 @@
   {% crispy form %} 
   <h6 class="text-end">Amount filtered: {{triple_filter.qs|length}}</h6>
   {% for object in page_obj %}
+  {% if object.verified %}
   <h6>#{{ forloop.counter }}<h6>
-  <div class="card" style="width: 100%;">
+  <div class="card border-success" style="width: 100%;">
+    <h5 class="card-header">Dataset:  {{object.dataset}}</h5>
+    <div class="card-body">
+      <h4 class="card-text">EntityA:  {{object.entityA}}</h4>
+      <h4 class="card-text">Relation:  {{object.relation}}</h4>
+      <h4 class="card-text">EntityB:  {{object.entityB}}</h4>
+      <h5 class="card-footer">Verified:  {{ object.verified }}</h5>
+      <a class="btn btn-success" href="{% url 'Audit:audit_triple_update' object.id %}" class="card-link">Comment</a>
+  </div>
+  {% else %}
+  <div class="card border-danger" style="width: 100%;">
+  <h5 class="card-header">Dataset:  {{object.dataset}}</h5>
   <div class="card-body">
-    <h5 class="card-title">Dataset:  {{object.dataset}}</h5>
     <h4 class="card-text">EntityA:  {{object.entityA}}</h4>
     <h4 class="card-text">Relation:  {{object.relation}}</h4>
     <h4 class="card-text">EntityB:  {{object.entityB}}</h4>
-    <h5 class="card-title">Verified:  {{ object.verified }}</h5>
+    <h5 class="card-footer">Verified:  {{ object.verified }}</h5>
+    <h5 class="card-text">Your Comment:  {{object.comment}}</h5>
     <a class="btn btn-success" href="{% url 'Audit:audit_triple_update' object.id %}" class="card-link">Comment</a>
   </div>
+  {% endif %}
 </div>
 <br/>
       {% endfor %}

@@ -1,15 +1,14 @@
-from pickle import FALSE
 from django.views.generic.list import ListView
 from django.urls import reverse
 from django.shortcuts import render
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import UpdateView,CreateView,DeleteView
 from .models import AuditTriple, Type, Dataset
 from django.contrib.auth.models import Group
 from django.core.paginator import Paginator
-from .filters import  AuditTripleFilter, AuditUserTripleFilter
+from .filters import  AuditTripleFilter, AuditUserTripleFilter, CommentFilter
 from django.core.exceptions import PermissionDenied
 
 # used to redirect login on certain pages
@@ -52,8 +51,6 @@ class GroupsView(TemplateView):
         a_set = set() 
         b_set = set() 
 
-
-        
 
         for dataset in Dataset.objects.all():
             simularity = []
@@ -268,7 +265,7 @@ def admin_view_triple_cards(request):
         queryset=AuditTriple.objects.all()
     )
 
-    paginated_triple_filter = Paginator(triple_filter.qs,50)
+    paginated_triple_filter = Paginator(triple_filter.qs,25)
 
     context['triple_filter'] = triple_filter 
     page_number = request.GET.get('page')
@@ -349,3 +346,12 @@ class CommentView(LoginRequiredMixin, ListView):
     def get_queryset(self): 
         qs = super(CommentView, self).get_queryset()
         return qs.exclude(comment='').order_by('user')
+
+    def get_context_data(self):
+        context = super(CommentView, self).get_context_data()
+        context['filter'] = CommentFilter(self.request.GET,queryset=self.get_queryset(),request=self.request)
+        paginated_comment_filter = Paginator(context['filter'].qs,10)
+        page_number = self.request.GET.get('page')
+        page_obj = paginated_comment_filter.get_page(page_number)
+        context['page_obj'] = page_obj
+        return context

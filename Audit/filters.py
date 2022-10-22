@@ -23,3 +23,11 @@ class AuditUserTripleFilter(django_filters.FilterSet):
         model = AuditTriple
         fields = ('dataset','dataset','user','relation','entityA','entityB','verified')
 
+class CommentFilter(django_filters.FilterSet):
+
+   # user = django_filters.ChoiceFilter(lookup_expr='startswith')
+
+    class Meta:
+        model = AuditTriple
+        fields = ('user','relation','entityA','entityB',)
+

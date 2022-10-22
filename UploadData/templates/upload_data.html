@@ -9,11 +9,11 @@
   <form action="{% url 'UploadData:upload' %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="mb-3">
-      <h6>Put entities in columnA and ColumnC. Relations in ColumnB</h6>
-      <h6>Add types to entities by using "|" as a delimeter.</h6>
-      <h6>For example columnA = entA|typeA1|typeA2 columnB = relation1 columnC = entB|typeB</h6>
+      <h6>Put entities in columnA and ColumnC. Relations in ColumnB.</h6>
+      <!--<h6>Add types to entities by using "|" as a delimeter.</h6>-->
+      <h6>For example columnA = entA columnB = relation1 columnC = entB.</h6>
       <br>
-      <h4>Input a excel file with the correct format</h4>
+      <h4>Input a excel file with the correct format.</h4>
       <br>
       <label for="datasetname">Name of dataset</label>
       <input type="text" name="datasetname" id="datasetname" class="form-control">

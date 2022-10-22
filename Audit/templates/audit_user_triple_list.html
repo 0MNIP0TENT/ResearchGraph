@@ -11,6 +11,7 @@
 {%endif%}
   <h1 class="text-center">User Triples</h1>
   <br/>
+  <h5><a href={% url 'Audit:audit_user_triple_cards' %}>Change to Card View</a></h5>
   <form method="GET">
   {% csrf_token %}
   {{ triple_filter.form | crispy }}

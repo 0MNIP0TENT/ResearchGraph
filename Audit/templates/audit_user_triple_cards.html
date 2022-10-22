@@ -1,0 +1,58 @@
+<!--AuditUserTripleCards-->
+{% extends '_base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% load audit_extras %}
+{% block content %}
+{% if user.is_authenticated%}
+  <p class="text-end">Logged in as {{ user.username }}</p>
+{% else %}
+ <p class="text-end">You are not logged in</p>
+{%endif%}
+<div class="container">
+  <h1 class="text-center">User Triples</h1>
+  <br/>
+  <h5><a href={% url 'Audit:audit_user_triple_list' %}>Change to Table View</a></h5>
+  <form method="GET">
+  {% csrf_token %}
+  {{ triple_filter.form | crispy }}
+  <br/>
+    <input style="inline-block" type="submit" class="btn btn-primary" value="Search"> 
+  </form>
+
+  <h6 class="text-end">Amount filtered: {{triple_filter.qs|length}}</h6>
+  
+{% for object in page_obj %}
+  <h6>#{{ forloop.counter }}<h6>
+  <div class="card" style="width: 100%;">
+  <div class="card-body">
+    <h5 class="card-title">Dataset:  {{object.dataset}}  |  User:  {{object.user}}</h5>
+    <h4 class="card-text">EntityA:  {{object.entityA}}</h4>
+    <h4 class="card-text">Relation:  {{object.relation}}</h4>
+    <h4 class="card-text">EntityB:  {{object.entityB}}</h4>
+    <p class="card-text"><b>Comment:</b>  {{object.comment}}</p>
+    <h5 class="card-title">Verified:  {{object.verified}}</h5>
+  </div>
+</div>
+<br/>
+      {% endfor %}
+
+  <div class="pagination">
+    <span class="step-links">
+    {% if page_obj.has_previous %}
+      <a class="btn btn-outline-primary btn-sm" href={% my_url page_obj.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
+      <a class="btn btn-outline-primary btn-sm" href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
+    {% endif %}
+      <span class="current">
+        Page {{ page_obj.number}} of {{ page_obj.paginator.num_pages }}.
+      </span>
+
+     {% if page_obj.has_next %}
+       <a class="btn btn-outline-primary btn-sm" href="{% my_url page_obj.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
+       <a class="btn btn-outline-primary btn-sm" href="{% my_url page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
+     {% endif %}
+     </span>
+  </div>
+  <br/>
+  </div>
+{% endblock content %}

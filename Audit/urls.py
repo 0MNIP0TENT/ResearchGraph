@@ -13,12 +13,14 @@ from .views import (
     admin_view_triples,
     CommentView,
     audit_triple_cards,
+    admin_view_triple_cards,
 )
 app_name = 'Audit'
 urlpatterns = [
 
     # urls for everyone 
     path('Groups/', GroupsView.as_view(), name='audit_groups'),
+    path('UserComments/',CommentView.as_view(), name='audit_comments'),
 
     # urls for auditors
     path('AuditTripleList/', audit_triples, name='audit_triple_list'),
@@ -27,8 +29,8 @@ urlpatterns = [
     path('AuditTriple/<uuid:pk>/Update/', AuditTripleUpdate.as_view(), name='audit_triple_update'),
 
     # urls for admins
-    path('UserTripleView/List/',admin_view_triples, name='audit_user_triple_list'),
-    path('UserComments/',CommentView.as_view(), name='audit_comments'),
+    path('UserTripleViewList/',admin_view_triples, name='audit_user_triple_list'),
+    path('UserTripleViewCards/',admin_view_triple_cards, name='audit_user_triple_cards'),
     path('<pk>/', AuditTripleDetailView.as_view(), name='audit_triple_detail'),
 
     path('delete/dataset/<pk>/', DeleteDataset.as_view(), name='audit_delete_dataset'),

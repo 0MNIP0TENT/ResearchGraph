@@ -139,8 +139,8 @@ class AuditTripleList(LoginRequiredMixin, ListView):
     login_url = '/accounts/login/login/' 
     model = AuditTriple 
     template_name = 'audit_triple_list.html'
-    form_class = AuditTripleModelForm
-    paginate_by = 50
+   # form_class = AuditTripleModelForm
+
     # filter results based on the user
     def get_queryset(self):
        # original qs
@@ -152,17 +152,41 @@ class AuditTripleList(LoginRequiredMixin, ListView):
     # add filter form
     def get_context_data(self, **kwargs):
         context = super(AuditTripleList, self).get_context_data(**kwargs)
-        context['filter'] = AuditTripleFilter(self.request.GET,queryset=self.get_queryset(),request=self.request)
-        context['form'] = AuditTripleModelForm()
+        context['triple_filter'] = triple_filter 
+        paginated_triple_filter = Paginator(triple_filter.qs,50)
+        context = {'form': AuditFunctionalForm(request=selfrequest)}
+        page_number = self.request.GET.get('page')
+        page_obj = paginated_triple_filter.get_page(page_number)
+        context['page_obj'] = page_obj
         return context
 
 class AuditFunctionalForm(forms.Form):
         
-    verified_choices = (
-        ('Unknown', 'Unknown'),
-        ('True', 'Yes'),
-        ('False', 'No'),
-    )
+    
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+
+        verified_choices = (
+            ('Unknown', 'Unknown'),
+          ('True', 'Yes'),
+          ('False', 'No'),
+        )
+
+        super(AuditFunctionalForm,self).__init__(*args, **kwargs)
+
+        self.relation_qs = AuditTriple.objects.filter(user=self.request.user).values_list('relation').distinct()
+
+        self.fields['relation'] = forms.CharField(required=False)
+        self.fields['relation'].widget = ListTextWidget(self.relation_qs, 'relation_list')
+        self.fields['relation'].queryset = AuditTriple.objects.filter(user=self.request.user).distinct()
+            
+        self.fields['entityA'] =  forms.CharField(required=False)
+        self.fields['entityB'] =  forms.CharField(required=False)
+
+        self.fields['verified'] = forms.ChoiceField(choices=verified_choices) 
+        self.fields['verified'].widget = forms.Select(attrs={'class': 'form-control'})
+
 
     helper = FormHelper()
     helper.form_method = 'GET'
@@ -179,21 +203,14 @@ class AuditFunctionalForm(forms.Form):
 
 
     dataset = forms.ModelChoiceField(required=False, queryset=Dataset.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-    relation_qs = AuditTriple.objects.values_list('relation').distinct()
-    relation = forms.CharField(required=False, widget=ListTextWidget(relation_qs, 'relation_list'))
-    entityA = forms.CharField(required=False)
-    entityB = forms.CharField(required=False)
-    verified = forms.ChoiceField(choices=verified_choices, widget=forms.Select(attrs={'class': 'form-control'}))
+    #relation_qs = AuditTriple.objects.values_list('relation').distinct()
+    #relation = forms.CharField(required=False, widget=ListTextWidget(relation_qs, 'relation_list'))
+    #relation = forms.CharField(required=False )
+    #entityA = forms.CharField(required=False)
+    #entityB = forms.CharField(required=False)
+    #verified = forms.ChoiceField(choices=verified_choices, widget=forms.Select(attrs={'class': 'form-control'}))
 
-    # def __init__(self, *args, **kwargs):
-    #         request = kwargs.pop("request")
-            
-    #         super().__init__(*args, **kwargs)
-    #         user = kwargs['request'].user
-            
-    #         if request:
-    #             self.fields['dataset'].queryset = Dataset.objects.get(id__exact=user)
-     
+    
      
 def audit_triples(request):
     context = {}
@@ -207,7 +224,7 @@ def audit_triples(request):
     )
 
     paginated_triple_filter = Paginator(triple_filter.qs,50)
-    context = {'form': AuditFunctionalForm()}
+    context = {'form': AuditFunctionalForm(request=request)}
     context['triple_filter'] = triple_filter 
     page_number = request.GET.get('page')
     page_obj = paginated_triple_filter.get_page(page_number)
@@ -227,7 +244,7 @@ def audit_triple_cards(request):
     )
 
     paginated_triple_filter = Paginator(triple_filter.qs,25)
-    context = {'form': AuditFunctionalForm()}
+    context = {'form': AuditFunctionalForm(request=request)}
     context['triple_filter'] = triple_filter 
     page_number = request.GET.get('page')
     page_obj = paginated_triple_filter.get_page(page_number)
@@ -267,6 +284,7 @@ def admin_view_triple_cards(request):
 
     paginated_triple_filter = Paginator(triple_filter.qs,25)
 
+    context = {'form': AuditFunctionalForm(request=request)}
     context['triple_filter'] = triple_filter 
     page_number = request.GET.get('page')
     page_obj = paginated_triple_filter.get_page(page_number)

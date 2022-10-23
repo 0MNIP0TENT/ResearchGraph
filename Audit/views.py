@@ -161,8 +161,6 @@ class AuditTripleList(LoginRequiredMixin, ListView):
         return context
 
 class AuditFunctionalForm(forms.Form):
-        
-    
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")

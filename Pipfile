@@ -12,7 +12,6 @@ matplotlib = "*"
 networkx = "*"
 scipy = "*"
 django-environ = "*"
-pynvim = "*"
 django-filter = "*"
 django-debug-toolbar = "*"
 

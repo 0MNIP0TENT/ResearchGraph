@@ -8,8 +8,9 @@ from django.views.generic.edit import UpdateView,CreateView,DeleteView
 from .models import AuditTriple, Type, Dataset
 from django.contrib.auth.models import Group
 from django.core.paginator import Paginator
-from .filters import  AuditTripleFilter, AuditUserTripleFilter, CommentFilter
+from .filters import  AuditTripleFilter, AuditUserTripleFilter, CommentFilter, DifferenceFilter
 from django.core.exceptions import PermissionDenied
+from users.models import CustomUser
 
 # used to redirect login on certain pages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -161,15 +162,14 @@ class AuditTripleList(LoginRequiredMixin, ListView):
         return context
 
 class AuditFunctionalForm(forms.Form):
-
+    verified_choices = (
+        ('Unknown', 'Unknown'),
+        ('True', 'True'),
+        ('False', 'False'),
+    )
+    
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
-
-        verified_choices = (
-            ('Unknown', 'Unknown'),
-          ('True', 'Yes'),
-          ('False', 'No'),
-        )
 
         super(AuditFunctionalForm,self).__init__(*args, **kwargs)
 
@@ -181,9 +181,6 @@ class AuditFunctionalForm(forms.Form):
             
         self.fields['entityA'] =  forms.CharField(required=False)
         self.fields['entityB'] =  forms.CharField(required=False)
-
-        self.fields['verified'] = forms.ChoiceField(choices=verified_choices) 
-        self.fields['verified'].widget = forms.Select(attrs={'class': 'form-control'})
 
 
     helper = FormHelper()
@@ -206,7 +203,7 @@ class AuditFunctionalForm(forms.Form):
     #relation = forms.CharField(required=False )
     #entityA = forms.CharField(required=False)
     #entityB = forms.CharField(required=False)
-    #verified = forms.ChoiceField(choices=verified_choices, widget=forms.Select(attrs={'class': 'form-control'}))
+    verified = forms.ChoiceField(choices=verified_choices, widget=forms.Select(attrs={'class': 'form-control'}))
 
     
      
@@ -361,13 +358,55 @@ class CommentView(LoginRequiredMixin, ListView):
 
     def get_queryset(self): 
         qs = super(CommentView, self).get_queryset()
-        return qs.exclude(comment='').order_by('user')
+        return qs.exclude(comment='').select_related('dataset','user').order_by('user')
 
     def get_context_data(self):
         context = super(CommentView, self).get_context_data()
-        context['filter'] = CommentFilter(self.request.GET,queryset=self.get_queryset(),request=self.request)
+        context['filter'] = CommentFilter(
+            self.request.GET,
+            queryset=self.get_queryset(),
+            request=self.request
+        )
         paginated_comment_filter = Paginator(context['filter'].qs,10)
         page_number = self.request.GET.get('page')
         page_obj = paginated_comment_filter.get_page(page_number)
+        context['page_obj'] = page_obj
+        return context
+
+class DifferenceView(LoginRequiredMixin, ListView):
+    model = AuditTriple
+    template_name = 'audit_differences.html'
+    login_url = '/accounts/login/login/' 
+
+    def get_queryset(self):
+        qs = super(DifferenceView, self).get_queryset()
+        difference_dict = dict()
+        a_set = set() 
+        b_set = set() 
+
+        group_user_dict = {group.name: group.user_set.values_list('id', flat=True) for group in Group.objects.all()}
+
+        for group in group_user_dict:
+            difference_list = []
+            user1, user2 = group_user_dict[group]  
+            a = AuditTriple.objects.filter(user=user1).values('entityA','relation','entityB','verified','comment')
+            b = AuditTriple.objects.filter(user=user2).values('entityA','relation','entityB','verified','comment')
+            print(AuditTriple.objects.filter(user=user1).difference(AuditTriple.objects.filter(user=user2)))
+            difference_list.append(abdifference)
+        print(difference_list)
+
+        return qs.exclude(comment='').select_related('dataset','user').order_by('user')
+
+    def get_context_data(self):
+        context = super(DifferenceView, self).get_context_data()
+        context['filter'] = DifferenceFilter(
+            self.request.GET,
+            queryset=self.get_queryset(),
+            request=self.request
+        )
+
+        paginated_difference_filter = Paginator(context['filter'].qs,10)
+        page_number = self.request.GET.get('page')
+        page_obj = paginated_difference_filter.get_page(page_number)
         context['page_obj'] = page_obj
         return context

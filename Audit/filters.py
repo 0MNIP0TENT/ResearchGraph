@@ -12,6 +12,12 @@ class AuditTripleFilter(django_filters.FilterSet):
         model = AuditTriple
         fields = ('dataset','relation','entityA','entityB','verified')
 
+class DifferenceFilter(django_filters.FilterSet):
+
+    class Meta:
+        model = AuditTriple
+        fields = ('dataset','user',)
+
 # for admin users
 class AuditUserTripleFilter(django_filters.FilterSet):
 
@@ -32,3 +38,4 @@ class CommentFilter(django_filters.FilterSet):
     class Meta:
         model = AuditTriple
         fields = ('user','relation','entityA','entityB',)
+

@@ -1,19 +1,17 @@
 from django.urls import path
 from .views import (
-    AuditTripleList,
     AuditTripleUpdate,
     AuditTypeCreate,
-    UserTripleView,
     AuditTripleDetailView,
     ListDatasets,
     DeleteDataset,
     GroupsView,
-    get_simularity,
     audit_triples,
     admin_view_triples,
     CommentView,
     audit_triple_cards,
     admin_view_triple_cards,
+    DifferenceView,
 )
 app_name = 'Audit'
 urlpatterns = [
@@ -21,6 +19,7 @@ urlpatterns = [
     # urls for everyone 
     path('Groups/', GroupsView.as_view(), name='audit_groups'),
     path('UserComments/',CommentView.as_view(), name='audit_comments'),
+    path('GroupDifferences/',DifferenceView.as_view(), name='audit_differences'),
 
     # urls for auditors
     path('AuditTripleList/', audit_triples, name='audit_triple_list'),

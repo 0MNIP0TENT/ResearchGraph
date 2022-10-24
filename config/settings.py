@@ -25,7 +25,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = int(env('DEBUG'))
 
-ALLOWED_HOSTS = ['omnipotent.pythonanywhere.com','10.0.0.79','localhost','127.0.0.1']
+ALLOWED_HOSTS = ['audittriples.pythonanywhere.com','omnipotent.pythonanywhere.com','10.0.0.79','localhost','127.0.0.1']
 
 # Application definition
 

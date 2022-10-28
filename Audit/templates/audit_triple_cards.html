@@ -1,4 +1,4 @@
-<!--AuditTripleList-->
+<!--AuditTripleCards-->
 {% extends '_base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
@@ -26,7 +26,7 @@
       <h4 class="card-text">Relation:  {{object.relation}}</h4>
       <h4 class="card-text">EntityB:  {{object.entityB}}</h4>
       <h5 class="card-footer">Verified:  {{ object.verified }}</h5>
-      <a class="btn btn-success" href="{% url 'Audit:audit_triple_update' object.id %}" class="card-link">Comment</a>
+      <a href="{% url 'Audit:audit_triple_update' object.id %}?next={{request.get_full_path|urlencode}}" class="card-link btn btn-success">Comment</a>
   </div>
   {% else %}
   <div class="card border-danger" style="width: 100%;">
@@ -37,7 +37,7 @@
     <h4 class="card-text">EntityB:  {{object.entityB}}</h4>
     <h5 class="card-footer">Verified:  {{ object.verified }}</h5>
     <h5 class="card-text"><b>Your Comment:</b>  {{object.comment}}</h5>
-    <a class="btn btn-success" href="{% url 'Audit:audit_triple_update' object.id %}" class="card-link">Comment</a>
+    <a  href="{% url 'Audit:audit_triple_update' object.id %}?next={{request.get_full_path|urlencode}}" class="card-link btn btn-success">Comment</a>
   </div>
   {% endif %}
 </div>

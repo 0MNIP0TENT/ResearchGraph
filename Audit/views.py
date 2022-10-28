@@ -304,6 +304,7 @@ class AuditTripleUpdate(LoginRequiredMixin,UpdateView):
         return super().form_valid(form)
 
     def get_success_url(self):
+        print(self.request.GET.get('next'))
         return self.request.GET.get('next','/')
 
 # Detail view for admins to view comments

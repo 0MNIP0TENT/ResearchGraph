@@ -304,7 +304,6 @@ class AuditTripleUpdate(LoginRequiredMixin,UpdateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        print(self.request.GET.get('next'))
         return self.request.GET.get('next','/')
 
 # Detail view for admins to view comments
@@ -392,9 +391,7 @@ class DifferenceView(LoginRequiredMixin, ListView):
             user1, user2 = group_user_dict[group]  
             a = AuditTriple.objects.filter(user=user1).values('entityA','relation','entityB','verified','comment')
             b = AuditTriple.objects.filter(user=user2).values('entityA','relation','entityB','verified','comment')
-            print(AuditTriple.objects.filter(user=user1).difference(AuditTriple.objects.filter(user=user2)))
             difference_list.append(abdifference)
-        print(difference_list)
 
         return qs.exclude(comment='').select_related('dataset','user').order_by('user')
 

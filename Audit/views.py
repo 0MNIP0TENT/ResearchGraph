@@ -380,20 +380,8 @@ class DifferenceView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         qs = super(DifferenceView, self).get_queryset()
-        difference_dict = dict()
-        a_set = set() 
-        b_set = set() 
-
         group_user_dict = {group.name: group.user_set.values_list('id', flat=True) for group in Group.objects.all()}
-
-        for group in group_user_dict:
-            difference_list = []
-            user1, user2 = group_user_dict[group]  
-            a = AuditTriple.objects.filter(user=user1).values('entityA','relation','entityB','verified','comment')
-            b = AuditTriple.objects.filter(user=user2).values('entityA','relation','entityB','verified','comment')
-            difference_list.append(abdifference)
-
-        return qs.exclude(comment='').select_related('dataset','user').order_by('user')
+        return qs.filter(verified=False).select_related('dataset','user').order_by('user')
 
     def get_context_data(self):
         context = super(DifferenceView, self).get_context_data()

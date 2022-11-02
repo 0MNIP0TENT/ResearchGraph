@@ -10,44 +10,62 @@
  <p class="text-end">You are not logged in</p>
 {%endif%}
 <div class="container">
-<h1>User Comment's</h1>
-<br/>
-<form method="GET">
-  {% csrf_token %}
-  {{ filter.form | crispy }}
+  <h1>Group Comparisons</h1>
   <br/>
-    <input style="inline-block" type="submit" class="btn btn-primary" value="Search"> 
-  </form>
- <br/>
-{% for object in page_obj %}
+  <br/>
+  <p>This page compares your unverified triples with your group partner's matching triples.</p>
+  <br/>
+  <br/>
+  <div class="row">
+    <div class="col-6">
+      {% if not object_list %}
+        <p>You have have not unverified any triples.</p>
+      {% endif %}
+      {% for object in object_list %}
+        <p>#{{forloop.counter}}  Dataset: {{ object.dataset }}<p> 
+        <div class="card border-danger" style="width: 100%;">
+          <h5 class="card-header">User:  {{object.user}}</h5>
+          <div class="card-body">
+            <h5 class="card-text">EntityA:  {{object.entityA}}</h5>
+            <h5 class="card-text">Relation:  {{object.relation}}</h5>
+            <h5 class="card-text">EntityB:  {{object.entityB}}</h5>
+            <h5 class="card-text">Verified:  {{object.verified}}</h5>
+            <p class="card-footer"><b>Comment:</b>  {{object.comment}}</p>
+          </div>
+        </div>
+<br/>
+      {% endfor %}
+    </div>
+<div class="col-6">
+{% for object in other_list %}
   <p>#{{forloop.counter}}  Dataset: {{ object.dataset }}<p> 
+  {% if object.verified %}
+  <div class="card border-success" style="width: 100%;">
+    <h5 class="card-header">User:  {{object.user}}</h5>
+  <div class="card-body">
+    <h5 class="card-text">EntityA:  {{object.entityA}}</h5>
+    <h5 class="card-text">Relation:  {{object.relation}}</h5>
+    <h5 class="card-text">EntityB:  {{object.entityB}}</h5>
+    <h5 class="card-text">Verified:  {{object.verified}}</h5>
+    <p class="card-footer"><b>Comment:</b>  {{object.comment}}</p>
+  </div>
+</div>
+  {% else %}
   <div class="card border-danger" style="width: 100%;">
     <h5 class="card-header">User:  {{object.user}}</h5>
   <div class="card-body">
     <h5 class="card-text">EntityA:  {{object.entityA}}</h5>
     <h5 class="card-text">Relation:  {{object.relation}}</h5>
-    <h5 class="card-text text-start">EntityB:  {{object.entityB}}</h5>
+    <h5 class="card-text">EntityB:  {{object.entityB}}</h5>
+    <h5 class="card-text">Verified:  {{object.verified}}</h5>
     <p class="card-footer"><b>Comment:</b>  {{object.comment}}</p>
   </div>
 </div>
 <br/>
+  {% endif %}
 {% endfor %}
-<div class="pagination">
-    <span class="step-links">
-    {% if page_obj.has_previous %}
-      <a class="btn btn-outline-primary btn-sm" href={% my_url page_obj.previous_page_number 'page' request.GET.urlencode %}">Previous</a>
-      <a class="btn btn-outline-primary btn-sm" href="{% my_url 1 'page' request.GET.urlencode %}">First</a>
-    {% endif %}
-      <span class="current">
-        Page {{page_obj.number}} of {{ page_obj.paginator.num_pages }}.
-      </span>
-
-     {% if page_obj.has_next %}
-       <a class="btn btn-outline-primary btn-sm" href="{% my_url page_obj.paginator.num_pages 'page' request.GET.urlencode %}">Last</a>
-       <a class="btn btn-outline-primary btn-sm" href="{% my_url page_obj.next_page_number 'page' request.GET.urlencode %}">Next</a>
-     {% endif %}
-     </span>
-  </div>
+ </div>
+</div>
 </div>
 <br/>
 {% endblock content%}

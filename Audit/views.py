@@ -10,7 +10,7 @@ from django.contrib.auth.models import Group
 from django.core.paginator import Paginator
 from .filters import  AuditTripleFilter, AuditUserTripleFilter, CommentFilter, DifferenceFilter
 from django.core.exceptions import PermissionDenied
-from users.models import CustomUser
+from django.contrib.auth import get_user_model
 
 # used to redirect login on certain pages
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -378,21 +378,33 @@ class DifferenceView(LoginRequiredMixin, ListView):
     template_name = 'audit_differences.html'
     login_url = '/accounts/login/login/' 
 
+    # Overwrite the queryset to return the unverified triples of the logged in user.
     def get_queryset(self):
         qs = super(DifferenceView, self).get_queryset()
-        group_user_dict = {group.name: group.user_set.values_list('id', flat=True) for group in Group.objects.all()}
-        return qs.filter(verified=False).select_related('dataset','user').order_by('user')
+        return qs.filter(user=self.request.user,verified=False).select_related('user')
 
     def get_context_data(self):
         context = super(DifferenceView, self).get_context_data()
-        context['filter'] = DifferenceFilter(
-            self.request.GET,
-            queryset=self.get_queryset(),
-            request=self.request
-        )
 
-        paginated_difference_filter = Paginator(context['filter'].qs,10)
-        page_number = self.request.GET.get('page')
-        page_obj = paginated_difference_filter.get_page(page_number)
-        context['page_obj'] = page_obj
+        # users only have one group
+        group = self.request.user.groups.all()[0]
+         
+        # get the name of the other group memeber
+        other_group_member = get_user_model().objects.filter(
+            groups__name=group).exclude(username=self.request.user.username) 
+        
+        # get search params for the other groups user
+        entityA_list = self.get_queryset().values_list('entityA') 
+        relation_list = self.get_queryset().values_list('relation') 
+        entityB_list = self.get_queryset().values_list('entityB') 
+
+        # only one other group member
+        other_list = AuditTriple.objects.filter(
+            user=other_group_member[0],
+            entityA__in=entityA_list,
+            relation__in=relation_list,
+            entityB__in=entityB_list
+        ).select_related('user','dataset') 
+
+        context['other_list'] = other_list
         return context

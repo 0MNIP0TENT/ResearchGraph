@@ -10,7 +10,7 @@ from .views import (
     CommentView,
     audit_triple_cards,
     admin_view_triple_cards,
-    DifferenceView,
+    GroupComparisons,
 )
 
 app_name = 'Audit'
@@ -19,7 +19,7 @@ urlpatterns = [
     # urls for everyone 
     path('Groups/', GroupsView.as_view(), name='audit_groups'),
     path('UserComments/',CommentView.as_view(), name='audit_comments'),
-    path('GroupDifferences/',DifferenceView.as_view(), name='audit_differences'),
+    path('GroupComparisons/',GroupComparisons.as_view(), name='audit_comparisons'),
 
     # urls for auditors
     path('AuditTripleList/', audit_triples, name='audit_triple_list'),

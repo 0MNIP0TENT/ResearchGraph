@@ -1,8 +1,7 @@
-from django.test import TestCase, SimpleTestCase, Client
+from django.test import TestCase, Client
 from django.urls import reverse, resolve
 from . models import AuditTriple, Dataset
 from django.contrib.auth import get_user_model
-import json
 from . import views
 # Create your tests here.
 
@@ -50,6 +49,10 @@ class TestUrls(TestCase):
         url = reverse('Audit:audit_user_triple_list')
         self.assertEquals(resolve(url).func,views.admin_view_triples)
 
+    def test_audit_group_comparisons(self):
+        url = reverse('Audit:audit_comparisons')
+        self.assertEquals(resolve(url).func.view_class,views.GroupComparisons)
+
     def test_audit_triple_detail(self):
         url = reverse('Audit:audit_triple_cards')
         self.assertEquals(resolve(url).func,views.audit_triple_cards)
@@ -65,6 +68,7 @@ class TestViews(TestCase):
         self.client = Client()
         self.groups_view_url = reverse('Audit:audit_groups')
         self.comment_view_url = reverse('Audit:audit_comments')
+        self.comparisons_view_url = reverse('Audit:audit_comparisons')
 
         new_user = get_user_model().objects.create_user(
             username='newuser'
@@ -95,6 +99,16 @@ class TestViews(TestCase):
         response = self.client.get(self.comment_view_url)
         self.assertEquals(response.status_code,200)
         self.assertTemplateUsed(response,'audit_comments.html')
+
+    def test_audit_comparisons_not_logged_in(self):
+        response = self.client.get(self.comparisons_view_url)
+        self.assertEquals(response.status_code,302)
+
+   # def test_audit_comparions_logged_in(self):
+   #     self.client.login(username='newuser',password='testpassword123')
+   #     response = self.client.get(self.comparisons_view_url)
+   #     self.assertEquals(response.status_code,200)
+   #     self.assertTemplateUsed(response,'audit_comparisons.html')
 
 class TestAdminViews(TestCase):
     def setUp(self):

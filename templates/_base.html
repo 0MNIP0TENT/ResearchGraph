@@ -61,7 +61,7 @@
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
 	    <li><a class="dropdown-item" href="{% url 'Audit:audit_groups' %}">Group Simularity</a></li>
 	    {% if not user.is_staff %}
-	      <li><a class="dropdown-item" href="{% url 'Audit:audit_differences' %}">Group Comparisons</a></li>
+	      <li><a class="dropdown-item" href="{% url 'Audit:audit_comparisons' %}">Group Comparisons</a></li>
             {% endif %}
             {% if user.is_authenticated %}
 	    <li><a class="dropdown-item" href="{% url 'Audit:audit_comments'%}">User Comments</a></li>

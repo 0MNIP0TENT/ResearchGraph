@@ -373,18 +373,18 @@ class CommentView(LoginRequiredMixin, ListView):
         context['page_obj'] = page_obj
         return context
 
-class DifferenceView(LoginRequiredMixin, ListView):
+class GroupComparisons(LoginRequiredMixin, ListView):
     model = AuditTriple
-    template_name = 'audit_differences.html'
+    template_name = 'audit_comparisons.html'
     login_url = '/accounts/login/login/' 
 
     # Overwrite the queryset to return the unverified triples of the logged in user.
     def get_queryset(self):
-        qs = super(DifferenceView, self).get_queryset()
+        qs = super(GroupComparisons, self).get_queryset()
         return qs.filter(user=self.request.user,verified=False).select_related('user')
 
     def get_context_data(self):
-        context = super(DifferenceView, self).get_context_data()
+        context = super(GroupComparisons, self).get_context_data()
 
         # users only have one group
         group = self.request.user.groups.all()[0]

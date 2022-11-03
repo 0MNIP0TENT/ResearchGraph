@@ -8,7 +8,7 @@ from django.views.generic.edit import UpdateView,CreateView,DeleteView
 from .models import AuditTriple, Type, Dataset
 from django.contrib.auth.models import Group
 from django.core.paginator import Paginator
-from .filters import  AuditTripleFilter, AuditUserTripleFilter, CommentFilter, DifferenceFilter
+from .filters import  AuditTripleFilter, AuditUserTripleFilter, CommentFilter 
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth import get_user_model
 

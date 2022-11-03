@@ -62,9 +62,9 @@
 	    <li><a class="dropdown-item" href="{% url 'Audit:audit_groups' %}">Group Simularity</a></li>
 	    {% if not user.is_staff %}
 	      <li><a class="dropdown-item" href="{% url 'Audit:audit_differences' %}">Group Comparisons</a></li>
+            {% endif %}
             {% if user.is_authenticated %}
 	    <li><a class="dropdown-item" href="{% url 'Audit:audit_comments'%}">User Comments</a></li>
-            {% endif %}
             {% endif %}
 	    <!-- <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Something else here</a></li>-->

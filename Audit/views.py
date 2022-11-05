@@ -9,6 +9,7 @@ from .models import AuditTriple, Type, Dataset
 from django.contrib.auth.models import Group
 from django.core.paginator import Paginator
 from .filters import  AuditTripleFilter, AuditUserTripleFilter, CommentFilter 
+from .forms import AuditUpdateForm
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth import get_user_model
 
@@ -289,20 +290,15 @@ def admin_view_triple_cards(request):
 class AuditTripleUpdate(LoginRequiredMixin,UpdateView):
     login_url = '/accounts/login/login/' 
     model = AuditTriple
-    template_name = 'audit_triple_form.html'
-    fields = [
-      "entityA",
-      "relation",
-      "entityB",
-      "comment",
-      #"verified",
-    ]
-
+    template_name = 'audit_triple_form.html' 
+    form_class = AuditUpdateForm
+  
     # if updated make verified False
     def form_valid(self,form):
         form.instance.verified = False
         return super().form_valid(form)
 
+    # redirect back to the last page the auditor was on
     def get_success_url(self):
         return self.request.GET.get('next','/')
 

@@ -43,11 +43,11 @@ class TestUrls(TestCase):
 
     def test_audit_user_triple_cards_is_resolved(self):
         url = reverse('Audit:audit_user_triple_cards')
-        self.assertEquals(resolve(url).func,views.admin_view_triple_cards)
+        self.assertEquals(resolve(url).func.view_class,views.UserTripleView)
 
     def test_audit_user_triple_list(self):
         url = reverse('Audit:audit_user_triple_list')
-        self.assertEquals(resolve(url).func,views.admin_view_triples)
+        self.assertEquals(resolve(url).func.view_class,views.UserTripleViewList)
 
     def test_audit_group_comparisons(self):
         url = reverse('Audit:audit_comparisons')

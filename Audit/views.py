@@ -1,34 +1,30 @@
 from django.views.generic.list import ListView
 from django.urls import reverse
 from django.shortcuts import render
-from django.http import JsonResponse
 from django.views.generic.base import TemplateView
 from django.views.generic.detail import DetailView
-from django.views.generic.edit import UpdateView,CreateView,DeleteView
-from .models import AuditTriple, Type, Dataset
+from django.views.generic.edit import UpdateView,DeleteView
+from .models import AuditTriple, Dataset
 from django.contrib.auth.models import Group
 from django.core.paginator import Paginator
 from .filters import  AuditTripleFilter, AuditUserTripleFilter, CommentFilter 
-from .forms import AuditUpdateForm
+from .forms import AuditUpdateForm, AuditFunctionalForm
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth import get_user_model
 
 # used to redirect login on certain pages
 from django.contrib.auth.mixins import LoginRequiredMixin
 
-#forms imports
-from django import forms
-from django.forms import ModelForm
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Field, HTML, Submit
-from Audit.fields import ListTextWidget
-
-# Create your views here.
-
+# admins see this page instead of the auditing page
 class UserTripleView(LoginRequiredMixin, ListView):
     login_url = '/accounts/login/login/' 
     model = AuditTriple
-    template_name = 'audit_user_triple_list.html'
+    template_name = 'audit_user_triple_cards.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_staff:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
        # original qs
@@ -38,6 +34,53 @@ class UserTripleView(LoginRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super(UserTripleView, self).get_context_data(**kwargs)
         context['filter'] = AuditUserTripleFilter(self.request.GET,queryset=self.get_queryset(),request=self.request)
+
+        self.triple_filter = AuditUserTripleFilter(
+            self.request.GET,
+            queryset=AuditTriple.objects.all().select_related('user')
+        )
+
+        paginated_triple_filter = Paginator(self.triple_filter.qs,25)
+
+        context = {'form': AuditFunctionalForm(request=self.request)}
+        context['triple_filter'] = self.triple_filter 
+        page_number = self.request.GET.get('page')
+        page_obj = paginated_triple_filter.get_page(page_number)
+        context['page_obj'] = page_obj
+
+        return context
+
+class UserTripleViewList(LoginRequiredMixin, ListView):
+    login_url = '/accounts/login/login/' 
+    model = AuditTriple
+    template_name = 'audit_user_triple_list.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        if not self.request.user.is_staff:
+            raise PermissionDenied
+        return super().dispatch(request, *args, **kwargs)
+
+    def get_queryset(self):
+       # original qs
+       return super().get_queryset().filter().select_related('user','dataset')
+
+    # add filter form
+    def get_context_data(self, **kwargs):
+        context = super(UserTripleViewList, self).get_context_data(**kwargs)
+        context['filter'] = AuditUserTripleFilter(self.request.GET,queryset=self.get_queryset(),request=self.request)
+
+        self.triple_filter = AuditUserTripleFilter(
+            self.request.GET,
+            queryset=AuditTriple.objects.all().select_related('user')
+        )
+
+        paginated_triple_filter = Paginator(self.triple_filter.qs,25)
+
+        context = {'form': AuditFunctionalForm(request=self.request)}
+        context['triple_filter'] = self.triple_filter 
+        page_number = self.request.GET.get('page')
+        page_obj = paginated_triple_filter.get_page(page_number)
+        context['page_obj'] = page_obj
 
         return context
 
@@ -82,132 +125,6 @@ class GroupsView(TemplateView):
 
         return context
 
-def get_simularity(request):
-    # NOT IN USE
-    group_user_dict = {group.name: group.user_set.values_list('id', flat=True) for group in Group.objects.all()}
-    simularity_dict = dict()
-    a_set = set() 
-    b_set = set() 
-    for dataset in Dataset.objects.all():
-        simularity = []
-        for group in group_user_dict:
-
-            # There are 2 users per group
-            user1, user2 = group_user_dict[group]  
-
-            # initial queries
-            a = AuditTriple.objects.filter(user=user1,dataset=dataset).values_list('entityA','relation','entityB','verified')
-            b = AuditTriple.objects.filter(user=user2,dataset=dataset).values_list('entityA','relation','entityB','verified')
-
-            for trip in a:
-                a_set.add((trip[0],trip[1],trip[2],trip[3])) 
-
-            for trip in b:
-                b_set.add((trip[0],trip[1],trip[2],trip[3])) 
-
-            simularity.append(round(len(a_set&b_set)/len(a_set|b_set)*100,2))
-            # clear set for next group
-            a_set.clear()
-            b_set.clear()
-
-        group_data = dict(zip(group_user_dict.keys(),simularity))
-        simularity_dict[dataset.name] = simularity
-
-    #return JsonResponse({'group_data':group_data,'simularity_dict':simularity_dict})
-    return JsonResponse({'group_data':group_data,'simularity_dict':simularity_dict})
-
-class AuditTripleModelForm(ModelForm):
-    # NOT IN USE
-    class Meta:
-        model = AuditTriple
-        fields = ['dataset','relation','entityA','entityB','verified']
-    @property
-    def helper(self):
-        helper = FormHelper()
-        helper.form_method = 'GET'
-        helper.layout = Layout(
-            HTML('<h1> hiiiiii </h1>'),
-            Field('dataset'),
-            Field('relation'),
-            Field('entityA'),
-            Field('entityB'),
-            Field('verified'),
-            Submit('submit','Submit', css_class='btn-success')
-        )
-        return helper
-
-class AuditTripleList(LoginRequiredMixin, ListView):
-    # NOT IN USE
-    login_url = '/accounts/login/login/' 
-    model = AuditTriple 
-    template_name = 'audit_triple_list.html'
-   # form_class = AuditTripleModelForm
-
-    # filter results based on the user
-    def get_queryset(self):
-       # original qs
-       qs = super().get_queryset() 
-
-       return qs.filter(user=self.request.user).select_related('user','dataset')
-       #return qs.filter(user=self.request.user).prefetch_related('entityA_types','entityB_types').select_related('dataset')
-
-    # add filter form
-    def get_context_data(self, **kwargs):
-        context = super(AuditTripleList, self).get_context_data(**kwargs)
-        context['triple_filter'] = triple_filter 
-        paginated_triple_filter = Paginator(triple_filter.qs,50)
-        context = {'form': AuditFunctionalForm(request=selfrequest)}
-        page_number = self.request.GET.get('page')
-        page_obj = paginated_triple_filter.get_page(page_number)
-        context['page_obj'] = page_obj
-        return context
-
-class AuditFunctionalForm(forms.Form):
-    verified_choices = (
-        ('Unknown', 'Unknown'),
-        ('True', 'True'),
-        ('False', 'False'),
-    )
-    
-    def __init__(self, *args, **kwargs):
-        self.request = kwargs.pop("request")
-
-        super(AuditFunctionalForm,self).__init__(*args, **kwargs)
-
-        self.relation_qs = AuditTriple.objects.filter(user=self.request.user).values_list('relation').distinct()
-
-        self.fields['relation'] = forms.CharField(required=False)
-        self.fields['relation'].widget = ListTextWidget(self.relation_qs, 'relation_list')
-        self.fields['relation'].queryset = AuditTriple.objects.filter(user=self.request.user).distinct()
-            
-        self.fields['entityA'] =  forms.CharField(required=False)
-        self.fields['entityB'] =  forms.CharField(required=False)
-
-
-    helper = FormHelper()
-    helper.form_method = 'GET'
-
-    # seems to work without defining these
-    # helper.form_action = reverse_lazy('Audit/AuditTriple/List/')
-    # helper.form_action = 'index'
-
-    # submit
-    helper.add_input(Submit('submit', 'Submit'))
-
-    # fields
-    # user = ForeignKey(get_user_model(),on_delete=models.CASCADE,default='')
-
-
-    dataset = forms.ModelChoiceField(required=False, queryset=Dataset.objects.all(), widget=forms.Select(attrs={'class': 'form-control'}))
-    #relation_qs = AuditTriple.objects.values_list('relation').distinct()
-    #relation = forms.CharField(required=False, widget=ListTextWidget(relation_qs, 'relation_list'))
-    #relation = forms.CharField(required=False )
-    #entityA = forms.CharField(required=False)
-    #entityB = forms.CharField(required=False)
-    verified = forms.ChoiceField(choices=verified_choices, widget=forms.Select(attrs={'class': 'form-control'}))
-
-    
-     
 def audit_triples(request):
     context = {}
 
@@ -248,45 +165,6 @@ def audit_triple_cards(request):
     
     return render(request,'audit_triple_cards.html',context=context)
 
-def admin_view_triples(request):
-    context = {}
-
-    if not request.user.is_staff:
-        raise PermissionDenied
-
-    triple_filter = AuditUserTripleFilter(
-        request.GET,
-        queryset=AuditTriple.objects.all()
-    )
-
-    paginated_triple_filter = Paginator(triple_filter.qs,50)
-
-    context['triple_filter'] = triple_filter 
-    page_number = request.GET.get('page')
-    page_obj = paginated_triple_filter.get_page(page_number)
-    context['page_obj'] = page_obj
-    return render(request,'audit_user_triple_list.html',context=context)
-
-def admin_view_triple_cards(request):
-    context = {}
-
-    if not request.user.is_staff:
-        raise PermissionDenied
-
-    triple_filter = AuditUserTripleFilter(
-        request.GET,
-        queryset=AuditTriple.objects.all().select_related('user')
-    )
-
-    paginated_triple_filter = Paginator(triple_filter.qs,25)
-
-    context = {'form': AuditFunctionalForm(request=request)}
-    context['triple_filter'] = triple_filter 
-    page_number = request.GET.get('page')
-    page_obj = paginated_triple_filter.get_page(page_number)
-    context['page_obj'] = page_obj
-    return render(request,'audit_user_triple_cards.html',context=context)
-
 class AuditTripleUpdate(LoginRequiredMixin,UpdateView):
     login_url = '/accounts/login/login/' 
     model = AuditTriple
@@ -306,23 +184,6 @@ class AuditTripleUpdate(LoginRequiredMixin,UpdateView):
 class AuditTripleDetailView(DetailView):
     model = AuditTriple
     template_name = 'audit_triple_detail.html'
-
-class AuditTypeCreate(LoginRequiredMixin, CreateView):
-    login_url = '/accounts/login/login/' 
-    model = Type
-
-    template_name = 'audit_type_create.html'
-
-    fields = [
-      "name",
-    ]
-
-    def form_valid(self,form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
-
-    def get_success_url(self):
-        return reverse('Audit:audit_triple_list')
 
 class ListDatasets(LoginRequiredMixin, ListView):
     login_url = '/accounts/login/login/' 
